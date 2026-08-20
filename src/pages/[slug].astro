@@ -1,0 +1,51 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { getCollection } from 'astro:content';
+import ChapterLayout from '../layouts/Chapter.astro';
+import MarkdownPage from '../layouts/MarkdownPage.astro';
+import { getChapters, getRelated, type Chapter } from '../lib/chapters';
+
+/**
+ * One dynamic route for both chapters and the standalone markdown pages, so
+ * every URL on the site stays one segment deep. Static routes such as
+ * /the-curator take priority over this one.
+ */
+export const getStaticPaths: GetStaticPaths = async () => {
+  const chapters = await getChapters();
+  const pages = await getCollection('pages');
+
+  const chapterPaths = await Promise.all(
+    chapters.map(async (chapter) => ({
+      params: { slug: chapter.data.slug },
+      props: {
+        chapter,
+        related: await getRelated(chapter),
+        total: chapters.length,
+        page: undefined,
+      },
+    })),
+  );
+
+  const pagePaths = pages.map((page) => ({
+    params: { slug: page.data.slug },
+    props: { chapter: undefined, related: [], total: 0, page },
+  }));
+
+  return [...chapterPaths, ...pagePaths];
+};
+
+const { chapter, related, total, page } = Astro.props as {
+  chapter?: Chapter;
+  related: Chapter[];
+  total: number;
+  page?: Awaited<ReturnType<typeof getCollection<'pages'>>>[number];
+};
+---
+
+{
+  chapter ? (
+    <ChapterLayout chapter={chapter} related={related} total={total} />
+  ) : (
+    <MarkdownPage page={page!} />
+  )
+}

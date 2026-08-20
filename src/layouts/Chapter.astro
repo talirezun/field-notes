@@ -1,0 +1,573 @@
+---
+import Base from './Base.astro';
+import SourceList from '../components/SourceList.astro';
+import CuratorBlock from '../components/CuratorBlock.astro';
+import RuleLabel from '../components/RuleLabel.astro';
+import { splitChapter, leadAnswer, type Chapter } from '../lib/chapters';
+import { AUTHOR, SITE_URL, SITE, LICENSES, formatDate, isoDate } from '../lib/site';
+
+interface Props {
+  chapter: Chapter;
+  related: Chapter[];
+  total: number;
+}
+
+const { chapter, related, total } = Astro.props;
+const { data } = chapter;
+const { sections, generalSources, intro } = splitChapter(chapter);
+const path = `/${data.slug}`;
+
+const person = {
+  '@type': 'Person',
+  name: AUTHOR.name,
+  jobTitle: AUTHOR.jobTitle,
+  affiliation: { '@type': 'Organization', name: AUTHOR.affiliation },
+  url: AUTHOR.homepage,
+  sameAs: [...AUTHOR.sameAs],
+};
+
+const article = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  '@id': `${SITE_URL}${path}#article`,
+  headline: data.title,
+  alternativeHeadline: data.question,
+  description: data.summary.trim(),
+  url: `${SITE_URL}${path}`,
+  mainEntityOfPage: { '@type': 'WebPage', '@id': `${SITE_URL}${path}` },
+  inLanguage: 'en',
+  datePublished: isoDate(data.updated),
+  dateModified: isoDate(data.updated),
+  author: person,
+  publisher: person,
+  isPartOf: { '@type': 'WebSite', '@id': `${SITE_URL}#website`, name: SITE.name },
+  keywords: data.tags.join(', '),
+  license: LICENSES.content.href,
+  citation: data.sources.map((source) => ({
+    '@type': 'CreativeWork',
+    name: source.title,
+    url: source.url,
+    ...(source.publication ? { publisher: source.publication } : {}),
+  })),
+  articleSection: sections.map((section) => section.title),
+};
+
+// A section only becomes an FAQ entry if its heading really is a question and
+// it opens with a self-contained answer. Anything else would be padding.
+const faqEntries = sections
+  .filter((section) => section.title.trim().endsWith('?'))
+  .map((section) => ({ section, answer: leadAnswer(section) }))
+  .filter((entry): entry is { section: (typeof sections)[number]; answer: string } =>
+    Boolean(entry.answer),
+  );
+
+const faq =
+  faqEntries.length >= 2
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        '@id': `${SITE_URL}${path}#faq`,
+        mainEntity: faqEntries.map((entry) => ({
+          '@type': 'Question',
+          name: entry.section.title,
+          url: `${SITE_URL}${path}#${entry.section.id}`,
+          acceptedAnswer: { '@type': 'Answer', text: entry.answer },
+        })),
+      }
+    : null;
+
+const schema = faq ? [article, faq] : [article];
+const number = String(data.number).padStart(2, '0');
+
+// Retired anchors still have to resolve. An alias renders as an empty target
+// immediately above the section it now points at.
+const aliasesFor = (sectionId: string) =>
+  data.anchorAliases.filter((alias) => alias.to === sectionId).map((alias) => alias.from);
+
+const knownIds = new Set(sections.map((section) => section.id));
+for (const alias of data.anchorAliases) {
+  if (!knownIds.has(alias.to)) {
+    throw new Error(
+      `${chapter.id}: anchor alias "${alias.from}" points at "${alias.to}", which no longer exists.`,
+    );
+  }
+}
+---
+
+<Base
+  title={data.title}
+  description={data.summary.trim()}
+  path={path}
+  markdownPath={`${path}.md`}
+  updated={data.updated}
+  schema={schema}
+>
+  <article class="chapter">
+    <div class="shell">
+      <header class="chapter-head">
+        <div class="head-rail">
+          <p class="chapter-number" aria-hidden="true">{number}</p>
+        </div>
+        <div class="head-main">
+        <h1>{data.title}</h1>
+        <p class="question">{data.question}</p>
+        <p class="summary">{data.summary.trim()}</p>
+
+        <dl class="chapter-meta">
+          <div>
+            <dt>Chapter</dt>
+            <dd>{number} of {total}</dd>
+          </div>
+          <div>
+            <dt>Updated</dt>
+            <dd><time datetime={isoDate(data.updated)}>{formatDate(data.updated)}</time></dd>
+          </div>
+          <div>
+            <dt>Tags</dt>
+            <dd>{data.tags.join(' · ')}</dd>
+          </div>
+          <div>
+            <dt>Markdown</dt>
+            <dd><a href={`${path}.md`}>{data.slug}.md</a></dd>
+          </div>
+        </dl>
+
+        {
+          data.status === 'scaffold' && (
+            <p class="scaffold">
+              <strong>This chapter is scaffolding.</strong> The structure and the anchors are
+              final. The body and the citations are placeholders waiting on the editorial
+              pass, so do not quote anything on this page yet.
+            </p>
+          )
+        }
+        </div>
+      </header>
+
+      {intro && <div class="prose intro" set:html={intro} />}
+
+      {/*
+        The provenance rail. Each section and the sources it draws on are
+        siblings in one grid row, so they line up without measuring anything in
+        the browser. Hovering either half highlights the pair.
+      */}
+      <div class="chapter-body">
+        {
+          sections.map((section, index) => (
+            <div class="section-row">
+              <aside class="rail-item" aria-label={`Sources for ${section.title}`}>
+                {section.sources.length > 0 ? (
+                  <SourceList sources={section.sources} heading="Sources" compact />
+                ) : (
+                  <p class="rail-empty" aria-hidden="true" />
+                )}
+              </aside>
+              <section class="section prose" id={`section-${section.id}`}>
+                {index > 0 && (
+                  <div class="section-divider">
+                    <a href={`#${section.id}`} title="Permanent link to this section">
+                      {section.id}
+                    </a>
+                  </div>
+                )}
+                {aliasesFor(section.id).map((alias) => (
+                  <span class="anchor-alias" id={alias} aria-hidden="true" />
+                ))}
+                <Fragment set:html={section.html} />
+              </section>
+            </div>
+          ))
+        }
+      </div>
+
+      {
+        generalSources.length > 0 && (
+          <div class="general-sources measure">
+            <RuleLabel as="h2" label="Sources for the chapter" />
+            <SourceList sources={generalSources} />
+          </div>
+        )
+      }
+
+      {
+        related.length > 0 && (
+          <nav class="related measure" aria-label="Related chapters">
+            <RuleLabel as="h2" label="Read next" />
+            <ul>
+              {related.map((item) => (
+                <li>
+                  <a href={`/${item.data.slug}`}>
+                    <span class="rel-number">
+                      {String(item.data.number).padStart(2, '0')}
+                    </span>
+                    <span class="rel-title">{item.data.title}</span>
+                    <span class="rel-question">{item.data.question}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        )
+      }
+
+      <CuratorBlock slug={data.slug} title={data.title} />
+    </div>
+  </article>
+</Base>
+
+<style>
+  .chapter {
+    padding-top: var(--space-7);
+  }
+
+  /*
+    The chapter page is one column of text with a rail in the left margin. The
+    shell is narrower than the site shell so the pair sits as a composition
+    rather than clinging to the left edge of a wide screen.
+  */
+  .chapter > :global(.shell) {
+    max-width: calc(var(--rail) + var(--measure) + var(--space-6) + var(--gutter) * 2);
+  }
+
+  .chapter-head {
+    display: grid;
+    grid-template-columns: var(--rail) minmax(0, var(--measure));
+    column-gap: var(--space-6);
+  }
+
+  /* The rail starts here and runs unbroken to the end of the last section. */
+  .head-rail {
+    border-right: var(--hairline) solid var(--ink-line);
+    padding-right: var(--space-4);
+    text-align: right;
+  }
+
+  .head-main {
+    min-width: 0;
+  }
+
+  .chapter-number {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 900;
+    font-size: var(--size-3xl);
+    line-height: 0.72;
+    color: var(--gold-dim);
+  }
+
+  .chapter-head h1 {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 900;
+    font-size: var(--size-2xl);
+    color: var(--bone);
+    letter-spacing: -0.015em;
+  }
+
+  /* The GEO hook, rendered where a reader sees it too. */
+  .question {
+    font-size: var(--size-lg);
+    color: var(--gold-bright);
+    margin-top: var(--space-3);
+    text-wrap: pretty;
+  }
+
+  .summary {
+    margin-top: var(--space-4);
+    color: var(--bone-dim);
+  }
+
+  .chapter-meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+    gap: var(--space-3) var(--space-4);
+    margin-top: var(--space-5);
+    padding-top: var(--space-4);
+    border-top: var(--hairline) solid var(--ink-line);
+  }
+
+  .chapter-meta dt {
+    font-family: var(--font-mono);
+    font-size: var(--size-xs);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--gold-dim);
+  }
+
+  .chapter-meta dd {
+    font-family: var(--font-mono);
+    font-size: var(--size-xs);
+    color: var(--bone-dim);
+    margin: var(--space-1) 0 0;
+  }
+
+  .scaffold {
+    margin-top: var(--space-5);
+    padding: var(--space-4);
+    border: var(--hairline) dashed var(--gold-dim);
+    border-radius: var(--radius);
+    font-size: var(--size-sm);
+    color: var(--bone-dim);
+  }
+
+  .scaffold strong {
+    color: var(--gold-bright);
+  }
+
+  .intro {
+    margin-top: var(--space-6);
+    margin-left: calc(var(--rail) + var(--space-6));
+  }
+
+  /* -------------------------------------------------- the provenance rail -- */
+
+  .chapter-body {
+    margin-top: var(--space-5);
+    display: grid;
+    grid-template-columns: var(--rail) minmax(0, var(--measure));
+    column-gap: var(--space-6);
+    row-gap: 0;
+    align-items: stretch;
+  }
+
+  .section-row {
+    display: contents;
+  }
+
+  .rail-item {
+    border-right: var(--hairline) solid var(--ink-line);
+    padding: var(--space-6) var(--space-4) var(--space-6) 0;
+    text-align: right;
+    transition: border-color 140ms ease;
+  }
+
+  .rail-item :global(.label),
+  .rail-item :global(.where),
+  .rail-item :global(.flag) {
+    color: var(--gold-dim);
+  }
+
+  .section {
+    padding: var(--space-6) 0;
+    min-width: 0;
+  }
+
+  .section:first-of-type,
+  .section-row:first-child .section {
+    padding-top: 0;
+  }
+
+  /* A retired anchor keeps resolving, without taking up space. */
+  .anchor-alias {
+    display: block;
+    height: 0;
+    scroll-margin-top: var(--space-7);
+  }
+
+  .section :global(h2) {
+    margin-top: 0;
+  }
+
+  /*
+    The centred hairline-with-label divider from talirezun.com, carrying the
+    section's permanent anchor rather than repeating the heading right below it.
+    Anchors are the contract this site makes, so it is worth putting one on the
+    page where a reader can see and copy it.
+  */
+  .section-divider {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: var(--space-4);
+    margin-bottom: var(--space-6);
+  }
+
+  .section-divider::before,
+  .section-divider::after {
+    content: '';
+    height: var(--hairline);
+    background: var(--gold-dim);
+  }
+
+  .section-divider a {
+    font-family: var(--font-mono);
+    font-size: var(--size-xs);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .section-divider a::before {
+    content: '#';
+    opacity: 0.7;
+  }
+
+  .section-divider a:hover {
+    color: var(--gold-bright);
+  }
+
+  /*
+    Hover either half of a row and both light up. The wrapper is display:
+    contents, so it has no box of its own but still matches :hover when the
+    pointer is over either child. No JavaScript involved.
+  */
+  .section-row:hover .rail-item,
+  .section-row:focus-within .rail-item {
+    border-right-color: var(--gold);
+  }
+
+  .section-row:hover .rail-item :global(a),
+  .section-row:focus-within .rail-item :global(a) {
+    color: var(--bone);
+    border-bottom-color: var(--gold);
+  }
+
+  .section-row:hover .section,
+  .section-row:focus-within .section {
+    background: linear-gradient(90deg, var(--gold-wash), transparent 60%);
+    box-shadow: -1.5rem 0 0 0 var(--gold-wash);
+  }
+
+  /* Set by the in-view observer below. Quieter than hover on purpose. */
+  .section-row[data-active] .rail-item {
+    border-right-color: var(--gold-dim);
+  }
+
+  @media (max-width: 62rem) {
+    /*
+      Narrow: the rail collapses to a Sources block at the end of each section,
+      which is what it is anyway once the margin is gone.
+    */
+    .chapter-head {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .head-rail {
+      border-right: 0;
+      text-align: left;
+      padding-right: 0;
+      margin-bottom: var(--space-2);
+    }
+
+    .chapter-body {
+      grid-template-columns: minmax(0, 1fr);
+      column-gap: 0;
+    }
+
+    .section-row {
+      display: flex;
+      flex-direction: column;
+      border-bottom: var(--hairline) solid var(--ink-line);
+    }
+
+    .section {
+      padding-bottom: var(--space-4);
+    }
+
+    .rail-item {
+      order: 2;
+      text-align: left;
+      border-right: 0;
+      border-left: 2px solid var(--ink-line);
+      padding: var(--space-3) 0 var(--space-6) var(--space-4);
+    }
+
+    .rail-item:empty,
+    .rail-item:has(.rail-empty) {
+      display: none;
+    }
+
+    .section-row:hover .section,
+    .section-row:focus-within .section {
+      background: none;
+      box-shadow: none;
+    }
+
+    .section-row:hover .rail-item,
+    .section-row:focus-within .rail-item {
+      border-left-color: var(--gold);
+    }
+  }
+
+  /* ------------------------------------------------------------- related -- */
+
+  .related ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .related a {
+    display: grid;
+    gap: var(--space-1);
+    text-decoration: none;
+    padding: var(--space-3) var(--space-4);
+    border: var(--hairline) solid var(--ink-line);
+    border-radius: var(--radius);
+  }
+
+  .related a:hover {
+    border-color: var(--gold-dim);
+    background: var(--ink-raised);
+  }
+
+  .rel-number {
+    font-family: var(--font-mono);
+    font-size: var(--size-xs);
+    color: var(--gold-dim);
+  }
+
+  .rel-title {
+    color: var(--bone);
+    font-size: var(--size-lg);
+  }
+
+  .rel-question {
+    font-size: var(--size-sm);
+    color: var(--bone-dim);
+  }
+
+  .general-sources,
+  .related,
+  .chapter :global(.curator) {
+    margin-top: var(--space-7);
+    margin-left: calc(var(--rail) + var(--space-6));
+  }
+
+  @media (max-width: 62rem) {
+    .intro,
+    .general-sources,
+    .related,
+    .chapter :global(.curator) {
+      margin-left: 0;
+    }
+  }
+</style>
+
+<script>
+  // Marks the section nearest the top of the viewport, so the rail reads as
+  // connected to where you are. This is a state change, not motion, and the
+  // page is fully usable without it.
+  const rows = Array.from(document.querySelectorAll<HTMLElement>('.section-row'));
+  if (rows.length > 0 && 'IntersectionObserver' in window) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          const row = entry.target.closest<HTMLElement>('.section-row');
+          if (!row) continue;
+          if (entry.isIntersecting) row.dataset.active = 'true';
+          else delete row.dataset.active;
+        }
+      },
+      { rootMargin: '-10% 0px -70% 0px' },
+    );
+    for (const row of rows) {
+      const section = row.querySelector('.section');
+      if (section) observer.observe(section);
+    }
+  }
+</script>

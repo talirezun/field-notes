@@ -1,0 +1,75 @@
+/*
+  Field Notes design tokens.
+
+  The palette carries over from talirezun.com: one warm khaki-gold accent, no
+  secondary hue. The surface inverts to a warm, brown-shifted dark. It is not
+  neutral grey-black, and that is the point: it should read as aged ink and
+  paper, which is what "field notes" means.
+
+  Contrast note, do not undo it: --bone on --ink is well above WCAG AA. --gold
+  on --ink passes AA for large text and UI only. Gold is for headings, rules,
+  labels and links. Never set body paragraphs in gold.
+*/
+
+:root {
+  /* Surface, warm and brown-shifted */
+  --ink: #100e0b;
+  --ink-raised: #1a1713;
+  --ink-line: #2c2721;
+
+  /* Accent, carried from talirezun.com */
+  --gold: #a89372;
+  --gold-bright: #cbb78e;
+  --gold-dim: #6b5c46;
+
+  /* Text */
+  --bone: #e9e4da;
+  --bone-dim: #9c958a;
+
+  /* Derived, so component CSS never hardcodes an alpha */
+  --gold-wash: rgb(168 147 114 / 0.09);
+  --gold-wash-strong: rgb(168 147 114 / 0.16);
+  --ink-shadow: rgb(0 0 0 / 0.45);
+
+  /* Type */
+  --font-display: 'Playfair Display', 'Iowan Old Style', 'Palatino Linotype',
+    Georgia, serif;
+  --font-body: 'IBM Plex Sans', ui-sans-serif, system-ui, -apple-system,
+    'Segoe UI', sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', 'Cascadia Mono',
+    Menlo, monospace;
+
+  /* A deliberate scale. Body sits at 18px minimum, this corpus is dense. */
+  --size-base: 1.125rem; /* 18px */
+  --size-sm: 0.9375rem; /* 15px */
+  --size-xs: 0.8125rem; /* 13px */
+  --size-lg: 1.25rem;
+  --size-xl: clamp(1.5rem, 1.2rem + 1.4vw, 2rem);
+  --size-2xl: clamp(2rem, 1.4rem + 2.8vw, 3.25rem);
+  --size-3xl: clamp(2.5rem, 1.5rem + 4.5vw, 4.75rem);
+
+  --leading-body: 1.65;
+  --leading-tight: 1.15;
+
+  --tracking-label: 0.16em;
+
+  /* Space, on a 4px grid */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+  --space-9: 6rem;
+
+  /* Layout. The measure is roughly 68 characters. */
+  --measure: 38rem;
+  --rail: 13rem;
+  --gutter: var(--space-5);
+  --shell: 76rem;
+
+  --radius: 2px;
+  --hairline: 1px;
+}

@@ -1,0 +1,84 @@
+---
+import type { Source } from '../../content/config';
+import { formatDate } from '../lib/site';
+
+interface Props {
+  sources: Source[];
+  heading?: string;
+  compact?: boolean;
+}
+const { sources, heading, compact = false } = Astro.props;
+---
+
+{
+  sources.length > 0 && (
+    <div class={compact ? 'sources compact' : 'sources'}>
+      {heading && <p class="label">{heading}</p>}
+      <ol>
+        {sources.map((source) => (
+          <li class={source.placeholder ? 'placeholder' : undefined}>
+            <a href={source.url} target="_blank" rel="noopener">
+              {source.title}
+            </a>
+            <span class="where">
+              {source.publication}
+              {source.publication && source.date ? ', ' : ''}
+              {source.date ? formatDate(source.date) : ''}
+            </span>
+            {source.placeholder && (
+              <span class="flag">
+                {compact ? 'stand-in' : 'stand-in, pending the editorial pass'}
+              </span>
+            )}
+          </li>
+        ))}
+      </ol>
+    </div>
+  )
+}
+
+<style>
+  .sources ol {
+    list-style: none;
+    padding: 0;
+    margin: var(--space-2) 0 0;
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  .sources li {
+    font-family: var(--font-mono);
+    font-size: var(--size-xs);
+    line-height: 1.5;
+    color: var(--bone-dim);
+  }
+
+  .sources a {
+    color: var(--bone-dim);
+    text-decoration: none;
+    border-bottom: var(--hairline) solid var(--gold-dim);
+    display: inline;
+  }
+
+  .sources a:hover {
+    color: var(--gold-bright);
+    border-bottom-color: var(--gold-bright);
+  }
+
+  .where {
+    display: block;
+    color: var(--gold-dim);
+    margin-top: 2px;
+  }
+
+  .flag {
+    display: block;
+    margin-top: 2px;
+    color: var(--gold-dim);
+    font-style: italic;
+  }
+
+  .compact ol {
+    gap: var(--space-2);
+  }
+</style>

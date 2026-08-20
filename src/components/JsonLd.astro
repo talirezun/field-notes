@@ -1,0 +1,11 @@
+---
+interface Props {
+  schema: Record<string, unknown> | Record<string, unknown>[];
+}
+const { schema } = Astro.props;
+// JSON-LD is data, never markup. Escaping < prevents a value from closing the
+// script element early.
+const json = JSON.stringify(schema).replace(/</g, '\\u003c');
+---
+
+<script type="application/ld+json" is:inline set:html={json} />

@@ -1,0 +1,95 @@
+---
+import manifest from '../generated/corpus-manifest.json';
+import { formatDate } from '../lib/site';
+
+interface Props {
+  heading?: string;
+}
+const { heading } = Astro.props;
+const builtOn = new Date(`${manifest.builtOn}T00:00:00Z`);
+---
+
+<div class="downloads">
+  {heading && <h3 class="label">{heading}</h3>}
+  <ul>
+    {
+      manifest.downloads.map((download) => (
+        <li>
+          <a class="dl" href={download.href} download>
+            <span class="dl-file">{download.file}</span>
+            <span class="dl-label">{download.label}</span>
+            <span class="dl-desc">{download.description}</span>
+            <span class="dl-meta">
+              {download.size} · {manifest.chapterCount} chapters · built{' '}
+              <time datetime={manifest.builtOn}>{formatDate(builtOn)}</time>
+            </span>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+  <p class="note">
+    Both files carry a provenance header with the source URL, the licence and the build
+    date. They are regenerated on every deploy, so they never lag behind the pages.
+  </p>
+</div>
+
+<style>
+  .downloads ul {
+    list-style: none;
+    padding: 0;
+    margin: var(--space-4) 0 0;
+    display: grid;
+    gap: var(--space-4);
+    grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+  }
+
+  .dl {
+    display: grid;
+    gap: var(--space-2);
+    height: 100%;
+    padding: var(--space-4);
+    border: var(--hairline) solid var(--ink-line);
+    border-radius: var(--radius);
+    background: var(--ink-raised);
+    text-decoration: none;
+  }
+
+  .dl:hover {
+    border-color: var(--gold-dim);
+  }
+
+  .dl-file {
+    font-family: var(--font-mono);
+    font-size: var(--size-xs);
+    color: var(--gold);
+    letter-spacing: 0.04em;
+  }
+
+  .dl-label {
+    color: var(--bone);
+    font-size: var(--size-base);
+    line-height: 1.35;
+  }
+
+  .dl-desc {
+    color: var(--bone-dim);
+    font-size: var(--size-sm);
+  }
+
+  .dl-meta {
+    font-family: var(--font-mono);
+    font-size: var(--size-xs);
+    color: var(--gold-dim);
+    margin-top: auto;
+    padding-top: var(--space-2);
+    border-top: var(--hairline) solid var(--ink-line);
+  }
+
+  .note {
+    margin-top: var(--space-4);
+    font-size: var(--size-sm);
+    color: var(--bone-dim);
+    max-width: var(--measure);
+  }
+</style>

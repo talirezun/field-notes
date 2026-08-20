@@ -1,0 +1,80 @@
+---
+import Base from './Base.astro';
+import { render, type CollectionEntry } from 'astro:content';
+import { AUTHOR, SITE_URL, isoDate, formatDate } from '../lib/site';
+
+interface Props {
+  page: CollectionEntry<'pages'>;
+}
+
+const { page } = Astro.props;
+const { Content } = await render(page);
+const path = `/${page.data.slug}`;
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  '@id': `${SITE_URL}${path}`,
+  name: page.data.title,
+  description: page.data.description,
+  url: `${SITE_URL}${path}`,
+  dateModified: isoDate(page.data.updated),
+  inLanguage: 'en',
+  isPartOf: { '@type': 'WebSite', '@id': `${SITE_URL}#website` },
+  author: {
+    '@type': 'Person',
+    '@id': `${SITE_URL}#person`,
+    name: AUTHOR.name,
+    jobTitle: AUTHOR.jobTitle,
+    affiliation: { '@type': 'Organization', name: AUTHOR.affiliation },
+    url: AUTHOR.homepage,
+    sameAs: [...AUTHOR.sameAs],
+  },
+};
+---
+
+<Base
+  title={page.data.title}
+  description={page.data.description}
+  path={path}
+  updated={page.data.updated}
+  schema={schema}
+>
+  <div class="shell page">
+    <header class="page-head">
+      <h1>{page.data.title}</h1>
+      <p class="meta">
+        Updated <time datetime={isoDate(page.data.updated)}>{formatDate(page.data.updated)}</time>
+      </p>
+    </header>
+    <div class="prose">
+      <Content />
+    </div>
+  </div>
+</Base>
+
+<style>
+  .page {
+    padding-top: var(--space-7);
+    padding-bottom: var(--space-8);
+  }
+
+  .page-head {
+    max-width: var(--measure);
+    margin-bottom: var(--space-6);
+    padding-bottom: var(--space-4);
+    border-bottom: var(--hairline) solid var(--ink-line);
+  }
+
+  .page-head h1 {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 900;
+    font-size: var(--size-2xl);
+    letter-spacing: -0.015em;
+  }
+
+  .page-head .meta {
+    margin-top: var(--space-3);
+  }
+</style>

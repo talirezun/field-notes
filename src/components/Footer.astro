@@ -1,0 +1,125 @@
+---
+import { SOCIALS, LINKS, LICENSES, AUTHOR, SITE } from '../lib/site';
+import SocialIcon from './SocialIcon.astro';
+
+const year = new Date().getUTCFullYear();
+---
+
+<footer class="site-footer">
+  <div class="shell">
+    <div class="rule-label" role="separator" aria-label="Field Notes"><span>Field Notes</span></div>
+
+    <div class="cols">
+      <section class="col">
+        <h3 class="label">Elsewhere</h3>
+        <ul class="links">
+          {
+            SOCIALS.map((social) => (
+              <li>
+                <a href={social.href} rel="me noopener" target="_blank">
+                  <SocialIcon icon={social.icon} size={15} />
+                  <span>{social.label}</span>
+                </a>
+              </li>
+            ))
+          }
+          <li>
+            <a href={LINKS.personalSite}>talirezun.com</a>
+          </li>
+        </ul>
+      </section>
+
+      <section class="col">
+        <h3 class="label">The corpus</h3>
+        <ul class="links">
+          <li><a href="/the-curator">Take it into The Curator</a></li>
+          <li><a href="/downloads/field-notes-complete.md">Complete corpus (markdown)</a></li>
+          <li><a href="/llms.txt">llms.txt</a></li>
+          <li><a href="/sitemap-index.xml">Sitemap</a></li>
+        </ul>
+      </section>
+
+      <section class="col">
+        <h3 class="label">Found an error?</h3>
+        <p class="note">
+          Corrections are welcome and go straight into the chapter file. Additions
+          are my call.
+        </p>
+        <ul class="links">
+          <li><a href={LINKS.corrections}>How to file a correction</a></li>
+          <li><a href={LINKS.repo}>Source on GitHub</a></li>
+        </ul>
+      </section>
+    </div>
+
+    <div class="colophon">
+      <p class="meta">
+        © {year} {AUTHOR.name}. {SITE.name} content is licensed
+        <a href={LICENSES.content.href} rel="license">{LICENSES.content.name}</a>. The site
+        code is <a href={LICENSES.code.href} rel="license">{LICENSES.code.name}</a>.
+      </p>
+      <p class="meta">Built with markdown in git. No CMS, no database, no cookies.</p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    margin-top: var(--space-9);
+    padding-bottom: var(--space-7);
+    border-top: var(--hairline) solid var(--ink-line);
+  }
+
+  .cols {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    gap: var(--space-6);
+    margin-top: var(--space-5);
+  }
+
+  .col h3 {
+    margin-bottom: var(--space-3);
+  }
+
+  .links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  .links a {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--size-sm);
+    text-decoration: none;
+    color: var(--bone);
+  }
+
+  .links a:hover {
+    color: var(--gold-bright);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  .note {
+    font-size: var(--size-sm);
+    color: var(--bone-dim);
+    margin-bottom: var(--space-3);
+    max-width: 26rem;
+  }
+
+  .colophon {
+    margin-top: var(--space-7);
+    padding-top: var(--space-4);
+    border-top: var(--hairline) solid var(--ink-line);
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  .colophon a {
+    color: var(--gold-bright);
+  }
+</style>

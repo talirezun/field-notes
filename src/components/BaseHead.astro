@@ -1,0 +1,95 @@
+---
+import { SITE, SITE_URL, AUTHOR } from '../lib/site';
+import JsonLd from './JsonLd.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Canonical path, e.g. "/context-engineering". */
+  path: string;
+  /** Raw markdown alternate for models and agents (§6.4). */
+  markdownPath?: string;
+  schema?: Record<string, unknown> | Record<string, unknown>[];
+  updated?: Date;
+}
+
+const { title, description, path, markdownPath, schema, updated } = Astro.props;
+
+const canonical = new URL(path, SITE_URL).href;
+const fullTitle =
+  path === '/' ? `${SITE.name} · ${AUTHOR.name}` : `${title} · ${SITE.name}`;
+const beacon = import.meta.env.PUBLIC_CF_BEACON_TOKEN;
+---
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>{fullTitle}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+<meta name="author" content={AUTHOR.name} />
+<meta name="generator" content={Astro.generator} />
+<meta name="color-scheme" content="dark" />
+<meta name="theme-color" content="#100E0B" />
+
+{/* Raw markdown for models and agents. */}
+{
+  markdownPath && (
+    <link
+      rel="alternate"
+      type="text/markdown"
+      href={new URL(markdownPath, SITE_URL).href}
+      title={`${title} as markdown`}
+    />
+  )
+}
+
+<meta property="og:type" content={path === '/' ? 'website' : 'article'} />
+<meta property="og:site_name" content={SITE.name} />
+<meta property="og:title" content={fullTitle} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:locale" content="en_GB" />
+{updated && <meta property="article:modified_time" content={updated.toISOString()} />}
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:creator" content="@talirezun" />
+
+<link rel="sitemap" href="/sitemap-index.xml" />
+<link rel="alternate" type="text/plain" href={`${SITE_URL}/llms.txt`} title="llms.txt" />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+
+{/* Self-hosted, no font CDN. Preload only the faces above the fold. */}
+<link
+  rel="preload"
+  href="/fonts/ibm-plex-sans-latin-400-normal.woff2"
+  as="font"
+  type="font/woff2"
+  crossorigin
+/>
+<link
+  rel="preload"
+  href="/fonts/ibm-plex-mono-latin-400-normal.woff2"
+  as="font"
+  type="font/woff2"
+  crossorigin
+/>
+<link
+  rel="preload"
+  href="/fonts/playfair-display-latin-900-italic.woff2"
+  as="font"
+  type="font/woff2"
+  crossorigin
+/>
+
+{schema && <JsonLd schema={schema} />}
+
+{/* Cloudflare Web Analytics. No cookies, so no consent banner. */}
+{
+  beacon && (
+    <script
+      is:inline
+      defer
+      src="https://static.cloudflareinsights.com/beacon.min.js"
+      data-cf-beacon={`{"token": "${beacon}"}`}
+    />
+  )
+}

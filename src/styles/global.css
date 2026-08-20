@@ -1,0 +1,331 @@
+@import './tokens.css';
+@import './fonts.css';
+
+/* ---------------------------------------------------------------- reset -- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+  scroll-padding-top: var(--space-7);
+  color-scheme: dark;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+body {
+  background: var(--ink);
+  color: var(--bone);
+  font-family: var(--font-body);
+  font-size: var(--size-base);
+  line-height: var(--leading-body);
+  font-synthesis-weight: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+img,
+svg,
+video {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+/* --------------------------------------------------------------- typo --- */
+
+h1,
+h2,
+h3,
+h4 {
+  line-height: var(--leading-tight);
+  text-wrap: balance;
+  font-weight: 600;
+}
+
+a {
+  color: var(--gold-bright);
+  text-decoration-color: var(--gold-dim);
+  text-underline-offset: 0.2em;
+  text-decoration-thickness: 1px;
+}
+
+a:hover {
+  text-decoration-color: var(--gold-bright);
+}
+
+:focus-visible {
+  outline: 2px solid var(--gold-bright);
+  outline-offset: 3px;
+  border-radius: var(--radius);
+}
+
+::selection {
+  background: var(--gold-dim);
+  color: var(--bone);
+}
+
+code,
+kbd,
+samp,
+pre {
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+}
+
+:not(pre) > code {
+  background: var(--ink-raised);
+  border: var(--hairline) solid var(--ink-line);
+  border-radius: var(--radius);
+  padding: 0.1em 0.35em;
+  color: var(--bone);
+}
+
+hr {
+  border: 0;
+  border-top: var(--hairline) solid var(--ink-line);
+  margin: var(--space-6) 0;
+}
+
+/* -------------------------------------------------------------- layout -- */
+
+.shell {
+  width: 100%;
+  max-width: var(--shell);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.measure {
+  max-width: var(--measure);
+}
+
+main {
+  flex: 1 0 auto;
+}
+
+.skip-link {
+  position: absolute;
+  left: var(--space-4);
+  top: var(--space-4);
+  z-index: 100;
+  transform: translateY(-200%);
+  background: var(--ink-raised);
+  border: var(--hairline) solid var(--gold);
+  color: var(--bone);
+  padding: var(--space-2) var(--space-4);
+  font-family: var(--font-mono);
+  font-size: var(--size-sm);
+  text-decoration: none;
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+/* ------------------------------------------------- structural devices --- */
+
+/*
+  The centred hairline-with-label divider, inherited from talirezun.com. It is
+  the same device, inverted. Two sites, one family.
+*/
+.rule-label {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: var(--space-4);
+  margin: var(--space-7) 0 var(--space-5);
+}
+
+.rule-label::before,
+.rule-label::after {
+  content: '';
+  height: var(--hairline);
+  background: var(--gold-dim);
+}
+
+.rule-label > span {
+  font-family: var(--font-mono);
+  font-size: var(--size-xs);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--gold);
+  white-space: nowrap;
+}
+
+/*
+  The offset block, also inherited: a hairline-bordered box with a solid gold
+  block sitting behind it, shifted down and right. A box-shadow with no blur is
+  the offset block, and it paints outside the border box without any stacking
+  context to get wrong.
+*/
+.offset-block {
+  position: relative;
+  border: var(--hairline) solid var(--ink-line);
+  background: var(--ink-raised);
+  padding: var(--space-5);
+  box-shadow: 7px 7px 0 0 var(--gold-dim);
+}
+
+/* Label used above blocks and in metadata rows. */
+.label {
+  font-family: var(--font-mono);
+  font-size: var(--size-xs);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.meta {
+  font-family: var(--font-mono);
+  font-size: var(--size-xs);
+  color: var(--bone-dim);
+}
+
+/* ---------------------------------------------------------------- prose -- */
+
+.prose {
+  max-width: var(--measure);
+}
+
+.prose > * + * {
+  margin-top: var(--space-4);
+}
+
+.prose p {
+  hyphens: auto;
+}
+
+.prose h2 {
+  font-size: var(--size-xl);
+  margin-top: var(--space-7);
+  color: var(--bone);
+}
+
+.prose h3 {
+  font-size: var(--size-lg);
+  margin-top: var(--space-6);
+  color: var(--gold-bright);
+}
+
+.prose ul,
+.prose ol {
+  padding-left: var(--space-5);
+}
+
+.prose li + li {
+  margin-top: var(--space-2);
+}
+
+.prose li::marker {
+  color: var(--gold-dim);
+}
+
+.prose blockquote {
+  border-left: 2px solid var(--gold-dim);
+  padding-left: var(--space-4);
+  color: var(--bone-dim);
+  font-style: italic;
+}
+
+.prose strong {
+  font-weight: 600;
+  color: #fff;
+}
+
+.prose pre {
+  background: var(--ink-raised) !important;
+  border: var(--hairline) solid var(--ink-line);
+  border-radius: var(--radius);
+  padding: var(--space-4);
+  overflow-x: auto;
+  font-size: var(--size-sm);
+  line-height: 1.55;
+}
+
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--size-sm);
+  display: block;
+  overflow-x: auto;
+}
+
+.prose th,
+.prose td {
+  border-bottom: var(--hairline) solid var(--ink-line);
+  padding: var(--space-2) var(--space-3);
+  text-align: left;
+  vertical-align: top;
+}
+
+.prose th {
+  font-family: var(--font-mono);
+  font-size: var(--size-xs);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--gold);
+  font-weight: 400;
+}
+
+/* Anchored headings: the link is the heading, revealed on hover or focus. */
+.anchor {
+  color: var(--gold-dim);
+  text-decoration: none;
+  margin-left: 0.4em;
+  opacity: 0;
+  font-weight: 400;
+  transition: opacity 120ms ease;
+}
+
+h2:hover > .anchor,
+h3:hover > .anchor,
+.anchor:focus-visible {
+  opacity: 1;
+}
+
+/* --------------------------------------------------------------- utils -- */
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.stack-4 > * + * {
+  margin-top: var(--space-4);
+}
+.stack-5 > * + * {
+  margin-top: var(--space-5);
+}
+.stack-6 > * + * {
+  margin-top: var(--space-6);
+}

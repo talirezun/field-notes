@@ -1,0 +1,23 @@
+# build output
+dist/
+.astro/
+
+# generated corpus artefacts (built by scripts/prebuild.ts, never committed)
+public/downloads/
+public/llms.txt
+public/fonts/
+
+# deps
+node_modules/
+
+# env
+.env
+.env.production
+
+# macOS
+.DS_Store
+src/generated/
+
+# The build brief is a private working document. It contains internal notes that
+# must not be published, and this repository is public.
+FIELD-NOTES-BUILD-SPEC.md

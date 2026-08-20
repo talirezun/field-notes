@@ -1,0 +1,39 @@
+---
+/**
+ * The centred hairline-with-label divider, inherited from talirezun.com.
+ *
+ * Pass `as="h2"` where the label is genuinely the section's heading, so the
+ * device carries the document outline instead of faking one with a separator.
+ */
+interface Props {
+  label: string;
+  id?: string;
+  as?: 'span' | 'h2' | 'h3';
+}
+const { label, id, as = 'span' } = Astro.props;
+const Tag = as;
+const isHeading = as !== 'span';
+---
+
+<div
+  class="rule-label"
+  id={isHeading ? undefined : id}
+  role={isHeading ? undefined : 'separator'}
+  aria-label={isHeading ? undefined : label}
+>
+  <Tag id={isHeading ? id : undefined}>{label}</Tag>
+</div>
+
+<style>
+  .rule-label > :global(h2),
+  .rule-label > :global(h3) {
+    font-family: var(--font-mono);
+    font-size: var(--size-xs);
+    font-weight: 400;
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--gold);
+    white-space: nowrap;
+    line-height: 1.6;
+  }
+</style>

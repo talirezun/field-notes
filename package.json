@@ -1,0 +1,30 @@
+{
+  "name": "field-notes",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Field notes from real builds, not vendor marketing. Dr. Tali Rezun.",
+  "scripts": {
+    "prebuild": "tsx scripts/prebuild.ts",
+    "build": "astro build",
+    "predev": "tsx scripts/prebuild.ts",
+    "dev": "astro dev",
+    "preview": "astro preview",
+    "check": "astro check",
+    "build:corpus": "tsx scripts/prebuild.ts"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.3",
+    "@fontsource/ibm-plex-mono": "^5.2.6",
+    "@fontsource/ibm-plex-sans": "^5.2.6",
+    "@fontsource/playfair-display": "^5.2.6",
+    "astro": "^7.2.4",
+    "gray-matter": "^4.0.3",
+    "jszip": "^3.10.1",
+    "tsx": "^4.20.6"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "typescript": "^5.9.2"
+  }
+}

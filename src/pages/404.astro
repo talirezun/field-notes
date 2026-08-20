@@ -1,0 +1,82 @@
+---
+import Base from '../layouts/Base.astro';
+import { getChapters } from '../lib/chapters';
+
+const chapters = await getChapters();
+---
+
+<Base
+  title="Not found"
+  description="That page is not here. The chapter index is, and so is the whole corpus as a download."
+  path="/404"
+>
+  <div class="shell notfound">
+    <p class="label">404</p>
+    <h1>That page is not here.</h1>
+    <p class="body">
+      Anchors on this site are permanent, so a broken link into a chapter is a bug worth
+      telling me about. Everything else, start from the index.
+    </p>
+    <ul class="list">
+      {
+        chapters.map((chapter) => (
+          <li>
+            <a href={`/${chapter.data.slug}`}>
+              <span class="num">{String(chapter.data.number).padStart(2, '0')}</span>
+              {chapter.data.title}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+    <p class="body">
+      Or take <a href="/downloads/field-notes-complete.md">the whole corpus as one markdown
+      file</a> and search it yourself.
+    </p>
+  </div>
+</Base>
+
+<style>
+  .notfound {
+    padding-block: var(--space-8);
+    max-width: var(--measure);
+  }
+
+  h1 {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 900;
+    font-size: var(--size-2xl);
+    margin-top: var(--space-3);
+  }
+
+  .body {
+    margin-top: var(--space-4);
+    color: var(--bone-dim);
+  }
+
+  .list {
+    list-style: none;
+    padding: 0;
+    margin: var(--space-6) 0 0;
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  .list a {
+    font-family: var(--font-mono);
+    font-size: var(--size-sm);
+    text-decoration: none;
+    color: var(--bone);
+    display: flex;
+    gap: var(--space-3);
+  }
+
+  .list a:hover {
+    color: var(--gold-bright);
+  }
+
+  .num {
+    color: var(--gold-dim);
+  }
+</style>

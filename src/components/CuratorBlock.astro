@@ -1,0 +1,74 @@
+---
+import { LINKS } from '../lib/site';
+
+interface Props {
+  /** Chapter slug, so the block can offer this chapter as markdown. */
+  slug?: string;
+  title?: string;
+}
+const { slug, title } = Astro.props;
+---
+
+<aside class="curator" aria-label="Take this into The Curator">
+  <div class="offset-block">
+    <p class="label">Take it with you</p>
+    <p class="body">
+      This corpus was written and maintained in <a href="/the-curator">The Curator</a>, an
+      open-source second brain that turns documents into an interlinked wiki and serves it
+      to a frontier model over MCP. You can ingest these notes into your own copy and
+      question them directly.
+    </p>
+    <p class="actions">
+      {
+        slug && (
+          <a class="action" href={`/${slug}.md`} data-track="chapter-md">
+            {title ?? 'This chapter'} as markdown
+          </a>
+        )
+      }
+      <a class="action" href="/the-curator">How to ingest the corpus</a>
+      <a class="action" href={LINKS.curatorRepo} target="_blank" rel="noopener">
+        ⭐ Star The Curator on GitHub
+      </a>
+    </p>
+  </div>
+</aside>
+
+<style>
+  .curator {
+    margin-top: var(--space-8);
+    max-width: var(--measure);
+  }
+
+  .body {
+    font-size: var(--size-sm);
+    color: var(--bone-dim);
+    margin-top: var(--space-3);
+  }
+
+  .body a {
+    color: var(--gold-bright);
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2) var(--space-4);
+    margin-top: var(--space-4);
+  }
+
+  .action {
+    font-family: var(--font-mono);
+    font-size: var(--size-xs);
+    letter-spacing: 0.05em;
+    color: var(--gold);
+    text-decoration: none;
+    border-bottom: var(--hairline) solid var(--gold-dim);
+    padding-bottom: 2px;
+  }
+
+  .action:hover {
+    color: var(--gold-bright);
+    border-bottom-color: var(--gold-bright);
+  }
+</style>

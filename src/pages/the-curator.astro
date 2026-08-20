@@ -1,0 +1,330 @@
+---
+import Base from '../layouts/Base.astro';
+import RuleLabel from '../components/RuleLabel.astro';
+import CopyBlock from '../components/CopyBlock.astro';
+import Downloads from '../components/Downloads.astro';
+import { LINKS, SITE_URL, AUTHOR, isoDate } from '../lib/site';
+
+const updated = new Date('2026-08-20T00:00:00Z');
+const path = '/the-curator';
+
+const description =
+  'The Curator is a local, open-source second brain: drop in documents, get an interlinked wiki, query it from a frontier model over MCP. Here is how to install it and ingest this corpus.';
+
+const agentPrompt = `Install The Curator on this machine.
+
+Repo: ${LINKS.curatorRepo}
+
+Do this:
+1. Clone the repo into a sensible directory and read its README before running anything.
+2. Check I have Node 18 or newer. Tell me if I do not, and stop.
+3. Install dependencies and start the server.
+4. Tell me the local URL to open, and what the onboarding wizard will ask me for.
+
+Do not add an API key yourself. Tell me where to paste mine and stop there.`;
+
+const queries = [
+  {
+    label: 'Trace a claim to its sources',
+    text: 'Across the Field Notes corpus, what does the author say fails most often in phase two of a build, and which sources back that up? Quote the specific passages and name the chapter each one came from.',
+  },
+  {
+    label: 'Find the disagreements',
+    text: 'Read the whole Field Notes corpus and find places where the author contradicts himself, or where a later chapter revises a position taken in an earlier one. List each one with both passages.',
+  },
+  {
+    label: 'Apply it to your own situation',
+    text: 'Using only the Field Notes corpus, draft the first ninety days of an AI adoption plan for a 300-person European manufacturer with no in-house ML team. Flag every point where the corpus does not actually cover the question, rather than filling the gap yourself.',
+  },
+  {
+    label: 'Pressure-test it',
+    text: 'Take the strongest claim in the Field Notes corpus about agent memory and argue against it. Use only evidence from the corpus itself, and say clearly where the corpus gives you nothing to argue with.',
+  },
+];
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: 'Ingest the Field Notes corpus into The Curator',
+  description,
+  url: `${SITE_URL}${path}`,
+  dateModified: isoDate(updated),
+  author: {
+    '@type': 'Person',
+    name: AUTHOR.name,
+    jobTitle: AUTHOR.jobTitle,
+    affiliation: { '@type': 'Organization', name: AUTHOR.affiliation },
+    url: AUTHOR.homepage,
+    sameAs: [...AUTHOR.sameAs],
+  },
+  step: [
+    { '@type': 'HowToStep', name: 'Install The Curator', url: `${SITE_URL}${path}#install` },
+    { '@type': 'HowToStep', name: 'Add an API key', url: `${SITE_URL}${path}#ingest` },
+    { '@type': 'HowToStep', name: 'Create a domain', url: `${SITE_URL}${path}#ingest` },
+    { '@type': 'HowToStep', name: 'Download and unzip the corpus', url: `${SITE_URL}${path}#ingest` },
+    { '@type': 'HowToStep', name: 'Drop each file into the Ingest tab', url: `${SITE_URL}${path}#ingest` },
+    { '@type': 'HowToStep', name: 'Query it', url: `${SITE_URL}${path}#query` },
+  ],
+};
+---
+
+<Base title="The Curator" description={description} path={path} updated={updated} schema={schema}>
+  <div class="shell page">
+    <header class="head measure">
+      <p class="label">The tool behind the corpus</p>
+      <h1>The Curator</h1>
+      <p class="lede">
+        A second brain that lives on your machine, reads your documents, and hands the
+        result to a frontier model when you ask it a question.
+      </p>
+      <p class="meta">
+        MIT licensed · <a href={LINKS.curatorRepo} target="_blank" rel="noopener">
+          github.com/talirezun/the-curator
+        </a>
+      </p>
+      <p class="badge">
+        <a href={LINKS.curatorRepo} target="_blank" rel="noopener">
+          <img
+            src="https://img.shields.io/github/stars/talirezun/the-curator?style=flat-square&label=stars&color=A89372&labelColor=1A1713"
+            alt="GitHub stars for talirezun/the-curator"
+            height="20"
+            loading="lazy"
+          />
+        </a>
+      </p>
+    </header>
+
+    <section class="measure stack-4" aria-labelledby="what">
+      <RuleLabel as="h2" label="What it is" id="what" />
+      <p>
+        You drop a PDF, an article or a markdown file into it. It reads the document and
+        writes a wiki: one note per entity, one per concept, one summary per source, all
+        linked to each other. Everything stays as plain markdown in a folder on your own
+        machine, which means you can read it, edit it, back it up and take it somewhere
+        else.
+      </p>
+      <p>
+        The part that matters is the other end. It runs a built-in MCP server, so a
+        frontier model can search and read that wiki as a tool rather than being fed a
+        wall of pasted text. You ask a question in Claude Desktop, it goes and looks
+        things up in your notes, and it answers with your own material and citations back
+        to the source.
+      </p>
+      <p class="caveat">
+        <strong>Be clear about the dependency.</strong> It needs a Google Gemini or an
+        Anthropic API key for ingestion and the health features. There is no version of
+        this that runs on nothing. Gemini has a free tier that comfortably covers trying
+        it out, and realistic ongoing cost is a few euros a month.
+      </p>
+    </section>
+
+    <section class="measure stack-4" aria-labelledby="why">
+      <RuleLabel as="h2" label="Why it is on this site" id="why" />
+      <p>
+        The corpus you are reading was built and is maintained in it. Every chapter here
+        started as notes in that graph and was edited down by hand.
+      </p>
+      <p>
+        So ingesting this corpus is two things at once. It gives you a queryable version of
+        everything I have worked out, and it is a genuine first run of the tool on real
+        material rather than on a demo file. That is a better demonstration than anything I
+        could write about it.
+      </p>
+    </section>
+
+    <section class="measure stack-4" aria-labelledby="install">
+      <RuleLabel as="h2" label="Install" id="install" />
+      <p>On macOS, one line:</p>
+      <CopyBlock
+        label="macOS"
+        code="curl -fsSL https://raw.githubusercontent.com/talirezun/the-curator/main/install.sh | bash"
+      />
+      <p class="note">
+        That script is readable at the URL above. Read it before you run it, the same as
+        you would with anyone else's install script.
+      </p>
+      <p>
+        On Windows and Linux, it is a manual setup: Node 18 or newer, clone the repo,
+        <code>npm install</code>, <code>node src/server.js</code>, then open
+        <code>localhost:3333</code>. The canonical steps are in the repo:
+      </p>
+      <p>
+        <a class="out" href={LINKS.curatorManualSetup} target="_blank" rel="noopener">
+          Manual setup for Windows, Linux and Mac
+        </a>
+      </p>
+    </section>
+
+    <section class="measure stack-4" aria-labelledby="agent-install">
+      <RuleLabel as="h2" label="Install it with a coding agent" id="agent-install" />
+      <p>
+        If you already have Claude Code, Cursor, OpenCode, Augment or Cline running, hand
+        it this and let it do the work. The canonical version of this prompt lives in the
+        User Guide in the repo, and it is mirrored here so you do not have to leave the
+        page.
+      </p>
+      <CopyBlock label="Paste into your coding agent" variant="prompt" code={agentPrompt} />
+      <p>
+        <a class="out" href={LINKS.curatorAgentInstall} target="_blank" rel="noopener">
+          User Guide §20, the canonical agent install prompt
+        </a>
+      </p>
+    </section>
+
+    <section class="stack-4" aria-labelledby="ingest">
+      <RuleLabel as="h2" label="Ingest this corpus" id="ingest" />
+      <div class="measure stack-4">
+        <p>
+          The Curator builds a wiki from source documents, so what you are handing it is
+          the markdown, not a pre-built graph. Nine files, a few minutes, and the tool does
+          the rest. That is the accurate description and it is also the better demo.
+        </p>
+        <ol class="steps">
+          <li>Install it, using either route above.</li>
+          <li>Add your Gemini or Anthropic API key in the onboarding wizard.</li>
+          <li>Create a domain. The ⚙️ Tech/AI template fits this corpus.</li>
+          <li>Download the chapters zip below and unzip it.</li>
+          <li>Drop each <code>.md</code> file into the Ingest tab.</li>
+          <li>
+            Open the Chat tab, or connect the My Curator MCP bridge from Settings and query
+            it from Claude Desktop.
+          </li>
+        </ol>
+        <p class="caveat">
+          Cost, honestly: ingesting nine chapters is a small number of model calls. It sits
+          comfortably inside Gemini's free tier as a one-off, and it is cents on a paid
+          key.
+        </p>
+      </div>
+      <Downloads heading="The corpus" />
+    </section>
+
+    <section class="measure stack-4" aria-labelledby="query">
+      <RuleLabel as="h2" label="Then ask it something" id="query" />
+      <p>
+        Once the MCP bridge is connected, these go straight into Claude Desktop. They are
+        written to be worth running rather than to look impressive.
+      </p>
+      {queries.map((query) => <CopyBlock label={query.label} variant="prompt" code={query.text} />)}
+    </section>
+
+    <section class="measure stack-4" aria-labelledby="star">
+      <RuleLabel as="h2" label="If it is useful" id="star" />
+      <p>
+        It is free and MIT licensed and I maintain it in the open. A star is how these
+        things get found.
+      </p>
+      <p>
+        <a class="star" href={LINKS.curatorRepo} target="_blank" rel="noopener">
+          ⭐ Star The Curator on GitHub
+        </a>
+      </p>
+    </section>
+  </div>
+</Base>
+
+<style>
+  .page {
+    padding-top: var(--space-7);
+  }
+
+  .head {
+    margin-bottom: var(--space-7);
+  }
+
+  .head h1 {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 900;
+    font-size: var(--size-2xl);
+    letter-spacing: -0.015em;
+    margin-top: var(--space-2);
+  }
+
+  .lede {
+    font-size: var(--size-lg);
+    color: var(--gold-bright);
+    margin-top: var(--space-4);
+    text-wrap: pretty;
+  }
+
+  .head .meta {
+    margin-top: var(--space-4);
+  }
+
+  .head .meta a {
+    color: var(--bone-dim);
+  }
+
+  .badge {
+    margin-top: var(--space-3);
+  }
+
+  /* Width varies with the star count, which is the point of a live badge. */
+  .badge img {
+    height: 20px;
+    width: auto;
+    border-radius: var(--radius);
+  }
+
+  section {
+    margin-bottom: var(--space-8);
+  }
+
+  .caveat {
+    padding: var(--space-4);
+    border-left: 2px solid var(--gold-dim);
+    background: var(--ink-raised);
+    font-size: var(--size-sm);
+    color: var(--bone-dim);
+  }
+
+  .caveat strong {
+    color: var(--gold-bright);
+  }
+
+  .note {
+    font-size: var(--size-sm);
+    color: var(--bone-dim);
+  }
+
+  .steps {
+    padding-left: var(--space-5);
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  .steps li::marker {
+    color: var(--gold-dim);
+    font-family: var(--font-mono);
+    font-size: var(--size-sm);
+  }
+
+  code {
+    background: var(--ink-raised);
+    border: var(--hairline) solid var(--ink-line);
+    border-radius: var(--radius);
+    padding: 0.1em 0.35em;
+  }
+
+  .out,
+  .star {
+    font-family: var(--font-mono);
+    font-size: var(--size-sm);
+    color: var(--gold);
+    text-decoration: none;
+    border-bottom: var(--hairline) solid var(--gold-dim);
+    padding-bottom: 3px;
+  }
+
+  .out:hover,
+  .star:hover {
+    color: var(--gold-bright);
+    border-bottom-color: var(--gold-bright);
+  }
+
+  .star {
+    display: inline-block;
+    font-size: var(--size-base);
+  }
+</style>

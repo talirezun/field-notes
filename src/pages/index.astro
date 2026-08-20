@@ -1,0 +1,342 @@
+---
+import Base from '../layouts/Base.astro';
+import RuleLabel from '../components/RuleLabel.astro';
+import Downloads from '../components/Downloads.astro';
+import { getChapters, splitChapter } from '../lib/chapters';
+import { SITE, SITE_URL, AUTHOR, LINKS, formatDate, isoDate } from '../lib/site';
+
+const chapters = await getChapters();
+const entries = chapters.map((chapter) => ({
+  chapter,
+  sections: splitChapter(chapter).sections,
+}));
+
+const lastUpdated = chapters.reduce(
+  (latest, chapter) => (chapter.data.updated > latest ? chapter.data.updated : latest),
+  chapters[0]!.data.updated,
+);
+
+const person = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  '@id': `${SITE_URL}#person`,
+  name: AUTHOR.name,
+  jobTitle: AUTHOR.jobTitle,
+  affiliation: { '@type': 'Organization', name: AUTHOR.affiliation },
+  url: AUTHOR.homepage,
+  sameAs: [...AUTHOR.sameAs],
+};
+
+const website = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  '@id': `${SITE_URL}#website`,
+  name: SITE.name,
+  alternateName: 'Field Notes by Dr. Tali Režun',
+  description: SITE.description,
+  url: SITE_URL,
+  inLanguage: 'en',
+  author: { '@id': `${SITE_URL}#person` },
+  publisher: { '@id': `${SITE_URL}#person` },
+  hasPart: chapters.map((chapter) => ({
+    '@type': 'Article',
+    '@id': `${SITE_URL}/${chapter.data.slug}#article`,
+    name: chapter.data.title,
+    url: `${SITE_URL}/${chapter.data.slug}`,
+    abstract: chapter.data.summary.trim(),
+  })),
+};
+---
+
+<Base
+  title={SITE.name}
+  description={SITE.description}
+  path="/"
+  markdownPath="/downloads/field-notes-complete.md"
+  updated={lastUpdated}
+  schema={[website, person]}
+>
+  <section class="hero">
+    <div class="shell">
+      <h1 class="display">Field Notes</h1>
+      <p class="tagline">{SITE.tagline}</p>
+      <div class="intro measure">
+        <p>
+          I have published roughly forty long-form articles, taught this material to
+          executive cohorts, and shipped software as someone who is not a developer. Those
+          essays are chronological and first person. They answer what happened to me.
+        </p>
+        <p>
+          This is the other axis. Topical, durable, and built to be extracted. Every chapter
+          answers a question, opens with the answer, and shows the published work it came
+          from in the margin. If a model reads one paragraph of it, that paragraph should
+          still be correct on its own.
+        </p>
+        <p class="meta">
+          Nothing here is republished from Substack or Medium. It is distilled across them,
+          and it links back.
+        </p>
+      </div>
+
+      <nav class="jump" aria-label="Jump to">
+        <a href="#chapters">The chapters</a>
+        <a href="#corpus">Take the corpus</a>
+        <a href="/the-curator">The Curator</a>
+      </nav>
+    </div>
+  </section>
+
+  <section class="chapters" id="chapters">
+    <div class="shell">
+      <RuleLabel as="h2" label={`${chapters.length} chapters`} />
+      <ol class="chapter-list">
+        {
+          entries.map(({ chapter, sections }) => (
+            <li class="chapter-card">
+              <a class="card-link" href={`/${chapter.data.slug}`}>
+                <span class="num">{String(chapter.data.number).padStart(2, '0')}</span>
+                <h3>{chapter.data.title}</h3>
+                <p class="q">{chapter.data.question}</p>
+              </a>
+              <p class="sum">{chapter.data.summary.trim()}</p>
+              {sections.length > 0 && (
+                <ul class="sections">
+                  {sections.map((section) => (
+                    <li>
+                      <a href={`/${chapter.data.slug}#${section.id}`}>{section.title}</a>
+                    </li>
+                  ))}
+                </ul>
+              )}
+              <p class="card-meta">
+                <time datetime={isoDate(chapter.data.updated)}>
+                  Updated {formatDate(chapter.data.updated)}
+                </time>
+                <span> · </span>
+                <a href={`/${chapter.data.slug}.md`}>{chapter.data.slug}.md</a>
+                {chapter.data.status === 'scaffold' && (
+                  <>
+                    <span> · </span>
+                    <span class="flag">scaffold, body pending</span>
+                  </>
+                )}
+              </p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="corpus" id="corpus">
+    <div class="shell">
+      <RuleLabel as="h2" label="Take the corpus" />
+      <div class="measure stack-4">
+        <h3 class="corpus-head">The whole thing is a download, and that is deliberate.</h3>
+        <p>
+          These notes were written and kept in <a href="/the-curator">The Curator</a>, my
+          open-source second brain. It reads documents, writes an interlinked wiki of
+          entities and concepts, and serves that wiki to a frontier model over MCP.
+          Everything stays as markdown on your own machine.
+        </p>
+        <p>
+          So take the corpus. Ingest it into your own copy and ask it questions I have not
+          thought to answer. That is a better demonstration of the tool than anything I
+          could write about it.
+        </p>
+      </div>
+      <Downloads />
+      <p class="corpus-links">
+        <a href="/the-curator">Step-by-step: install and ingest</a>
+        <a href={LINKS.curatorRepo} target="_blank" rel="noopener">
+          ⭐ Star The Curator on GitHub
+        </a>
+        <a href="/llms.txt">llms.txt</a>
+      </p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .hero {
+    padding-top: var(--space-8);
+  }
+
+  .display {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 900;
+    font-size: var(--size-3xl);
+    letter-spacing: -0.02em;
+    line-height: 0.95;
+  }
+
+  .tagline {
+    font-family: var(--font-mono);
+    font-size: var(--size-sm);
+    letter-spacing: 0.06em;
+    color: var(--gold);
+    margin-top: var(--space-4);
+    padding-top: var(--space-4);
+    border-top: var(--hairline) solid var(--gold-dim);
+    max-width: var(--measure);
+  }
+
+  .intro {
+    margin-top: var(--space-6);
+  }
+
+  .intro > * + * {
+    margin-top: var(--space-4);
+  }
+
+  .jump {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+    margin-top: var(--space-6);
+  }
+
+  .jump a,
+  .corpus-links a {
+    font-family: var(--font-mono);
+    font-size: var(--size-xs);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--gold);
+    text-decoration: none;
+    border-bottom: var(--hairline) solid var(--gold-dim);
+    padding-bottom: 3px;
+  }
+
+  .jump a:hover,
+  .corpus-links a:hover {
+    color: var(--gold-bright);
+    border-bottom-color: var(--gold-bright);
+  }
+
+  .chapters {
+    margin-top: var(--space-8);
+  }
+
+  .chapter-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 0;
+  }
+
+  .chapter-card {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-3);
+    padding: var(--space-6) 0;
+    border-bottom: var(--hairline) solid var(--ink-line);
+  }
+
+  @media (min-width: 62rem) {
+    .chapter-card {
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+      column-gap: var(--space-7);
+      align-items: start;
+    }
+
+    .card-link {
+      grid-row: span 3;
+    }
+  }
+
+  .card-link {
+    text-decoration: none;
+    display: grid;
+    gap: var(--space-2);
+    align-content: start;
+  }
+
+  .num {
+    font-family: var(--font-mono);
+    font-size: var(--size-xs);
+    color: var(--gold-dim);
+    letter-spacing: 0.1em;
+  }
+
+  .card-link h3 {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 900;
+    font-size: var(--size-xl);
+    color: var(--bone);
+    letter-spacing: -0.01em;
+  }
+
+  .card-link:hover h3 {
+    color: var(--gold-bright);
+  }
+
+  .q {
+    color: var(--gold);
+    font-size: var(--size-sm);
+    text-wrap: pretty;
+  }
+
+  .sum {
+    color: var(--bone-dim);
+    font-size: var(--size-sm);
+  }
+
+  .sections {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: var(--space-1);
+    border-left: var(--hairline) solid var(--ink-line);
+    padding-left: var(--space-4);
+  }
+
+  .sections a {
+    font-family: var(--font-mono);
+    font-size: var(--size-xs);
+    color: var(--bone-dim);
+    text-decoration: none;
+    line-height: 1.5;
+  }
+
+  .sections a:hover {
+    color: var(--gold-bright);
+  }
+
+  .card-meta {
+    font-family: var(--font-mono);
+    font-size: var(--size-xs);
+    color: var(--gold-dim);
+  }
+
+  .card-meta a {
+    color: var(--gold-dim);
+  }
+
+  .flag {
+    font-style: italic;
+  }
+
+  .corpus {
+    margin-top: var(--space-8);
+  }
+
+  .corpus-head {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 900;
+    font-size: var(--size-xl);
+    letter-spacing: -0.01em;
+  }
+
+  .corpus-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+    margin-top: var(--space-5);
+  }
+</style>

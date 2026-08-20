@@ -1,0 +1,130 @@
+---
+/**
+ * A command or prompt the reader is meant to run. Copy button included, because
+ * a command you have to select by hand is a command people get wrong.
+ */
+interface Props {
+  label?: string;
+  /** The exact text copied to the clipboard. */
+  code: string;
+  /** "shell" sets the block in mono at a smaller size; "prompt" wraps prose. */
+  variant?: 'shell' | 'prompt';
+}
+const { label, code, variant = 'shell' } = Astro.props;
+const text = code.trim();
+---
+
+<figure class={`copy-block ${variant}`}>
+  {label && <figcaption class="label">{label}</figcaption>}
+  <div class="body">
+    <pre><code>{text}</code></pre>
+    <button type="button" class="copy" data-copy={text}>
+      <span class="copy-idle">Copy</span>
+      <span class="copy-done" aria-hidden="true">Copied</span>
+    </button>
+  </div>
+</figure>
+
+<style>
+  .copy-block {
+    margin: var(--space-5) 0;
+  }
+
+  .copy-block .label {
+    display: block;
+    margin-bottom: var(--space-2);
+  }
+
+  .body {
+    position: relative;
+    background: var(--ink-raised);
+    border: var(--hairline) solid var(--ink-line);
+    border-radius: var(--radius);
+  }
+
+  pre {
+    margin: 0;
+    padding: var(--space-4);
+    padding-right: 6rem;
+    font-family: var(--font-mono);
+    font-size: var(--size-sm);
+    line-height: 1.6;
+    color: var(--bone);
+    /* Wrap rather than scroll. What matters is that the copy is exact, and a
+       long one-liner behind a scrollbar is a command people get wrong. */
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+
+  .prompt pre {
+    white-space: pre-wrap;
+    word-break: break-word;
+    font-family: var(--font-body);
+    font-size: var(--size-sm);
+    color: var(--bone);
+  }
+
+  .copy {
+    position: absolute;
+    top: var(--space-2);
+    right: var(--space-2);
+    font-family: var(--font-mono);
+    font-size: var(--size-xs);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--gold);
+    background: var(--ink);
+    border: var(--hairline) solid var(--gold-dim);
+    border-radius: var(--radius);
+    padding: var(--space-1) var(--space-3);
+    cursor: pointer;
+    line-height: 1.6;
+  }
+
+  .copy:hover {
+    color: var(--gold-bright);
+    border-color: var(--gold-bright);
+  }
+
+  .copy-done {
+    display: none;
+  }
+
+  .copy[data-copied] .copy-idle {
+    display: none;
+  }
+
+  .copy[data-copied] .copy-done {
+    display: inline;
+  }
+</style>
+
+<script>
+  // One delegated listener for every copy button on the page.
+  document.addEventListener('click', async (event) => {
+    const target = event.target as HTMLElement | null;
+    const button = target?.closest<HTMLButtonElement>('button[data-copy]');
+    if (!button) return;
+
+    const text = button.dataset.copy ?? '';
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch {
+      // Clipboard API is unavailable or blocked. Select the text instead so the
+      // reader can copy it by hand rather than being told nothing happened.
+      const pre = button.parentElement?.querySelector('pre');
+      if (pre) {
+        const range = document.createRange();
+        range.selectNodeContents(pre);
+        const selection = window.getSelection();
+        selection?.removeAllRanges();
+        selection?.addRange(range);
+      }
+      return;
+    }
+
+    button.dataset.copied = 'true';
+    button.setAttribute('aria-live', 'polite');
+    window.setTimeout(() => delete button.dataset.copied, 1600);
+  });
+</script>

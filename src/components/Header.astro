@@ -1,0 +1,158 @@
+---
+import { SOCIALS, SITE } from '../lib/site';
+import SocialIcon from './SocialIcon.astro';
+
+interface Props {
+  path: string;
+}
+const { path } = Astro.props;
+
+const nav = [
+  { label: 'Chapters', href: '/#chapters' },
+  { label: 'The Curator', href: '/the-curator' },
+  { label: 'About', href: '/about' },
+  { label: 'Work with me', href: '/work-with-me' },
+];
+
+const isCurrent = (href: string) => href === path;
+---
+
+<header class="site-header">
+  <div class="shell bar">
+    <a class="wordmark" href="/" aria-label={`${SITE.name}, home`}>
+      <span class="wordmark-text">Field Notes</span>
+      <span class="wordmark-sub">Dr. Tali Režun</span>
+    </a>
+
+    <nav class="nav" aria-label="Primary">
+      <ul>
+        {
+          nav.map((item) => (
+            <li>
+              <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <nav class="socials" aria-label="Elsewhere">
+      <ul>
+        {
+          SOCIALS.map((social) => (
+            <li>
+              <a href={social.href} rel="me noopener" target="_blank">
+                <SocialIcon icon={social.icon} />
+                <span class="visually-hidden">{social.label}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    border-bottom: var(--hairline) solid var(--ink-line);
+    background: var(--ink);
+  }
+
+  .bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-4) var(--space-5);
+    padding-block: var(--space-4);
+  }
+
+  .wordmark {
+    text-decoration: none;
+    color: var(--bone);
+    display: flex;
+    flex-direction: column;
+    line-height: 1.05;
+    margin-right: auto;
+  }
+
+  .wordmark-text {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 900;
+    font-size: 1.5rem;
+    letter-spacing: -0.01em;
+  }
+
+  .wordmark-sub {
+    font-family: var(--font-mono);
+    font-size: var(--size-xs);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-top: 0.35em;
+  }
+
+  .nav ul,
+  .socials ul {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex-wrap: wrap;
+  }
+
+  .nav a {
+    font-family: var(--font-mono);
+    font-size: var(--size-xs);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--bone-dim);
+    text-decoration: none;
+    padding-block: var(--space-1);
+    border-bottom: var(--hairline) solid transparent;
+  }
+
+  .nav a:hover,
+  .nav a[aria-current='page'] {
+    color: var(--gold-bright);
+    border-bottom-color: var(--gold-dim);
+  }
+
+  .socials {
+    padding-left: var(--space-5);
+    border-left: var(--hairline) solid var(--ink-line);
+  }
+
+  .socials a {
+    color: var(--bone-dim);
+    display: block;
+  }
+
+  .socials a:hover {
+    color: var(--gold-bright);
+  }
+
+  @media (max-width: 46rem) {
+    .bar {
+      gap: var(--space-3) var(--space-4);
+    }
+    .wordmark {
+      margin-right: 0;
+      width: 100%;
+    }
+    .nav {
+      order: 3;
+      width: 100%;
+    }
+    .socials {
+      margin-left: auto;
+      padding-left: 0;
+      border-left: 0;
+    }
+  }
+</style>
