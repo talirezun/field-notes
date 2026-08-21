@@ -1,0 +1,37 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+
+  // Field Notes is a static site served as an assets-only Worker. There is no
+  // `main`, because there is no server-side code and there should not be. The
+  // whole site is HTML, markdown and fonts on disk.
+  "name": "field-notes",
+  "compatibility_date": "2026-08-21",
+
+  "assets": {
+    "directory": "./dist",
+
+    // Astro is configured with build.format "file" and trailingSlash "never",
+    // so dist holds about.html rather than about/index.html. drop-trailing-slash
+    // is the matching policy: /about serves about.html, and /about/ redirects to
+    // /about rather than becoming a second URL for the same page.
+    "html_handling": "drop-trailing-slash",
+
+    // dist/404.html, which lists the chapters. Anchors here are permanent, so a
+    // broken link into a chapter is a bug and the 404 page says so.
+    "not_found_handling": "404-page"
+  },
+
+  // Declared here rather than left to the dashboard, so the domain is part of
+  // the repo and a deploy is idempotent.
+  "routes": [{ "pattern": "fieldnotes.talirezun.com", "custom_domain": true }],
+
+  // One canonical host. A site whose entire claim is that it is stable enough
+  // to cite should not also be served from a second indexable URL, and every
+  // page here carries a canonical tag pointing at the custom domain.
+  "workers_dev": false,
+  "preview_urls": false,
+
+  "observability": {
+    "enabled": true
+  }
+}

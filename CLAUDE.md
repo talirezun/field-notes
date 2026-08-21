@@ -270,19 +270,30 @@ If one of these fires, fix the content. Do not soften the check.
 
 ## Deployment
 
-Cloudflare Pages, connected to this repo, production branch `main`.
+Cloudflare, as a **Worker with static assets**, not a Pages project. The Worker
+is `field-notes` and the repo is connected to Cloudflare Builds, so a push to
+`main` builds and deploys.
 
-- Build command `npm run build`, output directory `dist`, Node pinned by
-  `.nvmrc`.
-- The custom domain is added **from inside the Pages project**, which writes the
-  DNS record and provisions the certificate. Do not create the DNS record by
-  hand first, it will conflict.
-- Cloudflare Web Analytics is wired through the `PUBLIC_CF_BEACON_TOKEN`
-  environment variable. Without it, no beacon script is emitted at all. No
-  cookies either way, so no consent banner.
+`wrangler.jsonc` is the source of truth, not the dashboard. It owns the assets
+directory, the trailing-slash policy, the 404 page and the custom domain.
+
+- Build command `npm run build`, deploy command `npx wrangler deploy`. There is
+  no build-output-directory setting: `wrangler.jsonc` points at `./dist`.
+- `html_handling` is `drop-trailing-slash`, which matches Astro's
+  `trailingSlash: "never"` and `build.format: "file"`. Change one and you have
+  to change the other, or every page gets a second URL.
+- `workers_dev` and `preview_urls` are **false** on purpose. One canonical host.
+  Do not turn them back on without a reason: a second indexable copy of a site
+  that exists to be cited is a real problem, not a cosmetic one.
+- Cloudflare Web Analytics reads `PUBLIC_CF_BEACON_TOKEN` at build time, set as
+  a build variable on the Worker. Without it no beacon script is emitted at all.
+  No cookies either way, so no consent banner.
 - `tsx`, `jszip` and the `@fontsource` packages are runtime `dependencies`, not
   devDependencies, so the build works on a clean CI install regardless of how
   `NODE_ENV` is set.
+
+`npm run deploy` does the same thing locally, and `npm run check:links` verifies
+every source URL in every chapter still resolves. See DEPLOY.md.
 
 ## Non-goals
 
