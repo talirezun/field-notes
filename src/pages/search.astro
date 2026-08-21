@@ -1,0 +1,649 @@
+---
+import Base from '../layouts/Base.astro';
+import RuleLabel from '../components/RuleLabel.astro';
+import { getChapters, splitChapter } from '../lib/chapters';
+import { SITE_URL } from '../lib/site';
+
+/**
+ * Search is a progressive enhancement over this page, not a replacement for
+ * it. With JavaScript disabled the page below is already useful: every
+ * chapter and every section, as ordinary links to the real pinned anchors.
+ * With JavaScript on, src/lib/build-search-index.ts's output at
+ * /search-index.json is fetched once and the script below replaces this list
+ * with live, ranked results as you type. Nothing here is behind a fetch: it
+ * is the same content the no-JS reader sees, rendered server-side.
+ */
+const chapters = await getChapters();
+const entries = chapters.map((chapter) => ({
+  chapter,
+  sections: splitChapter(chapter).sections,
+}));
+
+const sectionCount = entries.reduce((n, e) => n + e.sections.length, 0);
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  '@id': `${SITE_URL}/search`,
+  name: 'Search',
+  description:
+    'Search Field Notes by heading, question, tag or body text. Runs entirely in the browser, no server involved.',
+  url: `${SITE_URL}/search`,
+  isPartOf: { '@type': 'WebSite', '@id': `${SITE_URL}#website` },
+};
+---
+
+<Base
+  title="Search"
+  description="Search the Field Notes corpus by heading, question, tag or body text. In-browser search, no server, no external service."
+  path="/search"
+  schema={schema}
+>
+  <section class="search-page">
+    <div class="shell">
+      <h1 class="display">Search</h1>
+      <p class="tagline">
+        {chapters.length} chapters, {sectionCount} sections, searched in the browser
+      </p>
+
+      <div class="intro measure">
+        <p>
+          This runs against a small index built from the chapter files, entirely on your
+          machine. No server, no external service, nothing sent anywhere. With JavaScript
+          off you get the full list below instead, which is a reasonable way to search a
+          corpus this size too.
+        </p>
+      </div>
+
+      <form class="search-form" role="search" action="/search" id="search-form">
+        <label class="search-label" for="search-input">Search the corpus</label>
+        <input
+          type="search"
+          id="search-input"
+          name="q"
+          class="search-input"
+          placeholder="Try “agent memory”, “MCP”, “what fails”…"
+          autocomplete="off"
+          spellcheck="false"
+          disabled
+        />
+        <p class="search-hint" id="search-hint">
+          Loading the index…
+        </p>
+      </form>
+
+      <p class="result-status" id="search-status" aria-live="polite"></p>
+
+      <RuleLabel as="h2" label={`All ${chapters.length} chapters`} id="results-label" />
+
+      <div id="search-results">
+        <ol class="chapter-list" id="default-list">
+          {
+            entries.map(({ chapter, sections }) => (
+              <li class="chapter-card">
+                <a class="card-link" href={`/${chapter.data.slug}`}>
+                  <span class="num">{String(chapter.data.number).padStart(2, '0')}</span>
+                  <h3>{chapter.data.title}</h3>
+                  <p class="q">{chapter.data.question}</p>
+                </a>
+                {sections.length > 0 && (
+                  <ul class="sections">
+                    {sections.map((section) => (
+                      <li>
+                        <a href={`/${chapter.data.slug}#${section.id}`}>{section.title}</a>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .search-page {
+    padding-top: var(--space-8);
+    padding-bottom: var(--space-9);
+  }
+
+  .display {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 900;
+    font-size: var(--size-3xl);
+    letter-spacing: -0.02em;
+    line-height: 0.95;
+  }
+
+  .tagline {
+    font-family: var(--font-mono);
+    font-size: var(--size-sm);
+    letter-spacing: 0.06em;
+    color: var(--gold);
+    margin-top: var(--space-4);
+    padding-top: var(--space-4);
+    border-top: var(--hairline) solid var(--gold-dim);
+    max-width: var(--measure);
+  }
+
+  .intro {
+    margin-top: var(--space-5);
+    color: var(--bone-dim);
+  }
+
+  .search-form {
+    margin-top: var(--space-7);
+    max-width: var(--measure);
+  }
+
+  .search-label {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: var(--size-xs);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: var(--space-2);
+  }
+
+  .search-input {
+    width: 100%;
+    background: var(--ink-raised);
+    border: var(--hairline) solid var(--ink-line);
+    border-radius: var(--radius);
+    color: var(--bone);
+    font-family: var(--font-body);
+    font-size: var(--size-base);
+    padding: var(--space-3) var(--space-4);
+  }
+
+  .search-input::placeholder {
+    color: var(--bone-dim);
+  }
+
+  .search-input:hover {
+    border-color: var(--gold-dim);
+  }
+
+  .search-input:disabled {
+    opacity: 0.6;
+  }
+
+  /* -webkit adds its own reset icon; keep the surface consistent with the rest of the site. */
+  .search-input::-webkit-search-cancel-button {
+    filter: grayscale(1) opacity(0.7);
+  }
+
+  .search-hint {
+    margin-top: var(--space-2);
+    font-family: var(--font-mono);
+    font-size: var(--size-xs);
+    color: var(--gold-dim);
+  }
+
+  .result-status {
+    margin-top: var(--space-4);
+    font-family: var(--font-mono);
+    font-size: var(--size-xs);
+    color: var(--gold-dim);
+    min-height: 1.2em;
+  }
+
+  /* -------------------------------------------------------- default list -- */
+
+  .chapter-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 0;
+  }
+
+  .chapter-card {
+    padding: var(--space-5) 0;
+    border-bottom: var(--hairline) solid var(--ink-line);
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  @media (min-width: 48rem) {
+    .chapter-card {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      column-gap: var(--space-7);
+    }
+  }
+
+  .card-link {
+    text-decoration: none;
+    display: grid;
+    gap: var(--space-2);
+    align-content: start;
+  }
+
+  .num {
+    font-family: var(--font-mono);
+    font-size: var(--size-xs);
+    color: var(--gold-dim);
+    letter-spacing: 0.1em;
+  }
+
+  .card-link h3 {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 900;
+    font-size: var(--size-lg);
+    color: var(--bone);
+    letter-spacing: -0.01em;
+  }
+
+  .card-link:hover h3 {
+    color: var(--gold-bright);
+  }
+
+  .q {
+    color: var(--gold);
+    font-size: var(--size-sm);
+    text-wrap: pretty;
+  }
+
+  .sections {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: var(--space-1);
+    align-content: start;
+    border-left: var(--hairline) solid var(--ink-line);
+    padding-left: var(--space-4);
+  }
+
+  .sections a {
+    font-family: var(--font-mono);
+    font-size: var(--size-xs);
+    color: var(--bone-dim);
+    text-decoration: none;
+    line-height: 1.5;
+  }
+
+  .sections a:hover {
+    color: var(--gold-bright);
+  }
+
+  /* ---------------------------------------------------------- JS results -- */
+
+  :global(.results-list) {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 0;
+  }
+
+  :global(.result-card) {
+    padding: var(--space-5) 0;
+    border-bottom: var(--hairline) solid var(--ink-line);
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  :global(.result-chapter) {
+    font-family: var(--font-mono);
+    font-size: var(--size-xs);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    text-decoration: none;
+  }
+
+  :global(.result-chapter:hover) {
+    color: var(--gold-bright);
+  }
+
+  :global(.result-heading) {
+    text-decoration: none;
+    font-size: var(--size-lg);
+    color: var(--bone);
+  }
+
+  :global(.result-heading:hover) {
+    color: var(--gold-bright);
+  }
+
+  :global(.result-snippet) {
+    color: var(--bone-dim);
+    font-size: var(--size-sm);
+  }
+
+  :global(.result-snippet mark) {
+    background: var(--gold-wash-strong);
+    color: var(--gold-bright);
+    border-radius: var(--radius);
+    padding: 0 0.1em;
+  }
+
+  :global(.no-results) {
+    color: var(--bone-dim);
+    max-width: var(--measure);
+  }
+</style>
+
+<script>
+  import type { SearchIndex, SearchChapter, SearchSection } from '../lib/build-search-index';
+
+  /**
+   * The whole matcher: normalise, score, and snippet, for a corpus small
+   * enough (roughly 25,000 words, 56 sections) that none of this needs to be
+   * clever about performance. It runs on every keystroke against the full
+   * index and that is still well under a millisecond.
+   */
+
+  type Rec = {
+    chapterSlug: string;
+    chapterTitle: string;
+    chapterQuestion: string;
+    chapterTags: string;
+    sectionId: string;
+    sectionTitle: string;
+    text: string;
+    nHeading: string;
+    nChapterTitle: string;
+    nQuestion: string;
+    nTags: string;
+    nText: string;
+    /** The anchor id, hyphens turned to spaces: a short, deliberately chosen
+     * label for the section that often carries the exact word a reader
+     * would search for even when the rendered question heading does not. */
+    nAnchor: string;
+  };
+
+  type Scored = { rec: Rec; score: number };
+
+  const inputRef = document.getElementById('search-input') as HTMLInputElement | null;
+  const hintRef = document.getElementById('search-hint');
+  const statusRef = document.getElementById('search-status');
+  const resultsRef = document.getElementById('search-results');
+  const resultsLabel = document.getElementById('results-label');
+
+  if (!inputRef || !hintRef || !statusRef || !resultsRef) {
+    // Markup missing for some reason; the no-JS content already stands on
+    // its own, so there is nothing more to do.
+  } else {
+    // Reassigned to plain (non-nullable) consts: the check above proves they
+    // exist, but that narrowing does not reach into the functions declared
+    // below, which TypeScript has to assume might run at some later point.
+    const input = inputRef;
+    const hint = hintRef;
+    const status = statusRef;
+    const resultsEl = resultsRef;
+
+    const defaultHTML = resultsEl.innerHTML;
+    const defaultLabel = resultsLabel?.textContent ?? '';
+
+    // Strips combining marks after NFD decomposition, e.g. "Režun" -> "rezun".
+    // For every accented character in this corpus that is a one-to-one swap
+    // in length, which is what lets snippet positions computed on the
+    // normalised text be reused directly as slice indices into the original.
+    // Hyphens become spaces too, one character for another, so "three-phase"
+    // typed by a reader lines up with the "three-phase-build" anchor and with
+    // hyphenated compounds in the prose, without disturbing the 1:1 length
+    // alignment the snippet code below depends on.
+    const normalize = (s: string): string =>
+      s
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase()
+        .replace(/-/g, ' ');
+
+    const escapeHtml = (s: string): string =>
+      s.replace(/[&<>"']/g, (c) =>
+        c === '&' ? '&amp;' : c === '<' ? '&lt;' : c === '>' ? '&gt;' : c === '"' ? '&quot;' : '&#39;',
+      );
+
+    const findAll = (haystack: string, term: string): Array<[number, number]> => {
+      if (!term) return [];
+      const out: Array<[number, number]> = [];
+      let from = 0;
+      while (from <= haystack.length) {
+        const at = haystack.indexOf(term, from);
+        if (at === -1) break;
+        out.push([at, at + term.length]);
+        from = at + term.length;
+      }
+      return out;
+    };
+
+    /**
+     * A naive suffix strip, not a real stemmer, just enough that "fails"
+     * finds "failure" and "agents" finds "agent". Only used as a fallback:
+     * an exact match always outranks a stemmed one, so this only adds
+     * recall, it never displaces a better result.
+     */
+    const stemRoot = (term: string): string | null => {
+      if (term.length <= 4) return null;
+      if (term.endsWith('ies')) return `${term.slice(0, -3)}y`;
+      if (term.endsWith('ing')) return term.slice(0, -3);
+      if (term.endsWith('ed')) return term.slice(0, -2);
+      if (term.endsWith('es')) return term.slice(0, -2);
+      if (term.endsWith('s') && !term.endsWith('ss')) return term.slice(0, -1);
+      return null;
+    };
+
+    /** 1 for an exact substring hit, a fraction for a stemmed one, 0 for neither. */
+    const fieldScore = (haystack: string, term: string): number => {
+      if (haystack.includes(term)) return 1;
+      const root = stemRoot(term);
+      if (root && haystack.includes(root)) return 0.5;
+      return 0;
+    };
+
+    let records: Rec[] = [];
+
+    async function loadIndex(): Promise<void> {
+      try {
+        const res = await fetch('/search-index.json');
+        if (!res.ok) throw new Error(`${res.status}`);
+        const data = (await res.json()) as SearchIndex;
+        records = data.chapters.flatMap((chapter: SearchChapter) =>
+          chapter.sections.map((section: SearchSection) => {
+            const tags = chapter.tags.join(' ');
+            return {
+              chapterSlug: chapter.slug,
+              chapterTitle: chapter.title,
+              chapterQuestion: chapter.question,
+              chapterTags: tags,
+              sectionId: section.id,
+              sectionTitle: section.title,
+              text: section.text,
+              nHeading: normalize(section.title),
+              nChapterTitle: normalize(chapter.title),
+              nQuestion: normalize(chapter.question),
+              nTags: normalize(tags),
+              nText: normalize(section.text),
+              nAnchor: normalize(section.id),
+            } satisfies Rec;
+          }),
+        );
+        input.disabled = false;
+        hint.textContent = 'Matches headings, questions, tags and body text. Case and accent insensitive.';
+      } catch {
+        hint.textContent =
+          'The search index did not load. Use the full list below, or the corpus download on the home page.';
+      }
+    }
+
+    /** Best window of `text` to show as a snippet, centred on the match. */
+    function snippetFor(rec: Rec, terms: string[], phrase: string): string {
+      const radius = 90;
+      const nText = rec.nText;
+      const text = rec.text;
+
+      let anchor = phrase ? nText.indexOf(phrase) : -1;
+      if (anchor === -1) {
+        for (const term of terms) {
+          const candidates = [term, stemRoot(term)].filter((t): t is string => Boolean(t));
+          for (const candidate of candidates) {
+            const at = nText.indexOf(candidate);
+            if (at !== -1 && (anchor === -1 || at < anchor)) anchor = at;
+          }
+        }
+      }
+      if (anchor === -1) anchor = 0;
+
+      let start = Math.max(0, anchor - radius);
+      let end = Math.min(text.length, start + radius * 2);
+      start = Math.max(0, end - radius * 2);
+
+      // Snap to word boundaries so a snippet does not open or close mid-word.
+      if (start > 0) {
+        const spaceAfter = text.indexOf(' ', start);
+        if (spaceAfter !== -1 && spaceAfter < start + 20) start = spaceAfter + 1;
+      }
+      if (end < text.length) {
+        const spaceBefore = text.lastIndexOf(' ', end);
+        if (spaceBefore !== -1 && spaceBefore > end - 20) end = spaceBefore;
+      }
+
+      const rawSnippet = text.slice(start, end);
+      const normSnippet = nText.slice(start, end);
+
+      const ranges: Array<[number, number]> = [];
+      for (const term of terms) {
+        ranges.push(...findAll(normSnippet, term));
+        const root = stemRoot(term);
+        if (root) ranges.push(...findAll(normSnippet, root));
+      }
+      ranges.sort((a, b) => a[0] - b[0]);
+
+      const merged: Array<[number, number]> = [];
+      for (const [s, e] of ranges) {
+        const last = merged[merged.length - 1];
+        if (last && s <= last[1]) last[1] = Math.max(last[1], e);
+        else merged.push([s, e]);
+      }
+
+      let html = '';
+      let cursor = 0;
+      for (const [s, e] of merged) {
+        html += escapeHtml(rawSnippet.slice(cursor, s));
+        html += `<mark>${escapeHtml(rawSnippet.slice(s, e))}</mark>`;
+        cursor = e;
+      }
+      html += escapeHtml(rawSnippet.slice(cursor));
+
+      return (start > 0 ? '…' : '') + html + (end < text.length ? '…' : '');
+    }
+
+    function search(query: string): Scored[] {
+      const q = normalize(query).trim();
+      if (!q) return [];
+      const terms = q.split(/\s+/).filter(Boolean);
+
+      const scored: Scored[] = [];
+      for (const rec of records) {
+        const haystack = `${rec.nHeading} ${rec.nChapterTitle} ${rec.nQuestion} ${rec.nTags} ${rec.nAnchor} ${rec.nText}`;
+        // Multi-word queries require every term (or its stemmed root) to
+        // appear somewhere in the record, not just any one of them.
+        if (!terms.every((t) => fieldScore(haystack, t) > 0)) continue;
+
+        let score = 0;
+        // Whole-phrase match beats scattered words, and a heading match
+        // beats a body match: both are weighted bonuses stacked on top of
+        // per-term hits below.
+        if (rec.nHeading.includes(q)) score += 100;
+        if (rec.nChapterTitle.includes(q)) score += 70;
+        if (rec.nAnchor.includes(q)) score += 60;
+        if (rec.nQuestion.includes(q)) score += 50;
+        if (rec.nTags.includes(q)) score += 40;
+        if (rec.nText.includes(q)) score += 30;
+
+        for (const t of terms) {
+          score += fieldScore(rec.nHeading, t) * 20;
+          score += fieldScore(rec.nChapterTitle, t) * 12;
+          score += fieldScore(rec.nAnchor, t) * 15;
+          score += fieldScore(rec.nQuestion, t) * 8;
+          score += fieldScore(rec.nTags, t) * 8;
+
+          const root = stemRoot(t);
+          const exactOccurrences = findAll(rec.nText, t).length;
+          const rootOccurrences = root ? findAll(rec.nText, root).length : 0;
+          const occurrences = exactOccurrences > 0 ? exactOccurrences : rootOccurrences;
+          const perOccurrence = exactOccurrences > 0 ? 2 : 1;
+          score += Math.min(occurrences, 5) * perOccurrence;
+        }
+
+        scored.push({ rec, score });
+      }
+
+      scored.sort((a, b) => b.score - a.score || a.rec.chapterTitle.localeCompare(b.rec.chapterTitle));
+      return scored;
+    }
+
+    function render(query: string): void {
+      const trimmed = query.trim();
+
+      if (!trimmed) {
+        resultsEl.innerHTML = defaultHTML;
+        if (resultsLabel) resultsLabel.textContent = defaultLabel;
+        status.textContent = '';
+        return;
+      }
+
+      const results = search(trimmed);
+      const q = normalize(trimmed).trim();
+      const terms = q.split(/\s+/).filter(Boolean);
+
+      if (resultsLabel) {
+        resultsLabel.textContent = `Results for "${trimmed}"`;
+      }
+
+      if (results.length === 0) {
+        resultsEl.innerHTML = `<p class="no-results">No matches for &ldquo;${escapeHtml(
+          trimmed,
+        )}&rdquo;. Every word in a query has to match somewhere, so try fewer or different words.</p>`;
+        status.textContent = `No results for "${trimmed}"`;
+        return;
+      }
+
+      const items = results
+        .map(({ rec }) => {
+          const snippet = snippetFor(rec, terms, q);
+          return `
+            <li class="result-card">
+              <a class="result-chapter" href="/${rec.chapterSlug}">${escapeHtml(rec.chapterTitle)}</a>
+              <a class="result-heading" href="/${rec.chapterSlug}#${rec.sectionId}">${escapeHtml(
+                rec.sectionTitle,
+              )}</a>
+              <p class="result-snippet">${snippet}</p>
+            </li>`;
+        })
+        .join('');
+
+      resultsEl.innerHTML = `<ol class="results-list">${items}</ol>`;
+      status.textContent = `${results.length} result${results.length === 1 ? '' : 's'} for "${trimmed}"`;
+    }
+
+    // Debounced with a timer rather than requestAnimationFrame. rAF is for
+    // animation, and browsers stop servicing it whenever the tab is
+    // backgrounded or the window is occluded, which would leave the results
+    // stale against what is in the box. A timer runs regardless.
+    let pending = 0;
+    input.addEventListener('input', () => {
+      window.clearTimeout(pending);
+      pending = window.setTimeout(() => render(input.value), 80);
+    });
+
+    // A no-JS submit would reload this same page with a query string that
+    // does nothing server-side; once JS is running the form only needs to
+    // hand off to the live filter above.
+    document.getElementById('search-form')?.addEventListener('submit', (event) => {
+      event.preventDefault();
+      render(input.value);
+    });
+
+    void loadIndex();
+  }
+</script>

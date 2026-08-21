@@ -1,7 +1,7 @@
 ---
 title: "Work with me"
 slug: "work-with-me"
-description: "Teaching, advisory and speaking. What I do, who it is for, and how to reach me. Short and factual, with links out to the detail."
+description: "Teaching, advisory, building and speaking. What I do, who it is for, and every way to reach me. Short and factual, with links out to the detail."
 updated: 2026-08-20
 navOrder: 4
 ---
@@ -9,7 +9,8 @@ navOrder: 4
 ## What I do
 
 Four things, in roughly the order they take up my time. If one of them fits,
-the fastest route is a message on [LinkedIn](https://www.linkedin.com/in/talirezun/).
+pick whichever channel at the [bottom of this page](#getting-in-touch) you
+already use. They all reach me.
 
 ## Teaching
 
@@ -32,9 +33,22 @@ what not to build, and telling you which of the two problems you actually have.
 
 ## Building
 
-I build and run software. [The Curator](/the-curator) is open source and MIT
-licensed. [Lumina](https://luminawidget.xyz) is a commercial product. Chapter
-nine covers both in the terms I am willing to state publicly.
+I build and run software, and I publish most of it.
+
+[The Curator](/the-curator) is a local second brain. You drop in documents, it
+writes an interlinked wiki, and it serves that wiki to any agent or model that
+speaks MCP. Open source, MIT licensed. This corpus was built with it.
+
+[ØØT](https://github.com/talirezun/oot-framework), the organisation of tomorrow,
+is a file-based framework for running an organisation where the people producing
+the value are the ones directing the AI, rather than waiting on a central team to
+do it for them. It covers what to automate, in what order, and what has to change
+in how the organisation works for any of it to hold. Apache 2.0 for the code,
+CC BY-SA 4.0 for the documentation. Some of it is finished and some of it is
+scaffolding, and the repo says which is which.
+
+[Lumina](https://luminawidget.xyz) is a commercial product. Chapter nine covers
+it in the terms I am willing to state publicly.
 
 I am not available for contract development.
 
@@ -46,6 +60,26 @@ expect.
 
 ## Getting in touch
 
-[LinkedIn](https://www.linkedin.com/in/talirezun/) is the reliable channel.
-[X](https://x.com/talirezun) works for short things. Everything else is on
+Whichever of these you already use. I read all of them.
+
+- **[Substack](https://talirezun.substack.com).** Reply to any post, or message
+  me there. In practice this is how most people actually reach me, probably
+  because they are already reading something when the thought arrives.
+- **[LinkedIn](https://www.linkedin.com/in/talirezun/).** A DM here is the
+  reliable one for anything to do with teaching, advisory or speaking.
+- **[X](https://x.com/talirezun).** Good for short things and for arguing about
+  a claim on this site in public, which I do not mind at all.
+- **[GitHub](https://github.com/talirezun).** For anything about the code, open
+  an issue on the repo it concerns:
+  [The Curator](https://github.com/talirezun/the-curator/issues),
+  [ØØT](https://github.com/talirezun/oot-framework/issues), or
+  [this site](https://github.com/talirezun/field-notes/issues). A specific issue
+  beats a general message, and it stays where the next person can find it.
+- **[ResearchGate](https://www.researchgate.net/profile/Tali-Rezun).** For the
+  academic work, which is where the longer and more careful versions of some of
+  these arguments live.
+
+If something on this site is wrong, the fastest route is an issue on the
+[Field Notes repo](https://github.com/talirezun/field-notes/issues). Corrections
+go straight into the chapter file. The formal version of the advisory work is on
 [talirezun.com](https://talirezun.com).

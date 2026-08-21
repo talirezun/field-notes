@@ -35,9 +35,10 @@ export type SocialLink = {
   label: string;
   href: string;
   /** Key into src/components/SocialIcon.astro */
-  icon: 'x' | 'linkedin' | 'substack' | 'medium' | 'github';
+  icon: 'x' | 'linkedin' | 'substack' | 'medium' | 'github' | 'website' | 'researchgate';
 };
 
+/** The header row. Icon only, kept short on purpose. */
 export const SOCIALS: SocialLink[] = [
   { label: 'X', href: 'https://x.com/talirezun', icon: 'x' },
   { label: 'LinkedIn', href: 'https://www.linkedin.com/in/talirezun/', icon: 'linkedin' },
@@ -46,11 +47,24 @@ export const SOCIALS: SocialLink[] = [
   { label: 'GitHub', href: 'https://github.com/talirezun', icon: 'github' },
 ];
 
+/**
+ * The footer row, which has room for labels and so carries everything. The main
+ * site and the ResearchGate profile belong here rather than in the header,
+ * which stays at five icons.
+ */
+export const ELSEWHERE: SocialLink[] = [
+  ...SOCIALS,
+  { label: 'ResearchGate', href: 'https://www.researchgate.net/profile/Tali-Rezun', icon: 'researchgate' },
+  { label: 'talirezun.com', href: 'https://talirezun.com', icon: 'website' },
+];
+
 export const LINKS = {
   curatorRepo: 'https://github.com/talirezun/the-curator',
   curatorManualSetup:
     'https://github.com/talirezun/the-curator#option-b--manual-setup-windows--linux--mac',
   curatorAgentInstall: 'https://github.com/talirezun/the-curator/blob/main/USER-GUIDE.md',
+  /** The organisation of tomorrow framework. Apache 2.0, public. */
+  ootFramework: 'https://github.com/talirezun/oot-framework',
   /** Core domain only. Never link app.luminawidget.xyz. */
   lumina: 'https://luminawidget.xyz',
   personalSite: 'https://talirezun.com',

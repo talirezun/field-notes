@@ -23,6 +23,7 @@ export type ChapterFile = {
   summary: string;
   updated: string;
   draft: boolean;
+  tags: string[];
   sourceCount: number;
   placeholderSources: number;
   /** The complete file, frontmatter included. */
@@ -55,6 +56,7 @@ export function loadChapterFiles(): ChapterFile[] {
       summary: String(data.summary ?? '').trim().replace(/\s+/g, ' '),
       updated: asIsoDate(data.updated),
       draft: Boolean(data.draft),
+      tags: Array.isArray(data.tags) ? data.tags.map(String) : [],
       sourceCount: sources.length,
       placeholderSources: sources.filter((s) => s.placeholder === true).length,
       raw: raw.trimEnd() + '\n',

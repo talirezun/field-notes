@@ -5,9 +5,10 @@
  * and generate the corpus bundles. Both outputs are gitignored, because both
  * are derived from things that are committed.
  */
-import { copyFileSync, existsSync, mkdirSync } from 'node:fs';
+import { copyFileSync, existsSync, mkdirSync, writeFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { buildCorpus, formatBytes } from '../src/lib/build-corpus';
+import { buildSearchIndexData } from '../src/lib/build-search-index';
 
 const FONT_FILES: Array<[pkg: string, file: string]> = [
   ['playfair-display', 'playfair-display-latin-900-italic.woff2'],
@@ -59,6 +60,16 @@ async function main(): Promise<void> {
         `the corpus. Replace them with real citations during the editorial pass.`,
     );
   }
+
+  const searchIndex = buildSearchIndexData(builtOn);
+  const searchIndexPath = join(process.cwd(), 'public', 'search-index.json');
+  writeFileSync(searchIndexPath, JSON.stringify(searchIndex));
+  const sectionCount = searchIndex.chapters.reduce((n, c) => n + c.sections.length, 0);
+  const searchIndexBytes = statSync(searchIndexPath).size;
+  console.log(
+    `[prebuild] search index: ${searchIndex.chapters.length} chapters, ${sectionCount} ` +
+      `sections, ${formatBytes(searchIndexBytes)} (public/search-index.json)`,
+  );
 }
 
 main().catch((error) => {

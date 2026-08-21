@@ -9,7 +9,7 @@ const updated = new Date('2026-08-20T00:00:00Z');
 const path = '/the-curator';
 
 const description =
-  'The Curator is a local, open-source second brain: drop in documents, get an interlinked wiki, query it from a frontier model over MCP. Here is how to install it and ingest this corpus.';
+  'The Curator is a local, open-source second brain: drop in documents, get an interlinked wiki, query it from any agent or model that speaks MCP. Here is how to install it and ingest this corpus.';
 
 const agentPrompt = `Install The Curator on this machine.
 
@@ -104,11 +104,19 @@ const schema = {
         else.
       </p>
       <p>
-        The part that matters is the other end. It runs a built-in MCP server, so a
-        frontier model can search and read that wiki as a tool rather than being fed a
-        wall of pasted text. You ask a question in Claude Desktop, it goes and looks
-        things up in your notes, and it answers with your own material and citations back
-        to the source.
+        The part that matters is the other end. It runs a built-in MCP server, so a model
+        can search and read that wiki as a tool rather than being fed a wall of pasted
+        text. You ask a question, it goes and looks things up in your notes, and it
+        answers with your own material and citations back to the source.
+      </p>
+      <p>
+        That connection is not tied to any one product. MCP is an open protocol, so
+        anything that speaks it can read the wiki: Claude Desktop and Claude Code, Cursor,
+        OpenCode, Augment, Cline, ChatGPT's desktop app, or something you wrote yourself.
+        The wiki is markdown on your disk and the bridge is a standard server, so the
+        model and the harness are both yours to swap. That is deliberate. A second brain
+        you can only read through one vendor's client is not a second brain, it is that
+        vendor's product with your notes in it.
       </p>
       <p class="caveat">
         <strong>Be clear about the dependency.</strong> It needs a Google Gemini or an
@@ -186,8 +194,8 @@ const schema = {
           <li>Download the chapters zip below and unzip it.</li>
           <li>Drop each <code>.md</code> file into the Ingest tab.</li>
           <li>
-            Open the Chat tab, or connect the My Curator MCP bridge from Settings and query
-            it from Claude Desktop.
+            Open the Chat tab, or connect the My Curator MCP bridge from Settings and point
+            whichever agent you already use at it.
           </li>
         </ol>
         <p class="caveat">
@@ -202,8 +210,9 @@ const schema = {
     <section class="measure stack-4" aria-labelledby="query">
       <RuleLabel as="h2" label="Then ask it something" id="query" />
       <p>
-        Once the MCP bridge is connected, these go straight into Claude Desktop. They are
-        written to be worth running rather than to look impressive.
+        Once the MCP bridge is connected, these go straight into whatever you have
+        connected it to. They are written to be worth running rather than to look
+        impressive.
       </p>
       {queries.map((query) => <CopyBlock label={query.label} variant="prompt" code={query.text} />)}
     </section>

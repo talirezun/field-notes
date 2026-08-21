@@ -1,5 +1,5 @@
 ---
-import { SOCIALS, LINKS, LICENSES, AUTHOR, SITE } from '../lib/site';
+import { ELSEWHERE, LINKS, LICENSES, AUTHOR, SITE } from '../lib/site';
 import SocialIcon from './SocialIcon.astro';
 
 const year = new Date().getUTCFullYear();
@@ -14,7 +14,7 @@ const year = new Date().getUTCFullYear();
         <h3 class="label">Elsewhere</h3>
         <ul class="links">
           {
-            SOCIALS.map((social) => (
+            ELSEWHERE.map((social) => (
               <li>
                 <a href={social.href} rel="me noopener" target="_blank">
                   <SocialIcon icon={social.icon} size={15} />
@@ -23,9 +23,6 @@ const year = new Date().getUTCFullYear();
               </li>
             ))
           }
-          <li>
-            <a href={LINKS.personalSite}>talirezun.com</a>
-          </li>
         </ul>
       </section>
 

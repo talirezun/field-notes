@@ -6,6 +6,7 @@ dist/
 public/downloads/
 public/llms.txt
 public/fonts/
+public/search-index.json
 
 # deps
 node_modules/

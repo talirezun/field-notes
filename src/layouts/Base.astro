@@ -11,6 +11,10 @@ interface Props {
   markdownPath?: string;
   schema?: Record<string, unknown> | Record<string, unknown>[];
   updated?: Date;
+  /** Defaults to "website". Chapter pages pass "article". */
+  ogType?: 'website' | 'article';
+  /** Keep this URL out of search indexes. The 404 page uses it. */
+  noindex?: boolean;
 }
 
 const props = Astro.props;
