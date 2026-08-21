@@ -1,6 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <rect width="32" height="32" fill="#100E0B"/>
-  <rect x="4" y="7" width="24" height="1.5" fill="#A89372"/>
-  <rect x="4" y="23.5" width="24" height="1.5" fill="#A89372"/>
-  <text x="16" y="21" font-family="Georgia, 'Times New Roman', serif" font-size="15" font-style="italic" font-weight="700" fill="#E9E4DA" text-anchor="middle">F</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600">
+  <rect width="600" height="600" fill="#100E0B"/>
+  <g transform="translate(102.6498,72) scale(0.801406)" fill="#A89372">
+    <path d="M354.75,208.08c-26.56.97-53.12,1.94-79.67,2.91-.59,76.38-1.17,152.75-1.76,229.13l-47.55-19.74c-5.08-69.79-10.16-139.59-15.25-209.38-23.58-.97-47.16-1.94-70.74-2.91-7.98-14.33-15.96-28.66-23.94-42.99h255.21c-5.43,14.33-10.86,28.66-16.3,42.99Z"/>
+    <polygon points="51.61 406.19 5.16 433.01 240.7 569 240.7 515.36 51.61 406.19"/>
+    <polygon points="46.46 174.27 0 147.45 0 419.42 46.46 392.6 46.46 174.27"/>
+    <polygon points="253.22 0 488.76 135.99 442.3 162.81 253.22 53.65 253.22 0"/>
+    <polygon points="446.05 176.56 492.51 149.74 492.51 421.72 446.05 394.89 446.05 176.56"/>
+  </g>
 </svg>
