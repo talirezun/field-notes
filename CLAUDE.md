@@ -36,6 +36,22 @@ No CMS, no deploy step, no manual regeneration of anything. The download bundles
 and `llms.txt` are built from the chapter files on every deploy. If a change you
 are making adds a manual step to this loop, it is the wrong change.
 
+**The editorial rule for that loop lives in `content/PLAYBOOK.md`.** It decides
+whether a new article becomes a source, a new section, or a new chapter, and it
+walks the mechanical pass. Read it before editing a chapter. Most articles are a
+citation and a paragraph, not a chapter. New chapters are rare by design.
+
+Before you push, run both:
+
+```bash
+npm run validate   # every chapter, all errors at once, about a second
+npm run build      # the real gate
+```
+
+`npm run validate` is dependency-free and checks everything the schema checks
+plus the things it cannot: the anchor contract across time, the em dash rule,
+and the four to seven section range.
+
 ## Content rules, which are not optional
 
 ### Sourcing
@@ -137,6 +153,13 @@ Two mechanisms, both enforced at build time:
 
 Section ids are read out of the rendered HTML everywhere in the build, never out
 of Astro's `headings` array, so the two cannot drift apart.
+
+A third mechanism guards it across time. `content/anchors.lock.json` records
+every anchor that has ever shipped, and `npm run validate` fails if one stops
+resolving. The build cannot catch a rename on its own, because a renamed anchor
+leaves the file perfectly self-consistent. After deliberately adding or aliasing
+an anchor, run `npm run validate -- --update-lock`. The lock is a record of
+promises, not a cache.
 
 ## Content schema
 

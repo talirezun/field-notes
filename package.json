@@ -13,7 +13,8 @@
     "check": "astro check",
     "build:corpus": "tsx scripts/prebuild.ts",
     "check:links": "node scripts/check-links.mjs",
-    "deploy": "npm run build && wrangler deploy"
+    "deploy": "npm run build && wrangler deploy",
+    "validate": "node scripts/validate-chapters.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.3",

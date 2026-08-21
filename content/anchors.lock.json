@@ -1,0 +1,76 @@
+{
+  "context-engineering": [
+    "continuity",
+    "for-non-developers",
+    "how-it-fails",
+    "the-opening-prompt",
+    "three-phase-build",
+    "what-it-is",
+    "what-to-load"
+  ],
+  "agent-memory": [
+    "four-layers",
+    "knowledge-immortality",
+    "retrieval",
+    "shared-brain",
+    "the-problem",
+    "what-a-second-brain-is",
+    "what-broke"
+  ],
+  "coding-agents": [
+    "comparing-them",
+    "model-or-harness",
+    "permissions",
+    "staying-current",
+    "the-twelve-parts",
+    "what-a-harness-does"
+  ],
+  "building-without-being-a-developer": [
+    "how-you-verify",
+    "the-centaur-model",
+    "what-breaks",
+    "what-it-costs",
+    "what-you-need",
+    "who-this-is-for"
+  ],
+  "orchestration": [
+    "loops",
+    "the-orchestrator",
+    "verification",
+    "what-breaks",
+    "when-not-to",
+    "when-to-fan-out"
+  ],
+  "ai-sovereignty": [
+    "open-weights",
+    "the-cost-case",
+    "the-shutdown",
+    "the-three-rings",
+    "the-tradeoff",
+    "what-sovereignty-means"
+  ],
+  "organisational-design": [
+    "compensation",
+    "teaching-it",
+    "the-framework",
+    "the-klarna-test",
+    "the-regulatory-clock",
+    "where-it-fails"
+  ],
+  "verification": [
+    "automated-testing",
+    "tests-not-comments",
+    "the-audit",
+    "what-audits-find",
+    "what-you-cannot-check",
+    "why-it-matters"
+  ],
+  "what-i-shipped": [
+    "lumina",
+    "moj-ai",
+    "the-curator",
+    "the-smaller-ones",
+    "what-i-would-do-differently",
+    "what-it-cost"
+  ]
+}
