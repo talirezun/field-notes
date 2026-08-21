@@ -87,6 +87,43 @@ Beyond that, after a deploy the things worth eyeballing:
 - `/nope-not-here` returns the styled 404, not a Cloudflare error page.
 - `/about/` redirects to `/about`.
 
+## Known issue: Cloudflare is overriding robots.txt
+
+Fetch `https://fieldnotes.talirezun.com/robots.txt` and you get **two** files.
+Cloudflare injects a managed block above ours containing:
+
+```
+User-agent: *
+Content-Signal: search=yes,ai-train=no,use=reference
+
+User-agent: ClaudeBot
+Disallow: /
+User-agent: GPTBot
+Disallow: /
+User-agent: Google-Extended
+Disallow: /
+...
+```
+
+Our own `public/robots.txt` allows every one of those agents by name and has no
+`Disallow` in it at all. The block is added at the edge, not by the build.
+
+This inverts the site. Retrievability by models is a first-class requirement,
+not a side effect, and `Content-Signal: ai-train=no` is an unambiguous
+machine-readable reservation of rights against exactly the use this corpus was
+built for.
+
+**The fix is in the dashboard, not the repo:** Cloudflare → the `talirezun.com`
+zone → **AI Crawl Control** → the managed `robots.txt` / content signals
+settings. Turn the managed content off, or set the signals to allow.
+
+Two things to know before you do it. It is a **zone-level** setting, so it
+affects `talirezun.com` and every other hostname on that zone, not just Field
+Notes. And it is a genuine rights decision about your own writing: the default
+Cloudflare applied reserves your content against AI training. Field Notes is
+CC BY 4.0 and exists to be ingested, so for this site the answer is clear, but
+it is still your call to make and not a bug to silently fix.
+
 ## If a build fails
 
 The failure mode we already hit: `npx wrangler deploy` with no `wrangler.jsonc`
