@@ -52,18 +52,20 @@ That builds and deploys with the local wrangler, which is pinned in
 
 ## Web Analytics
 
-Privacy-preserving, no cookies, so there is no consent banner to add. It is not
-wired up yet. To turn it on:
+Cloudflare Web Analytics, wired up and running. No cookies, no localStorage, no
+consent banner, verified in a browser rather than assumed.
 
-1. Dashboard → **Analytics & Logs** → **Web Analytics** → **Add a site** →
-   `fieldnotes.talirezun.com`. Copy the site token.
-2. Worker → **Settings** → **Build** → **Build variables** → add
-   `PUBLIC_CF_BEACON_TOKEN` with that value.
-3. Push anything, or retry the last build. The variable is read at build time,
-   so it needs a rebuild to take effect.
+The site token lives in `src/lib/site.ts` as `CF_BEACON_TOKEN`. It is not a
+secret: the beacon only works by putting it in the page source where every
+visitor can read it, so hiding it in a dashboard build variable would buy
+nothing and cost a setting nobody remembers is there.
 
-Without that variable the site emits no beacon script at all, which is the right
-default. Nothing breaks if you never do this.
+`PUBLIC_CF_BEACON_TOKEN` still overrides it if a build ever needs to report
+somewhere else. Set the constant to an empty string to turn analytics off
+entirely: no beacon script is emitted at all when there is no token.
+
+Read the numbers at Dashboard → **Analytics & Logs** → **Web Analytics** →
+`fieldnotes.talirezun.com`.
 
 ## Checking a deploy
 

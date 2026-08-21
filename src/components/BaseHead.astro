@@ -1,5 +1,5 @@
 ---
-import { SITE, SITE_URL, AUTHOR } from '../lib/site';
+import { SITE, SITE_URL, AUTHOR, CF_BEACON_TOKEN } from '../lib/site';
 import JsonLd from './JsonLd.astro';
 
 /**
@@ -47,7 +47,7 @@ const metaDescription = forMeta(description);
 const canonical = new URL(path, SITE_URL).href;
 const fullTitle =
   path === '/' ? `${SITE.name} · ${AUTHOR.name}` : `${title} · ${SITE.name}`;
-const beacon = import.meta.env.PUBLIC_CF_BEACON_TOKEN;
+const beacon = import.meta.env.PUBLIC_CF_BEACON_TOKEN || CF_BEACON_TOKEN;
 ---
 
 <meta charset="utf-8" />
@@ -126,7 +126,7 @@ const beacon = import.meta.env.PUBLIC_CF_BEACON_TOKEN;
   beacon && (
     <script
       is:inline
-      defer
+      type="module"
       src="https://static.cloudflareinsights.com/beacon.min.js"
       data-cf-beacon={`{"token": "${beacon}"}`}
     />

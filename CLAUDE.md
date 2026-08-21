@@ -285,9 +285,11 @@ directory, the trailing-slash policy, the 404 page and the custom domain.
 - `workers_dev` and `preview_urls` are **false** on purpose. One canonical host.
   Do not turn them back on without a reason: a second indexable copy of a site
   that exists to be cited is a real problem, not a cosmetic one.
-- Cloudflare Web Analytics reads `PUBLIC_CF_BEACON_TOKEN` at build time, set as
-  a build variable on the Worker. Without it no beacon script is emitted at all.
-  No cookies either way, so no consent banner.
+- Cloudflare Web Analytics is on. The site token is `CF_BEACON_TOKEN` in
+  `src/lib/site.ts`, committed on purpose: it is public by design, since the
+  beacon only works by emitting it into the page. `PUBLIC_CF_BEACON_TOKEN`
+  overrides it. Empty token means no beacon script at all. No cookies, so no
+  consent banner, and it stays that way. Google Analytics would need one.
 - `tsx`, `jszip` and the `@fontsource` packages are runtime `dependencies`, not
   devDependencies, so the build works on a clean CI install regardless of how
   `NODE_ENV` is set.

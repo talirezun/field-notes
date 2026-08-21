@@ -63,6 +63,19 @@ export const LICENSES = {
   code: { name: 'MIT', href: 'https://github.com/talirezun/field-notes/blob/main/LICENSE-CODE' },
 } as const;
 
+/**
+ * Cloudflare Web Analytics site token.
+ *
+ * Not a secret. The beacon only works by putting it in the page source, where
+ * every visitor can read it, so hiding it in a build variable would buy nothing
+ * and cost a setting nobody remembers is there. It lives here, versioned with
+ * everything else. PUBLIC_CF_BEACON_TOKEN still overrides it if a build ever
+ * needs to report somewhere else.
+ *
+ * No cookies, so no consent banner. That is why this and not Google Analytics.
+ */
+export const CF_BEACON_TOKEN = '42cdeabdcd2c4dd9b340a69c93864ce8';
+
 /** ISO date, formatted the one way the whole site formats dates. */
 export function formatDate(date: Date): string {
   return new Intl.DateTimeFormat('en-GB', {
