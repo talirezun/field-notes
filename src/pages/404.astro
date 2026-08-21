@@ -9,6 +9,7 @@ const chapters = await getChapters();
   title="Not found"
   description="That page is not here. The chapter index is, and so is the whole corpus as a download."
   path="/404"
+  noindex
 >
   <div class="shell notfound">
     <p class="label">404</p>
@@ -17,6 +18,7 @@ const chapters = await getChapters();
       Anchors on this site are permanent, so a broken link into a chapter is a bug worth
       telling me about. Everything else, start from the index.
     </p>
+    <h2 class="label">The nine chapters</h2>
     <ul class="list">
       {
         chapters.map((chapter) => (
@@ -55,10 +57,14 @@ const chapters = await getChapters();
     color: var(--bone-dim);
   }
 
+  h2 {
+    margin-top: var(--space-7);
+  }
+
   .list {
     list-style: none;
     padding: 0;
-    margin: var(--space-6) 0 0;
+    margin: var(--space-4) 0 0;
     display: grid;
     gap: var(--space-2);
   }

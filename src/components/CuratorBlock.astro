@@ -21,7 +21,7 @@ const { slug, title } = Astro.props;
     <p class="actions">
       {
         slug && (
-          <a class="action" href={`/${slug}.md`} data-track="chapter-md">
+          <a class="action" href={`/read/${slug}`}>
             {title ?? 'This chapter'} as markdown
           </a>
         )

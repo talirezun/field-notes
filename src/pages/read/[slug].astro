@@ -1,0 +1,261 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { codeToHtml } from 'shiki';
+import Base from '../../layouts/Base.astro';
+import CopyButton from '../../components/CopyButton.astro';
+import { loadChapterFiles, renderChapterMarkdown } from '../../lib/corpus';
+import { formatDate } from '../../lib/site';
+
+/**
+ * The source view.
+ *
+ * /<slug>.md stays raw text/markdown, because that is a contract with models
+ * and agents: it is what rel="alternate" points at and what llms.txt lists, and
+ * an agent fetching it should get clean source with no markup around it.
+ *
+ * That contract makes it a poor thing to hand a person, which is what this page
+ * is for. Same bytes, syntax highlighted, with the frontmatter explained rather
+ * than dumped. It is also the clearest demonstration the site has of its own
+ * argument: the citations, the pinned anchors and the provenance header are all
+ * right there in the source.
+ */
+export const getStaticPaths: GetStaticPaths = () => {
+  const builtOn = new Date().toISOString().slice(0, 10);
+  return loadChapterFiles().map((chapter) => ({
+    params: { slug: chapter.slug },
+    props: { chapter, markdown: renderChapterMarkdown(chapter, builtOn) },
+  }));
+};
+
+const { chapter, markdown } = Astro.props as {
+  chapter: ReturnType<typeof loadChapterFiles>[number];
+  markdown: string;
+};
+
+// Shiki emits a literal newline between each `.line` span. Those spans are
+// display:block here so the line numbers can hang in a gutter, which makes every
+// newline an extra empty line box and doubles the leading. Strip them.
+const highlighted = (
+  await codeToHtml(markdown, { lang: 'markdown', theme: 'vitesse-dark' })
+).replace(/\n(?=<span class="line")/g, '');
+
+const bytes = Buffer.byteLength(markdown, 'utf8');
+const lines = markdown.split('\n').length;
+const size = bytes < 1024 ? `${bytes} B` : `${(bytes / 1024).toFixed(1)} KB`;
+const path = `/read/${chapter.slug}`;
+---
+
+<Base
+  title={`${chapter.title}, source`}
+  description={`The raw markdown behind the ${chapter.title} chapter, with its frontmatter, citations and pinned anchors. ${chapter.question}`}
+  path={path}
+  markdownPath={`/${chapter.slug}.md`}
+>
+  <div class="shell reader">
+    <header class="head">
+      <p class="label">Source view</p>
+      <h1>{chapter.title}</h1>
+      <p class="lede">
+        This is the exact markdown an agent gets from
+        <a href={`/${chapter.slug}.md`}><code>{chapter.slug}.md</code></a>, and the exact
+        file inside the corpus download. Nothing added, nothing stripped.
+      </p>
+
+      <dl class="meta-grid">
+        <div><dt>File</dt><dd>{chapter.file}</dd></div>
+        <div><dt>Size</dt><dd>{size}, {lines} lines</dd></div>
+        <div><dt>Citations</dt><dd>{chapter.sourceCount} sources</dd></div>
+        <div><dt>Updated</dt><dd>{formatDate(new Date(chapter.updated))}</dd></div>
+      </dl>
+
+      <nav class="actions" aria-label="This chapter">
+        <a href={`/${chapter.slug}`}>Read it formatted</a>
+        <a href={`/${chapter.slug}.md`}>Raw markdown</a>
+        <a href="/the-curator">Ingest the corpus</a>
+      </nav>
+
+      <p class="note">
+        The frontmatter at the top is what the build validates: a question that has to
+        end in a question mark, a summary between twenty-five and fifty words, and at
+        least one published source. Each pinned anchor on a heading fixes that section's
+        permanent link, so a heading can be rewritten without breaking anything that
+        points at it.
+      </p>
+    </header>
+
+    <div class="source-panel">
+      <div class="source-bar">
+        <span class="label">{chapter.file}</span>
+        <CopyButton code={markdown} label="Copy the file" />
+      </div>
+      <div class="source">
+        <Fragment set:html={highlighted} />
+      </div>
+    </div>
+  </div>
+</Base>
+
+<style>
+  .reader {
+    padding-top: var(--space-7);
+    padding-bottom: var(--space-8);
+  }
+
+  .head {
+    max-width: var(--measure);
+  }
+
+  .head h1 {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 900;
+    font-size: var(--size-2xl);
+    letter-spacing: -0.015em;
+    margin-top: var(--space-2);
+  }
+
+  .lede {
+    margin-top: var(--space-4);
+    color: var(--bone-dim);
+  }
+
+  .lede a {
+    color: var(--gold-bright);
+  }
+
+  .meta-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+    gap: var(--space-3) var(--space-4);
+    margin-top: var(--space-5);
+    padding-top: var(--space-4);
+    border-top: var(--hairline) solid var(--ink-line);
+  }
+
+  .meta-grid dt {
+    font-family: var(--font-mono);
+    font-size: var(--size-xs);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--gold-dim);
+  }
+
+  .meta-grid dd {
+    font-family: var(--font-mono);
+    font-size: var(--size-xs);
+    color: var(--bone-dim);
+    margin: var(--space-1) 0 0;
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2) var(--space-4);
+    margin-top: var(--space-5);
+  }
+
+  .actions a {
+    font-family: var(--font-mono);
+    font-size: var(--size-xs);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--gold);
+    text-decoration: none;
+    border-bottom: var(--hairline) solid var(--gold-dim);
+    padding-bottom: 3px;
+  }
+
+  .actions a:hover {
+    color: var(--gold-bright);
+    border-bottom-color: var(--gold-bright);
+  }
+
+  .note {
+    margin-top: var(--space-5);
+    font-size: var(--size-sm);
+    color: var(--bone-dim);
+  }
+
+  .note code,
+  .lede code {
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+    background: var(--ink-raised);
+    border: var(--hairline) solid var(--ink-line);
+    border-radius: var(--radius);
+    padding: 0.1em 0.35em;
+  }
+
+  /* Line numbers are counted in CSS rather than written into the markup, so
+     selecting the block copies the file and not a column of numbers with it. */
+  .source-panel {
+    margin-top: var(--space-6);
+    border: var(--hairline) solid var(--ink-line);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .source-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    padding: var(--space-3) var(--space-4);
+    border-bottom: var(--hairline) solid var(--ink-line);
+    background: var(--ink);
+  }
+
+  .source {
+    overflow: hidden;
+  }
+
+  .source :global(pre) {
+    margin: 0;
+    padding: var(--space-5) var(--space-5) var(--space-5) 0;
+    overflow-x: auto;
+    background: var(--ink-raised) !important;
+    font-size: var(--size-sm);
+    line-height: 1.6;
+    counter-reset: line;
+    tab-size: 2;
+  }
+
+  .source :global(code) {
+    font-family: var(--font-mono);
+  }
+
+  .source :global(.line) {
+    display: block;
+    padding-left: var(--space-4);
+    border-left: 2px solid transparent;
+  }
+
+  .source :global(.line)::before {
+    counter-increment: line;
+    content: counter(line);
+    display: inline-block;
+    width: 3.5rem;
+    margin-left: -0.5rem;
+    margin-right: var(--space-4);
+    text-align: right;
+    color: var(--gold-dim);
+    opacity: 0.55;
+    user-select: none;
+  }
+
+  .source :global(.line):hover {
+    background: var(--gold-wash);
+    border-left-color: var(--gold-dim);
+  }
+
+  @media (max-width: 46rem) {
+    .source :global(.line)::before {
+      width: 2rem;
+      margin-right: var(--space-2);
+    }
+    .source :global(pre) {
+      padding-inline: 0;
+      font-size: var(--size-xs);
+    }
+  }
+</style>

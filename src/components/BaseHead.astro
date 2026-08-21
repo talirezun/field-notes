@@ -2,6 +2,29 @@
 import { SITE, SITE_URL, AUTHOR } from '../lib/site';
 import JsonLd from './JsonLd.astro';
 
+/**
+ * Search engines cut a description around 155 characters. The chapter schema
+ * mandates a 25 to 50 word summary, which is 150 to 330, so a schema-compliant
+ * chapter can never produce a description that fits. Trim at a sentence end
+ * where there is one, otherwise at a word boundary, rather than shipping every
+ * chapter's snippet truncated mid-word by the search engine instead.
+ */
+function forMeta(text: string, max = 155): string {
+  const clean = text.trim().replace(/\s+/g, ' ');
+  if (clean.length <= max) return clean;
+
+  const window = clean.slice(0, max);
+  const sentenceEnd = Math.max(
+    window.lastIndexOf('. '),
+    window.lastIndexOf('? '),
+    window.lastIndexOf('! '),
+  );
+  if (sentenceEnd >= 80) return clean.slice(0, sentenceEnd + 1);
+
+  const wordEnd = window.lastIndexOf(' ');
+  return `${clean.slice(0, wordEnd > 0 ? wordEnd : max - 1)}…`;
+}
+
 interface Props {
   title: string;
   description: string;
@@ -11,9 +34,15 @@ interface Props {
   markdownPath?: string;
   schema?: Record<string, unknown> | Record<string, unknown>[];
   updated?: Date;
+  /** Defaults to "website". Chapter pages pass "article". */
+  ogType?: 'website' | 'article';
+  /** Keep this URL out of search indexes. The 404 page uses it. */
+  noindex?: boolean;
 }
 
-const { title, description, path, markdownPath, schema, updated } = Astro.props;
+const { title, description, path, markdownPath, schema, updated, ogType, noindex } =
+  Astro.props;
+const metaDescription = forMeta(description);
 
 const canonical = new URL(path, SITE_URL).href;
 const fullTitle =
@@ -24,8 +53,9 @@ const beacon = import.meta.env.PUBLIC_CF_BEACON_TOKEN;
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>{fullTitle}</title>
-<meta name="description" content={description} />
+<meta name="description" content={metaDescription} />
 <link rel="canonical" href={canonical} />
+{noindex && <meta name="robots" content="noindex, follow" />}
 <meta name="author" content={AUTHOR.name} />
 <meta name="generator" content={Astro.generator} />
 <meta name="color-scheme" content="dark" />
@@ -43,14 +73,21 @@ const beacon = import.meta.env.PUBLIC_CF_BEACON_TOKEN;
   )
 }
 
-<meta property="og:type" content={path === '/' ? 'website' : 'article'} />
+<meta property="og:type" content={ogType ?? 'website'} />
 <meta property="og:site_name" content={SITE.name} />
 <meta property="og:title" content={fullTitle} />
-<meta property="og:description" content={description} />
+<meta property="og:description" content={metaDescription} />
 <meta property="og:url" content={canonical} />
 <meta property="og:locale" content="en_GB" />
+
+{/* One card for the whole site. See src/lib/og-image.ts. */}
+<meta property="og:image" content={new URL('/og.png', SITE_URL).href} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="Field Notes by Dr. Tali Režun. Field notes from real builds, not vendor marketing." />
 {updated && <meta property="article:modified_time" content={updated.toISOString()} />}
-<meta name="twitter:card" content="summary" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content={new URL('/og.png', SITE_URL).href} />
 <meta name="twitter:creator" content="@talirezun" />
 
 <link rel="sitemap" href="/sitemap-index.xml" />

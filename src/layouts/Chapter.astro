@@ -100,6 +100,7 @@ for (const alias of data.anchorAliases) {
   path={path}
   markdownPath={`${path}.md`}
   updated={data.updated}
+  ogType="article"
   schema={schema}
 >
   <article class="chapter">
@@ -127,8 +128,8 @@ for (const alias of data.anchorAliases) {
             <dd>{data.tags.join(' · ')}</dd>
           </div>
           <div>
-            <dt>Markdown</dt>
-            <dd><a href={`${path}.md`}>{data.slug}.md</a></dd>
+            <dt>Source</dt>
+            <dd><a href={`/read/${data.slug}`}>{data.slug}.md</a></dd>
           </div>
         </dl>
 

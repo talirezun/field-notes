@@ -1,0 +1,88 @@
+---
+/**
+ * Copies `code` to the clipboard. Carries the one delegated listener that every
+ * copy control on the site uses, so it works standalone or nested in CopyBlock.
+ */
+interface Props {
+  code: string;
+  label?: string;
+  done?: string;
+  class?: string;
+}
+const { code, label = 'Copy', done = 'Copied', class: className } = Astro.props;
+---
+
+<button type="button" class:list={['copy', className]} data-copy={code.trim()}>
+  <span class="copy-idle">{label}</span>
+  <span class="copy-done" aria-hidden="true">{done}</span>
+</button>
+
+<style>
+  .copy {
+    font-family: var(--font-mono);
+    font-size: var(--size-xs);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--gold);
+    background: var(--ink);
+    border: var(--hairline) solid var(--gold-dim);
+    border-radius: var(--radius);
+    padding: var(--space-1) var(--space-3);
+    cursor: pointer;
+    line-height: 1.6;
+  }
+
+  .copy:hover {
+    color: var(--gold-bright);
+    border-color: var(--gold-bright);
+  }
+
+  .copy-done {
+    display: none;
+  }
+
+  .copy[data-copied] .copy-idle {
+    display: none;
+  }
+
+  .copy[data-copied] .copy-done {
+    display: inline;
+  }
+</style>
+
+<script>
+  // One delegated listener for every copy button on the page, however many
+  // instances of this component render.
+  const KEY = '__fieldNotesCopyBound';
+  if (!(KEY in window)) {
+    (window as any)[KEY] = true;
+
+    document.addEventListener('click', async (event) => {
+      const target = event.target as HTMLElement | null;
+      const button = target?.closest<HTMLButtonElement>('button[data-copy]');
+      if (!button) return;
+
+      try {
+        await navigator.clipboard.writeText(button.dataset.copy ?? '');
+      } catch {
+        // Clipboard blocked or unavailable. Select the source instead, so the
+        // reader can copy by hand rather than being told nothing happened.
+        const pre =
+          button.closest('figure, .source-panel')?.querySelector('pre') ??
+          button.parentElement?.querySelector('pre');
+        if (pre) {
+          const range = document.createRange();
+          range.selectNodeContents(pre);
+          const selection = window.getSelection();
+          selection?.removeAllRanges();
+          selection?.addRange(range);
+        }
+        return;
+      }
+
+      button.dataset.copied = 'true';
+      button.setAttribute('aria-live', 'polite');
+      window.setTimeout(() => delete button.dataset.copied, 1600);
+    });
+  }
+</script>

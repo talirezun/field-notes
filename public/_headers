@@ -1,0 +1,23 @@
+# Cloudflare assets serves everything with max-age=0, must-revalidate by
+# default. For content-hashed and versioned files that means a revalidation
+# round trip per file per page view, which is the exact cost the site avoids by
+# self-hosting fonts rather than using a CDN. Undoing it there and paying it
+# here would be silly.
+
+# Astro puts a content hash in these filenames, so the URL changes whenever the
+# bytes do. Safe to cache forever.
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Font filenames carry the family, subset, weight and style. A different font is
+# a different filename, so these are effectively immutable too.
+/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Rebuilt on every deploy and served from a stable URL, so they must revalidate.
+# An agent that ingested a stale corpus would not know it had.
+/downloads/*
+  Cache-Control: public, max-age=0, must-revalidate
+
+/*.md
+  Cache-Control: public, max-age=0, must-revalidate
