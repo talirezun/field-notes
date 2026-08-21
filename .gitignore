@@ -21,3 +21,9 @@ src/generated/
 # The build brief is a private working document. It contains internal notes that
 # must not be published, and this repository is public.
 FIELD-NOTES-BUILD-SPEC.md
+
+# Authoring audit trail. Private working document: it records contradictions
+# found across published sources and claims awaiting the owner's decision.
+# This repository is public. Do not commit it.
+content/NOTES.md
+_to_delete/
