@@ -2,6 +2,7 @@
 import Base from './Base.astro';
 import { render, type CollectionEntry } from 'astro:content';
 import { AUTHOR, SITE_URL, isoDate, formatDate } from '../lib/site';
+import pageDates from '../generated/page-dates.json';
 
 interface Props {
   page: CollectionEntry<'pages'>;
@@ -11,6 +12,15 @@ const { page } = Astro.props;
 const { Content } = await render(page);
 const path = `/${page.data.slug}`;
 
+/**
+ * The date shown on a standalone page is its last git commit date, not a
+ * hand-typed frontmatter value: see src/lib/page-dates.ts. `page.data.updated`
+ * is the fallback for when git history could not be trusted at build time
+ * (shallow clone, or no git at all), which is why it stays in the schema.
+ */
+const dateEntry = (pageDates as Record<string, { date: string; source: string }>)[page.data.slug];
+const updated = dateEntry ? new Date(dateEntry.date) : page.data.updated;
+
 const schema = {
   '@context': 'https://schema.org',
   '@type': 'WebPage',
@@ -18,7 +28,7 @@ const schema = {
   name: page.data.title,
   description: page.data.description,
   url: `${SITE_URL}${path}`,
-  dateModified: isoDate(page.data.updated),
+  dateModified: isoDate(updated),
   inLanguage: 'en',
   isPartOf: { '@type': 'WebSite', '@id': `${SITE_URL}#website` },
   author: {
@@ -37,14 +47,14 @@ const schema = {
   title={page.data.title}
   description={page.data.description}
   path={path}
-  updated={page.data.updated}
+  updated={updated}
   schema={schema}
 >
   <div class="shell page">
     <header class="page-head">
       <h1>{page.data.title}</h1>
       <p class="meta">
-        Updated <time datetime={isoDate(page.data.updated)}>{formatDate(page.data.updated)}</time>
+        Updated <time datetime={isoDate(updated)}>{formatDate(updated)}</time>
       </p>
     </header>
     <div class="prose">

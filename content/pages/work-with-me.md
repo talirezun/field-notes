@@ -37,7 +37,8 @@ I build and run software, and I publish most of it.
 
 [The Curator](/the-curator) is a local second brain. You drop in documents, it
 writes an interlinked wiki, and it serves that wiki to any agent or model that
-speaks MCP. Open source, MIT licensed. This corpus was built with it.
+speaks MCP. Open source and MIT, apart from ten Shared Brain backend files that
+are source-available. This corpus was built with it.
 
 [ØØT](https://github.com/talirezun/oot-framework), the organisation of tomorrow,
 is a file-based framework for running an organisation where the people producing

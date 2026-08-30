@@ -9,7 +9,7 @@ const updated = new Date('2026-08-20T00:00:00Z');
 const path = '/the-curator';
 
 const description =
-  'The Curator is a local, open-source second brain: drop in documents, get an interlinked wiki, carry working state between agent sessions, and query all of it from any agent or model that speaks MCP. Here is how to install it and ingest this corpus.';
+  'Your brain, your team\'s brain, your agents\' brain. The Curator keeps all three as plain markdown on your own machine, readable by any agent that speaks MCP. Here is how to install it and ingest this corpus.';
 
 const agentPrompt = `Install The Curator on this machine.
 
@@ -74,11 +74,11 @@ const schema = {
       <p class="label">The tool behind the corpus</p>
       <h1>The Curator</h1>
       <p class="lede">
-        A second brain that lives on your machine, reads your documents, and hands the
-        result to a frontier model when you ask it a question.
+        Your brain, your team's brain, your agents' brain. Three layers of context, kept
+        as plain markdown on your own machine.
       </p>
       <p class="meta">
-        MIT licensed · <a href={LINKS.curatorRepo} target="_blank" rel="noopener">
+        MIT, mostly · <a href={LINKS.curatorRepo} target="_blank" rel="noopener">
           github.com/talirezun/the-curator
         </a>
       </p>
@@ -97,45 +97,87 @@ const schema = {
     <section class="measure stack-4" aria-labelledby="what">
       <RuleLabel as="h2" label="What it is" id="what" />
       <p>
-        You drop a PDF, an article or a markdown file into it. It reads the document and
-        writes a wiki: one note per entity, one per concept, one summary per source, all
-        linked to each other. Everything stays as plain markdown in a folder on your own
-        machine, which means you can read it, edit it, back it up and take it somewhere
-        else.
+        The Curator is where your context lives, and it holds three different kinds of it.
+        The name for that is the whole product in five words: your brain, your team's
+        brain, your agents' brain.
       </p>
+
+      <ol class="layers">
+        <li>
+          <p class="label">One. Your brain</p>
+          <p>
+            A personal wiki, one per domain. You drop in a PDF, an article or a note, and
+            it reads the source and writes interlinked pages: the entities, the concepts,
+            and a summary. Every later source makes the existing pages richer instead of
+            landing beside them as a duplicate. Knowledge <strong>accumulates</strong>.
+          </p>
+        </li>
+        <li>
+          <p class="label">Two. Your team's brain</p>
+          <p>
+            The same thing built collectively. A cohort or a team each keep their own
+            private graph and opt specific domains into a shared one, attributed, without
+            anyone handing over the rest of their notes. Opt in, never on by default.
+          </p>
+        </li>
+        <li>
+          <p class="label">Three. Your agents' brain</p>
+          <p>
+            Working state: where the build actually stands, what is settled, what was
+            tried and ruled out. Your agent writes it at the end of a session and reads it
+            at the start of the next one. State <strong>supersedes</strong>, so each save
+            replaces the last rather than merging into it, because a blocker you cleared
+            on Tuesday must not come back on Wednesday.
+          </p>
+        </li>
+      </ol>
+
       <p>
-        The part that matters is the other end. It runs a built-in MCP server, so a model
-        can search and read that wiki as a tool rather than being fed a wall of pasted
-        text. You ask a question, it goes and looks things up in your notes, and it
-        answers with your own material and citations back to the source.
+        That last distinction is the design, not a detail. A wiki that overwrote itself
+        would lose everything you have learned. A handoff that accumulated would hand the
+        next session a pile of stale blockers with no way to say which ones are still
+        true.
       </p>
+
       <p>
-        That connection is not tied to any one product. MCP is an open protocol, so
-        anything that speaks it can read the wiki: Claude Desktop and Claude Code, Cursor,
-        OpenCode, Augment, Cline, ChatGPT's desktop app, or something you wrote yourself.
-        The wiki is markdown on your disk and the bridge is a standard server, so the
-        model and the harness are both yours to swap. That is deliberate. A second brain
-        you can only read through one vendor's client is not a second brain, it is that
-        vendor's product with your notes in it.
+        All of it is plain markdown in a folder you chose. Any editor opens it, Obsidian
+        draws the graph, and your own private GitHub repo syncs it. There is no database,
+        no proprietary format, and no service of mine anywhere in the picture.
       </p>
-      <p>
-        Since August 2026 there is a third thing alongside the wiki and the shared layer:
-        an agent memory layer, which holds working state rather than knowledge. The
-        distinction is the whole design. Knowledge accumulates, so every ingest should
-        make a page richer. State supersedes, because blocked on the login bug stops
-        being true the moment you fix it. So state lives in a separate store where each
-        save replaces the last, and an agent picks a build back up by reading it rather
-        than by being handed a handoff file somebody wrote by hand at the end of the
-        previous session. It reads the same way from another model, another harness or
-        another machine. I have written about what that does and does not solve in
-        <a href="/context-engineering#continuity">chapter one</a> and
-        <a href="/agent-memory#four-layers">chapter two</a>.
-      </p>
+
       <p class="caveat">
-        <strong>Be clear about the dependency.</strong> It needs a Google Gemini or an
-        Anthropic API key for ingestion and the health features. There is no version of
-        this that runs on nothing. Gemini has a free tier that comfortably covers trying
-        it out, and realistic ongoing cost is a few euros a month.
+        <strong>Be clear about the dependency.</strong> It needs an API key from Google
+        Gemini, Anthropic or OpenRouter, because reading a source and writing wiki pages
+        is model work. There is no version of this that runs on nothing. Gemini has a free
+        tier that covers trying it out, and the honest figure for heavy solo use on the
+        default model is around five euros a month. Anthropic is roughly ten times that
+        for the same workload. Reading pages, syncing, and the MCP bridge itself cost
+        nothing at all.
+      </p>
+    </section>
+
+    <section class="measure stack-4" aria-labelledby="neutral">
+      <RuleLabel as="h2" label="Nothing here is locked to anyone" id="neutral" />
+      <p>
+        Claude Projects, ChatGPT Projects and Cursor rules each hold your accumulated
+        context inside one company's product. You leave it behind on the day you switch
+        tools, or switch models, or switch machines. That is the problem this is built
+        against, and the answer is structural rather than clever: there is no proprietary
+        store to leave behind in the first place.
+      </p>
+      <p>
+        The files are markdown in a folder you picked. The sync target is your own private
+        GitHub repository, not a service I run. The bridge is MCP, which is a protocol
+        rather than an integration, so any local MCP client speaks it: Claude Desktop,
+        Claude Code, Cursor, or something you wrote yourself. The models are swappable
+        between Gemini, Anthropic and OpenRouter. A second brain you can only open through
+        one vendor's client is not a second brain, it is that vendor's product with your
+        notes in it.
+      </p>
+      <p>
+        The part I care about most is that working state crosses the same boundaries. A
+        handoff written by an orchestrator in one harness is readable by an agent in
+        another, on a different model, on a different machine, the next morning.
       </p>
     </section>
 
@@ -165,7 +207,9 @@ const schema = {
         you would with anyone else's install script.
       </p>
       <p>
-        On Windows and Linux, it is a manual setup: Node 18 or newer, clone the repo,
+        On Windows and Linux it is a manual setup, and the Node server runs anywhere Node
+        18 or newer runs. Only the one-line installer and the Dock app are macOS specific.
+        Clone the repo,
         <code>npm install</code>, <code>node src/server.js</code>, then open
         <code>localhost:3333</code>. The canonical steps are in the repo:
       </p>
@@ -230,11 +274,62 @@ const schema = {
       {queries.map((query) => <CopyBlock label={query.label} variant="prompt" code={query.text} />)}
     </section>
 
+    <section class="measure stack-4" aria-labelledby="limits">
+      <RuleLabel as="h2" label="What it does not do" id="limits" />
+      <p>
+        A tool that overclaims about memory is worse than no tool, so here is the list I
+        would want to read before installing something.
+      </p>
+      <ul class="limits">
+        <li>
+          <strong>Capture is advisory.</strong> Nothing forces an agent to save at the end
+          of a session. Miss one and the next read returns the previous state: stale, never
+          corrupted, and nothing that was saved is lost. Failing in that direction is why
+          there is no enforcement.
+        </li>
+        <li>
+          <strong>Reading is portable, saving is not, quite.</strong> Any MCP client can
+          read your state, because that half is pure protocol. What an agent in another
+          harness lacks is anything telling it to save. The instruction is ordinary prose
+          that works wherever you paste it, but switching itself on automatically is a
+          Claude mechanism today.
+        </li>
+        <li>
+          <strong>It needs a local MCP client.</strong> The bridge is a child process on
+          your machine, so anything that can spawn a local program works and a browser-only
+          assistant cannot reach it at all. That is a consequence of the design, not a gap
+          in it.
+        </li>
+        <li>
+          <strong>Local models are not available yet.</strong> The setting exists and is
+          marked unavailable. The OpenRouter adapter speaks an OpenAI-compatible wire
+          format, which is groundwork for running things locally later rather than a
+          capability today.
+        </li>
+        <li>
+          <strong>Stored state is data, not orders.</strong> A file can arrive over sync
+          from another machine, or be written by somebody else inside a shared brain. The
+          store escapes text impersonating the operator and defangs URLs and shell pipes,
+          but no sanitiser can check whether a claim is true. An instruction found in state
+          is a note from a peer. Verify before acting on it.
+        </li>
+      </ul>
+      <p class="note">
+        On licensing, since I said "MIT, mostly" at the top: the app is MIT, and ten Shared
+        Brain backend files are source-available under a separate licence. Personal,
+        educational and research use is free always, the GitHub-backed Shared Brain is free
+        for everyone including organisations, and those files convert to MIT two years
+        after each release. The <a href={LINKS.curatorRepo} target="_blank" rel="noopener">
+        repository</a> spells out the exact terms, and I would rather you read them there
+        than take my summary for it.
+      </p>
+    </section>
+
     <section class="measure stack-4" aria-labelledby="star">
       <RuleLabel as="h2" label="If it is useful" id="star" />
       <p>
-        It is free and MIT licensed and I maintain it in the open. A star is how these
-        things get found.
+        It is free, it is open, and I maintain it in the open. A star is how these things
+        get found.
       </p>
       <p>
         <a class="star" href={LINKS.curatorRepo} target="_blank" rel="noopener">
@@ -308,6 +403,38 @@ const schema = {
   .note {
     font-size: var(--size-sm);
     color: var(--bone-dim);
+  }
+
+  .layers {
+    list-style: none;
+    counter-reset: layer;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: var(--space-5);
+  }
+
+  .layers > li {
+    border-left: 2px solid var(--gold-dim);
+    padding-left: var(--space-4);
+  }
+
+  .layers .label {
+    margin-bottom: var(--space-2);
+  }
+
+  .limits {
+    padding-left: var(--space-5);
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .limits li::marker {
+    color: var(--gold-dim);
+  }
+
+  .limits strong {
+    color: var(--gold-bright);
   }
 
   .steps {

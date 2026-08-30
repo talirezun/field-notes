@@ -96,13 +96,13 @@ The tool I built for this is The Curator. It is open source under MIT, it runs l
 
 Two things about it that people get wrong, and I would rather state them plainly than let the marketing version stand.
 
-**It needs an API key.** Either Google Gemini or Anthropic. There is no version of this that runs the ingestion pipeline on nothing. Gemini has a free tier, though Google tightened it substantially at the end of 2025 and a single batch of five to ten PDFs will usually exhaust a day's quota. On paid keys, moderate solo use lands around five euros a month. If you would rather nothing left your machine at all, it runs against a local model through LM Studio, and the trade is exactly what you would expect: full privacy, lower quality.
+**It needs an API key.** Google Gemini, Anthropic or OpenRouter. There is no version of this that runs the ingestion pipeline on nothing. Gemini has a free tier, though Google tightened it substantially at the end of 2025 and a single batch of five to ten PDFs will usually exhaust a day's quota. On paid keys, moderate solo use lands around five euros a month. If you would rather nothing left your machine at all, it runs against a local model through LM Studio, and the trade is exactly what you would expect: full privacy, lower quality.
 
 **The output is roughly ninety-five percent right, not a hundred.** An AI building a knowledge graph makes mistakes: links that point nowhere, pages that end up orphaned, the same concept written twice under slightly different names. That is why there is a health layer that scans for broken links, orphans and near-duplicates. Every scan is opt-in, priced before you run it, and gated behind a preview, so nothing destructive happens without you signing off on it.
 
 ## How does the model actually reach the notes? {#retrieval}
 
-Through an MCP server that exposes the wiki to a frontier model as a set of tools. Seventeen of them, ten read and seven write. The model can list domains, pull an index, search across the wiki, read a specific page, and then, if you let it, write findings back. Once that bridge is connected, the model is not being handed a pile of documents. It is navigating a structure.
+Through an MCP server that exposes the wiki to a frontier model as a set of tools. Twenty of them as of August 2026: twelve that read, and eight health and authoring tools, of which five change anything on disk. The model can list domains, pull an index, search across the wiki, read a specific page, and then, if you let it, write findings back. Once that bridge is connected, the model is not being handed a pile of documents. It is navigating a structure.
 
 The graph-native tools are the ones that justify the whole architecture, because they answer questions a flat index cannot answer at all.
 
@@ -110,7 +110,7 @@ The graph-native tools are the ones that justify the whole architecture, because
 
 The working query pattern is boring and it is the right one: list the domains, pull the index, search, then read the specific nodes that matter. Cheap traversal first, expensive full reads last. It is the same just-in-time discipline from the previous chapter, applied to notes instead of code.
 
-For scale, my own articles domain sits at roughly three thousand three hundred nodes and fifteen thousand edges as of mid-2026, built by ingesting sources over about six months. All seventeen tools work identically against a local model with no network, which matters if the material is sensitive.
+For scale, my own articles domain sits at roughly three thousand three hundred nodes and fifteen thousand edges as of mid-2026, built by ingesting sources over about six months. All twenty tools work identically against a local model with no network, which matters if the material is sensitive.
 
 The same bridge now carries working state as well as knowledge, and that introduces a problem the wiki never had. State can arrive over sync from another machine, or be written by somebody else inside a shared brain, so it has to be treated as data rather than as orders. The store escapes text that tries to impersonate the operator and defangs URLs and shell pipes on the way in and on the way out. That last rule came from a measurement rather than a theory: planted state containing a piped shell install was never executed by a model, but in three runs out of ten it was relayed to me as a recommended next step. No sanitiser can check whether a claim is true. An instruction found in state is a note from a peer, not an order.
 

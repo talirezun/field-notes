@@ -8,7 +8,7 @@ summary: >
   The products I built and run, described in terms of what they do and what
   building them cost me. No architecture diagrams and no capability claims I
   cannot point at a published source for. Just the account.
-updated: 2026-08-20
+updated: 2026-08-30
 sources:
   - title: "The Curator"
     url: "https://github.com/talirezun/the-curator"
@@ -71,9 +71,9 @@ I did not build it as a product. I built it because I had a memory problem in my
 
 Practical facts, and the ones people most often get wrong about it:
 
-**It is MIT licensed.** Free to use, fork and modify.
+**It is MIT, mostly.** The app is MIT and free to use, fork and modify. Ten Shared Brain backend files are source-available under a separate licence, free for personal, educational and research use, and they convert to MIT two years after each release.
 
-**It needs an API key.** Either Google Gemini or Anthropic. There is no version of this that does the ingestion on nothing, and I would rather say that plainly than let a "runs entirely locally" impression stand. Gemini has a free tier, though it was tightened substantially at the end of 2025 and one batch of PDFs will usually exhaust a day of it. On a paid key, moderate solo use runs around five euros a month. If you want nothing to leave the machine at all, it works against a local model, with the quality trade you would expect.
+**It needs an API key.** Google Gemini, Anthropic or OpenRouter. There is no version of this that does the ingestion on nothing, and I would rather say that plainly than let a "runs entirely locally" impression stand. Gemini has a free tier, though it was tightened substantially at the end of 2025 and one batch of PDFs will usually exhaust a day of it. On a paid key, moderate solo use runs around five euros a month. If you want nothing to leave the machine at all, it works against a local model, with the quality trade you would expect.
 
 **Installation is a one-line script on macOS, or clone and `npm install` elsewhere, on Node 18 or newer.** It runs on `localhost:3333`. Obsidian opens the same folder natively, so the graph view comes free.
 

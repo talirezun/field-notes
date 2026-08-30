@@ -9,6 +9,7 @@ import { copyFileSync, existsSync, mkdirSync, writeFileSync, statSync } from 'no
 import { join } from 'node:path';
 import { buildCorpus, formatBytes } from '../src/lib/build-corpus';
 import { buildSearchIndexData } from '../src/lib/build-search-index';
+import { resolvePageDates } from '../src/lib/page-dates';
 
 const FONT_FILES: Array<[pkg: string, file: string]> = [
   ['playfair-display', 'playfair-display-latin-900-italic.woff2'],
@@ -43,8 +44,25 @@ function copyFonts(): void {
   console.log(`[prebuild] fonts: ${FONT_FILES.length} files copied to public/fonts`);
 }
 
+function writePageDates(): void {
+  const generatedDir = join(process.cwd(), 'src', 'generated');
+  mkdirSync(generatedDir, { recursive: true });
+
+  const { dates, log, gitDisabledReason } = resolvePageDates();
+  writeFileSync(join(generatedDir, 'page-dates.json'), JSON.stringify(dates, null, 2));
+
+  if (gitDisabledReason) {
+    console.warn(
+      `[prebuild] page dates: git history not trusted (${gitDisabledReason}). ` +
+        'Falling back to frontmatter `updated` for every page in content/pages.',
+    );
+  }
+  console.log(`[prebuild] page dates: ${log.join(', ')}`);
+}
+
 async function main(): Promise<void> {
   copyFonts();
+  writePageDates();
 
   const builtOn = new Date().toISOString().slice(0, 10);
   const manifest = await buildCorpus(builtOn);

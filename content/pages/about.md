@@ -31,8 +31,10 @@ It distils across them and links back to them.
 ## Where the material comes from
 
 The raw material lives in a knowledge graph I built with
-[The Curator](/the-curator), my own open-source second brain. Field Notes is the
-published surface of that graph, edited down by hand.
+[The Curator](/the-curator), my own open-source tool for keeping context: what I
+have read, what a group has read together, and where a piece of work currently
+stands. Field Notes is the published surface of the first of those, edited down
+by hand.
 
 Three rules govern what makes it here:
 
