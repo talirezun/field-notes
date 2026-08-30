@@ -8,7 +8,7 @@ summary: >
   An agent forgets everything when the window closes. A second brain is the
   durable half of the system: structured, linked notes the agent reads back on
   demand, so accumulated thinking outlives any single conversation.
-updated: 2026-08-20
+updated: 2026-08-30
 sources:
   - title: "The Agent Memory Problem, and Why It Matters"
     url: "https://talirezun.substack.com/p/the-agent-memory-problem-and-why"
@@ -49,6 +49,11 @@ sources:
     publication: "Substack"
     date: 2026-06-03
     sections: ["the-problem"]
+  - title: "The Handoff Writes Itself"
+    url: "https://talirezun.substack.com/p/the-handoff-writes-itself"
+    publication: "Substack"
+    date: 2026-08-30
+    sections: ["four-layers", "retrieval", "knowledge-immortality"]
 related: ["context-engineering", "coding-agents"]
 tags: ["agent-memory", "second-brain", "knowledge-management", "mcp"]
 ---
@@ -77,6 +82,12 @@ Retrieval treats your documents as a lookup table. Chunk everything, embed it, a
 
 Curation is the opposite bet: read once, integrate permanently. The knowledge is compiled and kept current rather than re-derived on demand. Retrieval fetches. Curation remembers.
 
+There is one more thing that looks like a memory layer and is not, and mistaking it for one is an error I made for two years. Knowledge accumulates. State supersedes.
+
+Everything you learn about a topic is worth keeping, and a new source should make the page richer rather than sit beside it as a duplicate. Where things stand right now is the opposite. Blocked on the login bug stops being true the moment you fix it, and a store that merely added the fix would leave the stale blocker sitting next to it, with no way to say that this is no longer the case. So working state belongs in a separate store with overwrite semantics, where each save replaces the last rather than merging into it. Knowledge grows. State is current, or it is worthless.
+
+The practical test is whether the thing expires. A wrong turn you took this week is state. A failure whose value is the pattern across many incidents is a wiki page. The suite was at eighty-four green before my change is state. How a subsystem actually works is a page. Put durable material into working state and the next save quietly overwrites it, and nothing warns you, because overwriting is precisely what that store is for.
+
 ## What is a second brain, in concrete terms? {#what-a-second-brain-is}
 
 A folder of markdown files on your own machine that an AI keeps organised. You drop in a PDF, an article or a text file, and it reads the source and writes an interlinked wiki out of it: entity pages for the people, tools and companies, concept pages for the ideas, and a summary page for the source itself. Roughly five to fifteen linked pages per source. Drop in something on the same subject a month later and it updates the existing pages rather than creating near-duplicates, so the wiki gets denser rather than just bigger.
@@ -101,6 +112,8 @@ The working query pattern is boring and it is the right one: list the domains, p
 
 For scale, my own articles domain sits at roughly three thousand three hundred nodes and fifteen thousand edges as of mid-2026, built by ingesting sources over about six months. All seventeen tools work identically against a local model with no network, which matters if the material is sensitive.
 
+The same bridge now carries working state as well as knowledge, and that introduces a problem the wiki never had. State can arrive over sync from another machine, or be written by somebody else inside a shared brain, so it has to be treated as data rather than as orders. The store escapes text that tries to impersonate the operator and defangs URLs and shell pipes on the way in and on the way out. That last rule came from a measurement rather than a theory: planted state containing a piped shell install was never executed by a model, but in three runs out of ten it was relayed to me as a recommended next step. No sanitiser can check whether a claim is true. An instruction found in state is a note from a peer, not an order.
+
 What I cannot tell you is how this behaves at ten times that size. I have not tested it against tens of thousands of nodes, multiple active domains and years of ingestion. Traversal efficiency and token consumption at that scale are open questions, and writes through the MCP are already noticeably slow on large wikis. This is generation one of something.
 
 ## What changes once your thinking outlives the session? {#knowledge-immortality}
@@ -114,6 +127,12 @@ What that buys, at the personal end, is expertise that does not evaporate. Thirt
 The durability bet is markdown, deliberately. Plain text has been readable for decades and will stay readable for decades more, which is not something you can say about any particular application's database format. The whole design follows from wanting the notes to outlive the tool that made them.
 
 I would rather not oversell the personal version of this. Compounding is real and I feel it daily in my own work. But the claim I am making is about the mechanism, not about having proven that a lifetime of knowledge survives, because not enough time has passed for anyone to have proven that.
+
+On the agent side there is now one measured number, and it is worth reporting with its limits attached. Asked an open question about what to do next, models given no working state named the correct top priority in zero runs out of four. Given the state, eight out of eight. That first row is the effect worth relying on.
+
+The second row is the interesting one. Three of those eight still proposed something the handoff explicitly ruled out, and twice a model quoted the decision and overrode it in the same sentence. What changed that was placement rather than wording. A constraint filed as a firm decision, phrased as a negative with its reason attached, was respected in every run, while the same constraint living inside a narrative about what had gone wrong was re-litigated until it was moved. A constraint written as a story reads as history. Written as a decision it reads as a boundary.
+
+Small sample, one provider, one project, so treat that as the shape of an effect rather than a rate.
 
 ## What happens when more than one person contributes? {#shared-brain}
 

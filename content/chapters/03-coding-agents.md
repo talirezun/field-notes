@@ -8,7 +8,7 @@ summary: >
   The model writes the code. The harness decides what it sees, what it may
   touch, and when it stops. Most of the difference between a good session and
   a wasted one comes from the harness, not the model underneath it.
-updated: 2026-08-20
+updated: 2026-08-30
 sources:
   - title: "Blueprint of a Frontier Coding Agent"
     url: "https://talirezun.substack.com/p/blueprint-of-a-frontier-coding-agent"
@@ -52,6 +52,11 @@ sources:
     url: "https://talirezun.substack.com/p/from-0-to-dev-in-one-day-what-a-real"
     publication: "Substack"
     date: 2026-07-20
+    sections: ["staying-current"]
+  - title: "The Handoff Writes Itself"
+    url: "https://talirezun.substack.com/p/the-handoff-writes-itself"
+    publication: "Substack"
+    date: 2026-08-30
     sections: ["staying-current"]
 related: ["context-engineering", "orchestration"]
 tags: ["coding-agents", "developer-tools", "harness", "claude-code"]
@@ -146,6 +151,8 @@ The remaining gap has a name in my head: the open loop. An agent that can deploy
 By betting on the shape rather than the tool. The twelve components do not change. Roles, context and handoffs do not change. What changes, roughly quarterly, is which product implements them best, and if your working method is built around a specific product you will rebuild your method every time the market moves.
 
 Look at what happened to my own verdicts. Claude Desktop went from "graduate away from it" to "my daily driver" in about a year. Every model version number in everything I have published is now stale, some of it within weeks of publication. A tool comparison is a photograph, not a map.
+
+There is now a concrete version of that bet. The state a session leaves behind lives as plain markdown in a store the agent reaches over MCP, rather than inside any one product's project folder, so a handoff written by an orchestrator in one harness can be read by an agent in another, on another machine. What travels is the reading. What does not travel yet is the instruction to save, because automatic activation from a description is a mechanism specific to particular clients and everywhere else it is prose you paste in. The artefact is tool-independent. The discipline is not, quite.
 
 Two habits keep this from being a problem.
 

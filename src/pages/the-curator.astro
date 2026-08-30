@@ -9,7 +9,7 @@ const updated = new Date('2026-08-20T00:00:00Z');
 const path = '/the-curator';
 
 const description =
-  'The Curator is a local, open-source second brain: drop in documents, get an interlinked wiki, query it from any agent or model that speaks MCP. Here is how to install it and ingest this corpus.';
+  'The Curator is a local, open-source second brain: drop in documents, get an interlinked wiki, carry working state between agent sessions, and query all of it from any agent or model that speaks MCP. Here is how to install it and ingest this corpus.';
 
 const agentPrompt = `Install The Curator on this machine.
 
@@ -117,6 +117,19 @@ const schema = {
         model and the harness are both yours to swap. That is deliberate. A second brain
         you can only read through one vendor's client is not a second brain, it is that
         vendor's product with your notes in it.
+      </p>
+      <p>
+        Since August 2026 there is a third thing alongside the wiki and the shared layer:
+        an agent memory layer, which holds working state rather than knowledge. The
+        distinction is the whole design. Knowledge accumulates, so every ingest should
+        make a page richer. State supersedes, because blocked on the login bug stops
+        being true the moment you fix it. So state lives in a separate store where each
+        save replaces the last, and an agent picks a build back up by reading it rather
+        than by being handed a handoff file somebody wrote by hand at the end of the
+        previous session. It reads the same way from another model, another harness or
+        another machine. I have written about what that does and does not solve in
+        <a href="/context-engineering#continuity">chapter one</a> and
+        <a href="/agent-memory#four-layers">chapter two</a>.
       </p>
       <p class="caveat">
         <strong>Be clear about the dependency.</strong> It needs a Google Gemini or an

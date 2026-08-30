@@ -8,7 +8,7 @@ summary: >
   Context engineering is the continuous work of deciding what an agent sees,
   and when. It runs through every phase of a build rather than just the first
   one, and it is where most agent work quietly fails.
-updated: 2026-08-20
+updated: 2026-08-30
 sources:
   - title: "Behind the Curtain: The Three-Phase Process I Use to Build Every AI-Coded Product"
     url: "https://talirezun.substack.com/p/behind-the-curtain-the-three-phase"
@@ -52,6 +52,11 @@ sources:
     publication: "Research paper"
     date: 2026-08-01
     sections: ["what-to-load", "continuity"]
+  - title: "The Handoff Writes Itself"
+    url: "https://talirezun.substack.com/p/the-handoff-writes-itself"
+    publication: "Substack"
+    date: 2026-08-30
+    sections: ["continuity"]
 related: ["agent-memory", "coding-agents"]
 tags: ["context-engineering", "ai-agents", "methodology"]
 ---
@@ -166,7 +171,7 @@ None of it is clever. That is rather the point.
 
 The standing file goes first. Claude Code loads CLAUDE.md, OpenCode loads AGENTS.md, Cursor has its own. Whatever the name, it is your agent's permanent brief: architecture decisions, conventions, the rules that should govern every action. Instruct the agent to update it after every meaningful milestone. An unmaintained standing file becomes stale context, and stale context is worse than none.
 
-The handoff file does the heavy lifting. Written by the orchestrator at the end of a session, it says what happened, which agent did what, what is still open, and where the relevant documentation is. Crucially, it carries the role instruction forward too: you are the orchestrator, you do not write code yourself, you delegate, you audit. It is the same job you would do for a person joining the team on a Monday.
+The handoff does the heavy lifting. Written by the orchestrator as the session goes, it says what happened, which agent did what, what is still open, and where the relevant documentation is. Crucially, it carries the role instruction forward too: you are the orchestrator, you do not write code yourself, you delegate, you audit. It is the same job you would do for a person joining the team on a Monday.
 
 Underneath that there are three layers of memory, and knowing which one a piece of knowledge belongs in is most of the skill.
 
@@ -178,11 +183,15 @@ Underneath that there are three layers of memory, and knowing which one a piece 
 
 The scale this has to survive is the argument for taking any of it seriously. Lumina Gen 2 took hundreds of sessions with hundreds of agents over roughly a month, and around eight hundred and sixty commits. The whole system exists so that agent number forty-seven starts with the same understanding of the project that agent number three finished with.
 
-I want to be honest about how automated this is not. I still manually remind the agents, every single session, that all documentation must be in sync before we close. Manually. Every time. Some of this is a discipline problem that better tooling should solve and has not solved yet.
+Until recently this section ended with an admission that none of it was automated, and that I still reminded the agents every single session to get the documentation in sync before we closed. Part of that is now solved, and the split is worth being precise about.
+
+The handoff no longer gets written by hand. The orchestrator saves working state through an MCP store as it goes, and a fresh session, on a different model or a different harness or a different machine, starts with one sentence: read the working state for this scope and carry on. What that removes is not mainly the twenty minutes at the end. It is a single point of failure sitting at the worst possible position in the process, because the model being asked to compress an entire session into one perfect document was the model nearest its context limit, with its judgement already sliding.
+
+What is not solved is the capture. Nothing forces a save before a session ends, so it is still discipline rather than machinery. Miss one and the next read returns the previous state: stale, never corrupted, and nothing that was saved is lost. Failing in that direction is the argument for leaving it advisory rather than wiring in enforcement.
 
 ## Does any of this change if you cannot read the code? {#for-non-developers}
 
-The practice is identical. The verification is different. You still write the brief, still keep the standing file current, still write the handoff at eighty percent. What changes is that you cannot check the work by reading the diff, so you check it by using the thing.
+The practice is identical. The verification is different. You still write the brief, still keep the standing file current, still close the session out at eighty percent. What changes is that you cannot check the work by reading the diff, so you check it by using the thing.
 
 I do not write the code. I have not for two years. So this is the version of the practice I actually run.
 
