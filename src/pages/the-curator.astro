@@ -78,6 +78,7 @@ const schema = {
         as plain markdown on your own machine.
       </p>
       <p class="meta">
+        <a href={LINKS.curatorSite} target="_blank" rel="noopener">mycurator.xyz</a> ·
         MIT, mostly · <a href={LINKS.curatorRepo} target="_blank" rel="noopener">
           github.com/talirezun/the-curator
         </a>
@@ -181,6 +182,26 @@ const schema = {
       </p>
     </section>
 
+    <section class="measure stack-4" aria-labelledby="site">
+      <RuleLabel as="h2" label="Ask the site instead of reading it" id="site" />
+      <p>
+        The product has a home of its own at
+        <a href={LINKS.curatorSite} target="_blank" rel="noopener">mycurator.xyz</a>, and
+        the fastest way to find out whether it fits you is to ask it. The page runs on
+        <a href="/what-i-shipped#lumina">Lumina</a>, grounded in the product documentation,
+        so you can ask how to install it, what it costs, whether it runs on Windows, or how
+        the working state layer behaves, and get an answer that links into the section of
+        the page that covers it. Most of what is on this page is answerable there in a
+        sentence.
+      </p>
+      <p class="note">
+        The site itself is plain static files on the edge with the conversation woven into
+        the page rather than parked in a corner. I wrote the build up as a manual, because
+        that shape is the one I now think every product website should have. It is cited
+        from <a href="/what-i-shipped#lumina">chapter nine</a>.
+      </p>
+    </section>
+
     <section class="measure stack-4" aria-labelledby="why">
       <RuleLabel as="h2" label="Why it is on this site" id="why" />
       <p>
@@ -197,7 +218,12 @@ const schema = {
 
     <section class="measure stack-4" aria-labelledby="install">
       <RuleLabel as="h2" label="Install" id="install" />
-      <p>On macOS, one line:</p>
+      <p>
+        The friendlier version of this, with the download and the Windows and Linux setup
+        side by side, is the Quick start on
+        <a href={LINKS.curatorSite} target="_blank" rel="noopener">mycurator.xyz</a>. The
+        commands are the same. On macOS, one line:
+      </p>
       <CopyBlock
         label="macOS"
         code="curl -fsSL https://raw.githubusercontent.com/talirezun/the-curator/main/install.sh | bash"

@@ -8,7 +8,7 @@ summary: >
   The products I built and run, described in terms of what they do and what
   building them cost me. No architecture diagrams and no capability claims I
   cannot point at a published source for. Just the account.
-updated: 2026-08-30
+updated: 2026-09-16
 sources:
   - title: "The Curator"
     url: "https://github.com/talirezun/the-curator"
@@ -59,13 +59,23 @@ sources:
     url: "https://medium.com/@talirezun/from-prototype-to-production-building-an-ai-widget-platform-in-30-days-23c603c91475"
     publication: "Medium"
     sections: ["what-it-cost"]
+  - title: "Where Your Context Lives"
+    url: "https://talirezun.substack.com/p/where-your-context-lives"
+    publication: "Substack"
+    date: 2026-09-03
+    sections: ["the-curator"]
+  - title: "Every Product Needs a Home"
+    url: "https://talirezun.substack.com/p/every-product-needs-a-home"
+    publication: "Substack"
+    date: 2026-09-16
+    sections: ["lumina"]
 related: ["building-without-being-a-developer", "agent-memory"]
 tags: ["projects", "the-curator", "lumina", "build-log"]
 ---
 
 ## What is The Curator and why did I build it? {#the-curator}
 
-A local, open-source second brain. You drop a PDF, an article or a note into it, and it reads the source and writes an interlinked wiki out of it: entity pages, concept pages, and a summary page for the source. Everything stays as plain markdown on your own machine, and an MCP server exposes the whole graph to a frontier model as a set of seventeen tools, so the model can traverse it and write findings back during a live session.
+A local, open-source place for context to live, in three layers. Your brain: you drop a PDF, an article or a note into it, and it reads the source and writes an interlinked wiki, entity pages, concept pages and a summary page, that gets richer with every source rather than longer. Your team's brain: the same thing built collectively by a cohort, opt-in, without anyone handing over the rest of their notes. Your agents' brain: working state, where a build currently stands, written by an agent at the end of a session and read at the start of the next one, on whatever model, harness or machine that next session happens to be. Everything stays as plain markdown on your own machine, and an MCP server exposes all of it to any local MCP client as a set of twenty tools. Since September 2026 it is a desktop app with a menu bar widget, and the product site is [mycurator.xyz](https://mycurator.xyz).
 
 I did not build it as a product. I built it because I had a memory problem in my own work and nothing available solved it the way I wanted it solved.
 
@@ -73,7 +83,7 @@ Practical facts, and the ones people most often get wrong about it:
 
 **It is MIT, mostly.** The app is MIT and free to use, fork and modify. Ten Shared Brain backend files are source-available under a separate licence, free for personal, educational and research use, and they convert to MIT two years after each release.
 
-**It needs an API key.** Google Gemini, Anthropic or OpenRouter. There is no version of this that does the ingestion on nothing, and I would rather say that plainly than let a "runs entirely locally" impression stand. Gemini has a free tier, though it was tightened substantially at the end of 2025 and one batch of PDFs will usually exhaust a day of it. On a paid key, moderate solo use runs around five euros a month. If you want nothing to leave the machine at all, it works against a local model, with the quality trade you would expect.
+**It needs an API key.** Google Gemini, Anthropic or OpenRouter. There is no version of this that does the ingestion on nothing, and I would rather say that plainly than let a "runs entirely locally" impression stand. Gemini has a free tier, though it was tightened substantially at the end of 2025 and one batch of PDFs will usually exhaust a day of it. On a paid key, moderate solo use runs around five euros a month. Local models are not available yet. The provider row exists in Settings and is marked unavailable, and the MCP bridge needing no network of its own is a different thing from that.
 
 **Installation is a one-line script on macOS, or clone and `npm install` elsewhere, on Node 18 or newer.** It runs on `localhost:3333`. Obsidian opens the same folder natively, so the graph view comes free.
 
@@ -84,6 +94,8 @@ What went wrong is in chapter two in detail, so briefly here: early versions pro
 ## What is Lumina? {#lumina}
 
 A business uploads its own documents and gets a chat agent that answers from them. When the documents do not cover something, it says so rather than inventing an answer. It deploys as a website widget and across several messaging channels from one engine, with a shared inbox where staff can see every conversation, take over a thread from the AI mid-conversation, and search across channels.
+
+The clearest public example of what it is for is The Curator's own site at [mycurator.xyz](https://mycurator.xyz), which I built in September 2026 as a static page with the conversation woven into it rather than bolted on in a corner. You ask about The Curator and the answer comes back with links into the sections of the page you are already standing on, and the page responds by offering to scroll you there. That is Lumina in the background, grounded in four markdown files of product knowledge, and the whole thing stays plain files served from the edge. I wrote the build up as a manual, because the shape of it is the shape I now think every product website should have.
 
 The design choice underneath it, which I have written about publicly and which shapes everything else, is that the whole document set goes into the model's context rather than being chunked, embedded and retrieved. That decision came out of the year I spent failing to make retrieval work well enough on a different product, which is the next section.
 

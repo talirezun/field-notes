@@ -8,7 +8,7 @@ summary: >
   An agent forgets everything when the window closes. A second brain is the
   durable half of the system: structured, linked notes the agent reads back on
   demand, so accumulated thinking outlives any single conversation.
-updated: 2026-08-30
+updated: 2026-09-16
 sources:
   - title: "The Agent Memory Problem, and Why It Matters"
     url: "https://talirezun.substack.com/p/the-agent-memory-problem-and-why"
@@ -54,6 +54,11 @@ sources:
     publication: "Substack"
     date: 2026-08-30
     sections: ["four-layers", "retrieval", "knowledge-immortality"]
+  - title: "Where Your Context Lives"
+    url: "https://talirezun.substack.com/p/where-your-context-lives"
+    publication: "Substack"
+    date: 2026-09-03
+    sections: ["retrieval", "knowledge-immortality"]
 related: ["context-engineering", "coding-agents"]
 tags: ["agent-memory", "second-brain", "knowledge-management", "mcp"]
 ---
@@ -110,7 +115,7 @@ The graph-native tools are the ones that justify the whole architecture, because
 
 The working query pattern is boring and it is the right one: list the domains, pull the index, search, then read the specific nodes that matter. Cheap traversal first, expensive full reads last. It is the same just-in-time discipline from the previous chapter, applied to notes instead of code.
 
-For scale, my own articles domain sits at roughly three thousand three hundred nodes and fifteen thousand edges as of mid-2026, built by ingesting sources over about six months. All twenty tools work identically against a local model with no network, which matters if the material is sensitive.
+For scale, my own articles domain sits at roughly three thousand three hundred nodes and fifteen thousand edges as of mid-2026, built by ingesting sources over about six months. The bridge itself is a local process that needs no network of its own, so an MCP client on the same machine can read the wiki without anything leaving it, which matters if the material is sensitive. What is not available yet is running the ingestion and the chat on a local model. That provider row exists in Settings and is marked unavailable, and I would rather say so than let a runs-entirely-locally impression stand.
 
 The same bridge now carries working state as well as knowledge, and that introduces a problem the wiki never had. State can arrive over sync from another machine, or be written by somebody else inside a shared brain, so it has to be treated as data rather than as orders. The store escapes text that tries to impersonate the operator and defangs URLs and shell pipes on the way in and on the way out. That last rule came from a measurement rather than a theory: planted state containing a piped shell install was never executed by a model, but in three runs out of ten it was relayed to me as a recommended next step. No sanitiser can check whether a claim is true. An instruction found in state is a note from a peer, not an order.
 
@@ -128,7 +133,7 @@ The durability bet is markdown, deliberately. Plain text has been readable for d
 
 I would rather not oversell the personal version of this. Compounding is real and I feel it daily in my own work. But the claim I am making is about the mechanism, not about having proven that a lifetime of knowledge survives, because not enough time has passed for anyone to have proven that.
 
-On the agent side there is now one measured number, and it is worth reporting with its limits attached. Asked an open question about what to do next, models given no working state named the correct top priority in zero runs out of four. Given the state, eight out of eight. That first row is the effect worth relying on.
+On the agent side there are now two small measurements, and they are worth keeping apart because I have seen them run together. The first was a seeded project with one open architecture question, two providers, eight runs, and seven cents of API spend. Without the working state the model proposed a command the project had already recorded as failed in three of four runs, and an architecture the team had ruled out in four of four. With the handoff present, zero of four for both. The second was a separate reading against this project's own real handoff. Asked an open question about what to do next, models given no working state named the correct top priority in zero runs out of four. Given the state, eight out of eight. The first row of each is the effect worth relying on.
 
 The second row is the interesting one. Three of those eight still proposed something the handoff explicitly ruled out, and twice a model quoted the decision and overrode it in the same sentence. What changed that was placement rather than wording. A constraint filed as a firm decision, phrased as a negative with its reason attached, was respected in every run, while the same constraint living inside a narrative about what had gone wrong was re-litigated until it was moved. A constraint written as a story reads as history. Written as a decision it reads as a boundary.
 

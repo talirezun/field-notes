@@ -7,6 +7,15 @@ This site is my own context-engineering practice applied to my own site, so
 treat this file the way you would want your own to be treated: it is the thing
 that stops you guessing.
 
+## Working state
+
+This repository's working state lives in The Curator (project `projects/field-notes`, see
+`.curator-project`). At the START of every session call the my-curator MCP tool
+`get_working_state` with project "field-notes" and scope "latest" and read the standing
+brief before acting. SAVE with `save_working_state` under project "field-notes", scope
+"main", after every material decision and at least every ten tool calls, and ALWAYS
+before you stop; a save overwrites, so send the complete state each time.
+
 ## What this is
 
 Field Notes is the published, edited surface of my personal knowledge graph. It

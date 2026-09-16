@@ -60,6 +60,8 @@ export const ELSEWHERE: SocialLink[] = [
 
 export const LINKS = {
   curatorRepo: 'https://github.com/talirezun/the-curator',
+  /** The product site. Static, with the conversation woven into the page. */
+  curatorSite: 'https://mycurator.xyz',
   curatorManualSetup:
     'https://github.com/talirezun/the-curator#option-b--manual-setup-windows--linux--mac',
   curatorAgentInstall: 'https://github.com/talirezun/the-curator/blob/main/USER-GUIDE.md',
