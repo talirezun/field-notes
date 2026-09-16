@@ -84,8 +84,8 @@ Beyond that, after a deploy the things worth eyeballing:
 - `/context-engineering` shows the provenance rail in the left margin on a wide
   screen, with sources aligned to the section that draws on them.
 - `/context-engineering.md` returns `text/markdown`, not HTML.
-- `/llms.txt` lists all nine chapters.
-- `/downloads/field-notes-chapters.zip` unzips to nine markdown files.
+- `/llms.txt` lists all ten chapters.
+- `/downloads/field-notes-chapters.zip` unzips to ten markdown files.
 - `/nope-not-here` returns the styled 404, not a Cloudflare error page.
 - `/about/` redirects to `/about`.
 

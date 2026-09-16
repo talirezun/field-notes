@@ -4,7 +4,7 @@
  * A link to this site pasted into Slack, LinkedIn or a chat window is one of
  * the main ways anyone arrives here, and without an og:image every one of those
  * renders as a blank grey rectangle. One card for the whole site rather than one
- * per chapter: the site has a single identity and a per-page card would be nine
+ * per chapter: the site has a single identity and a per-page card would be ten
  * near-identical images to keep in sync.
  *
  * Drawn as SVG and rasterised with resvg, which takes real font buffers.
@@ -71,7 +71,7 @@ export function ogSvg(): string {
   <line x1="252" y1="356" x2="1104" y2="356" stroke="${GOLD_DIM}" stroke-width="1"/>
   <text class="tagline" x="252" y="410">Field notes from real builds, not vendor marketing.</text>
 
-  <text class="sub" x="252" y="474">Nine chapters on AI agents, context engineering and</text>
+  <text class="sub" x="252" y="474">Ten chapters on AI agents, context engineering and</text>
   <text class="sub" x="252" y="510">building production software as a non-developer.</text>
 
   <text class="rail" x="252" y="574">FIELDNOTES.TALIREZUN.COM</text>

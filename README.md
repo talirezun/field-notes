@@ -35,7 +35,7 @@ The corpus was written and is maintained in
 second brain. It reads documents, writes an interlinked wiki of entities and
 concepts, and serves that wiki to a frontier model over MCP.
 
-Download the zip, drop the nine files into the Ingest tab, and query your own
+Download the zip, drop the ten files into the Ingest tab, and query your own
 copy. Full instructions are at
 [/the-curator](https://fieldnotes.talirezun.com/the-curator).
 

@@ -54,8 +54,18 @@ async function check(url) {
 const urls = collectUrls();
 console.log(`Checking ${urls.size} source URLs from ${readdirSync(CHAPTERS).length} chapters.`);
 
+// One retry after a short pause. Fifty concurrent requests will occasionally
+// get a single transient refusal from Substack, and a transient refusal is not
+// a dead citation. A URL that fails twice in a row is.
+const checkTwice = async (url) => {
+  const first = await check(url);
+  if (first.status >= 200 && first.status < 400) return first;
+  await new Promise((resolve) => setTimeout(resolve, 1500));
+  return check(url);
+};
+
 const results = await Promise.all(
-  [...urls.keys()].map(async (url) => ({ url, ...(await check(url)) })),
+  [...urls.keys()].map(async (url) => ({ url, ...(await checkTwice(url)) })),
 );
 
 const tolerated = [];

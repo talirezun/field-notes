@@ -8,7 +8,7 @@ summary: >
   Sovereignty is not a slogan about hosting location. It is a set of concrete
   answers about where the weights run, who can revoke your access, what leaves
   your network, and what you would do if a vendor changed terms tomorrow.
-updated: 2026-08-20
+updated: 2026-09-16
 sources:
   - title: "16x Cheaper, Open Weights, and the Model That Doesn't Disappear on Fridays"
     url: "https://talirezun.substack.com/p/16x-cheaper-open-weights-and-the"
@@ -83,7 +83,7 @@ Two releases from the summer of 2026 illustrate where the line sits, and I am da
 
 **Qwen3.8-27B**, released on the fourteenth of August 2026 under Apache 2.0. Roughly twenty-seven billion parameters, dense, with a 262,000-token native context window. At four-bit quantisation the community consensus is that this needs a 24GB card rather than a 16GB one. That is one high-end consumer GPU. Not a rack, not a datacentre, one card. I should be clear that the memory figure is community consensus rather than my own benchmark.
 
-**DeepSeek V4 Flash**, in public beta from the thirty-first of July 2026 with MIT-licensed weights. Text only, and it wants 32GB and up to run locally.
+**DeepSeek V4 Flash**, in public beta from the thirty-first of July 2026 with MIT-licensed weights, sits on the other side of the line. Text only, and a mixture-of-experts model of roughly two hundred and eighty billion parameters, which means that at the most aggressive quantisation available the weights alone want somewhere around ninety to a hundred gigabytes of memory, with the practical builds above a hundred and ten. That is not a consumer card and it is not two of them. I had earlier put it at thirty-two gigabytes, which was wrong by a factor of three, and the correction is worth making in public because the whole point of this section is that the number decides which side of the line a model lands on.
 
 Earlier in the year, **Kimi K2.7** landed with a modified MIT licence, a trillion total parameters with thirty-two billion active per token in a mixture-of-experts arrangement, and a 256,000-token context window. Its published benchmark score came from its own maker, independent scores were not available when I wrote about it, and practitioners were reporting that headline numbers did not replicate cleanly on real repositories. I said then to treat it as directional rather than definitive and I would say the same now.
 

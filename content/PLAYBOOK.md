@@ -53,8 +53,9 @@ people expect, and it is the step most likely to be skipped in favour of
 something bigger.
 
 **Capacity matters here.** Four sections is the floor, seven is the ceiling, and
-the validator enforces both. As of August 2026, chapters 01 and 02 are full at
-seven. The other seven have exactly one slot each. When a chapter is full, the
+the validator enforces both. As of September 2026, chapters 01 and 02 are full
+at seven. The other eight, including chapter 10 on product websites, have
+exactly one slot each. When a chapter is full, the
 choice is to replace a weak section, merge two, or split the chapter. Never
 just add an eighth.
 
@@ -62,7 +63,7 @@ just add an eighth.
 
 Only when both of these are true:
 
-- It answers a question none of the nine answer, and
+- It answers a question none of the existing chapters answer, and
 - **at least three separate published pieces** support it.
 
 The test: can you write four to seven question-shaped sections, each opening

@@ -8,7 +8,7 @@ summary: >
   Context engineering is the continuous work of deciding what an agent sees,
   and when. It runs through every phase of a build rather than just the first
   one, and it is where most agent work quietly fails.
-updated: 2026-08-30
+updated: 2026-09-16
 sources:
   - title: "Behind the Curtain: The Three-Phase Process I Use to Build Every AI-Coded Product"
     url: "https://talirezun.substack.com/p/behind-the-curtain-the-three-phase"
@@ -131,7 +131,7 @@ Load the smallest payload that answers the step in front of you, and load it whe
 
 More context is not better context, and this took me a while to accept.
 
-The frontier harnesses have already worked this out. They read with grep, glob, head and tail rather than loading complete files. When they compact a session they keep architectural decisions and unresolved bugs and throw away redundant tool results. On the tooling side, the effect is counterintuitive enough that it is worth stating: the Vercel v0 team reportedly removed around eighty percent of their available tools and got better results. More tools often means worse performance, because every tool definition is context the model has to hold and reason about.
+The frontier harnesses have already worked this out. They read with grep, glob, head and tail rather than loading complete files. When they compact a session they keep architectural decisions and unresolved bugs and throw away redundant tool results. On the tooling side, the effect is counterintuitive enough that it is worth stating: Vercel's team behind d0, their internal text-to-SQL agent, reportedly removed around eighty percent of their available tools and got better results. More tools often means worse performance, because every tool definition is context the model has to hold and reason about.
 
 The same principle showed up in a completely different shape when I rebuilt Moj AI, a legal document assistant for Slovenian building regulation. I spent about a year on a conventional retrieval pipeline: chunk the documents, embed the chunks, store the vectors, retrieve the closest matches. It shipped at eighty percent accuracy and nothing I tried got it past eighty-five percent on complex table data. I tried smaller chunks, larger chunks, overlapping chunks, three embedding models, metadata on chunks, hybrid search, multiple retrieval passes, reranking. I even built a second model to check the first one's answers.
 

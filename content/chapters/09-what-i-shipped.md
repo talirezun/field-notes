@@ -69,7 +69,7 @@ sources:
     publication: "Substack"
     date: 2026-09-16
     sections: ["lumina"]
-related: ["building-without-being-a-developer", "agent-memory"]
+related: ["building-without-being-a-developer", "agent-memory", "product-websites"]
 tags: ["projects", "the-curator", "lumina", "build-log"]
 ---
 

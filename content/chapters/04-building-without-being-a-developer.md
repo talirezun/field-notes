@@ -48,7 +48,7 @@ sources:
     publication: "Substack"
     date: 2026-07-20
     sections: ["what-you-need"]
-related: ["coding-agents", "context-engineering"]
+related: ["coding-agents", "context-engineering", "product-websites"]
 tags: ["non-developer", "centaur", "product", "practice"]
 ---
 

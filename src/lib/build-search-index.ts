@@ -1,7 +1,7 @@
 /**
  * The client-side search index for /search.
  *
- * The corpus is roughly 25,000 words across nine chapters and about 56
+ * The corpus is roughly 28,000 words across ten chapters and about 62
  * sections, small enough that a search library would be overkill. This
  * module builds one static JSON file at build time; the browser does the
  * matching, in src/pages/search.astro's inline script, with no server and no
