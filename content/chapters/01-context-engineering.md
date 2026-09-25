@@ -8,7 +8,7 @@ summary: >
   Context engineering is the continuous work of deciding what an agent sees,
   and when. It runs through every phase of a build rather than just the first
   one, and it is where most agent work quietly fails.
-updated: 2026-09-16
+updated: 2026-09-25
 sources:
   - title: "Behind the Curtain: The Three-Phase Process I Use to Build Every AI-Coded Product"
     url: "https://talirezun.substack.com/p/behind-the-curtain-the-three-phase"
@@ -57,6 +57,11 @@ sources:
     publication: "Substack"
     date: 2026-08-30
     sections: ["continuity"]
+  - title: "The Context Engine"
+    url: "https://talirezun.substack.com/p/the-context-engine"
+    publication: "Substack"
+    date: 2026-09-20
+    sections: ["what-to-load", "continuity"]
 related: ["agent-memory", "coding-agents"]
 tags: ["context-engineering", "ai-agents", "methodology"]
 ---
@@ -141,6 +146,8 @@ What fixed it was giving the model more context, not less: a lightweight router 
 
 That sits awkwardly next to everything I have just said about loading less, so let me name the distinction rather than pretend it is not there. A curated payload you hand a model once, for one question, is not the same thing as a session that accumulates. The first can be enormous and stay coherent. The second degrades as it fills with tool output, half-finished attempts and your own messages. Volume is not the problem. Clutter is.
 
+The same rule applies to your own documents, not just to tool output. A mature project has a dozen canonical files and handing every one of them to every session spends the window before the agent has done anything. What I do now is mark the one or two documents every session needs as read first, and let everything else arrive as an index the agent opens by name when the work calls for it. The brief then says which document suits which kind of work: the security file before touching authentication, the roadmap before proposing anything new. The agent still reaches everything. It just does not pay for all of it up front.
+
 ## Why does an agent drift, and where does it start? {#how-it-fails}
 
 Drift starts as a context problem and arrives looking like a reasoning problem, and it is almost always silent. The agent does not crash and it does not tell you it has lost the thread. It keeps going, gets more confident, and by the time the output is obviously wrong you have three commits built on a misunderstanding.
@@ -169,9 +176,17 @@ With files, not with the model. The model starts from nothing every time and no 
 
 None of it is clever. That is rather the point.
 
+It is worth being clear about what the constraint actually is, because the growth in window sizes has convinced a lot of people the problem went away. A million tokens is now ordinary. It does not matter. The window is not the constraint, the session boundary is. When a session ends the next one opens empty, whether the window holds two hundred thousand tokens or ten million, and if the next session runs in a different harness, on a different model or on a different machine, it opens empty somewhere that has never heard of the first one.
+
+And this is not a programmer's problem. Design systems are tokens, websites are files, decks and research notebooks and financial models are all produced today by giving an agent context and letting it write. Building software is the loudest case, not the definition. Any task big enough to take more than one sitting is a multi-session task: a book, a literature review across two hundred papers, three months of diligence on an investment memo. Every one of them fails the same way when the session ends.
+
 The standing file goes first. Claude Code loads CLAUDE.md, OpenCode loads AGENTS.md, Cursor has its own. Whatever the name, it is your agent's permanent brief: architecture decisions, conventions, the rules that should govern every action. Instruct the agent to update it after every meaningful milestone. An unmaintained standing file becomes stale context, and stale context is worse than none.
 
+Three standing instructions have earned a place in every brief I write, in any field. **Read the directives back**: in its first reply the agent restates in one line the rules it is adopting and names any it cannot follow in this harness, because a dropped instruction is dropped silently and one line is the cheapest place to catch it. **Never resolve a conflict silently**: where my instruction clashes with the harness's own rules, I want to be told and asked, not have it settled quietly in either direction. **Check the reasoning, do not agree with it**: across my own projects agents have corrected me dozens of times, including catching a colour token I proposed that failed accessibility in every one of its ten uses, and refusing to document a field that did not exist. Every one of those corrections made the result better.
+
 The handoff does the heavy lifting. Written by the orchestrator as the session goes, it says what happened, which agent did what, what is still open, and where the relevant documentation is. Crucially, it carries the role instruction forward too: you are the orchestrator, you do not write code yourself, you delegate, you audit. It is the same job you would do for a person joining the team on a Monday.
+
+A handoff is not a diary. Every line should be one of four things: a decision, an observation with a way to recheck it, a trap with the evidence that proved it, or a next step with the reason it is next. Prose about how the session went costs window on the other side and buys nothing. The part I would give up last is the traps. A day that went wrong three times leaves three sentences, and without them the next agent, very possibly a different model in a different tool, rediscovers each one at full price.
 
 Underneath that there are three layers of memory, and knowing which one a piece of knowledge belongs in is most of the skill.
 
@@ -187,7 +202,7 @@ Until recently this section ended with an admission that none of it was automate
 
 The handoff no longer gets written by hand. The orchestrator saves working state through an MCP store as it goes, and a fresh session, on a different model or a different harness or a different machine, starts with one sentence: read the working state for this scope and carry on. What that removes is not mainly the twenty minutes at the end. It is a single point of failure sitting at the worst possible position in the process, because the model being asked to compress an entire session into one perfect document was the model nearest its context limit, with its judgement already sliding.
 
-What is not solved is the capture. Nothing forces a save before a session ends, so it is still discipline rather than machinery. Miss one and the next read returns the previous state: stale, never corrupted, and nothing that was saved is lost. Failing in that direction is the argument for leaving it advisory rather than wiring in enforcement.
+What is not solved is the capture. Nothing forces a save before a session ends, so it is still discipline rather than machinery. Miss one and the next read returns the previous state: stale, never corrupted, and nothing that was saved is lost. Failing in that direction is the argument for leaving it advisory rather than wiring in enforcement. A forced save could produce a handoff that is confidently wrong, which is worse than a stale one. How often agents actually save when told to turned out to be a measurable question, with an uncomfortable answer, and it is in the harness chapter under [whether a harness saves its own state](/coding-agents#making-it-save).
 
 ## Does any of this change if you cannot read the code? {#for-non-developers}
 

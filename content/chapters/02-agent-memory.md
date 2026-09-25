@@ -8,7 +8,7 @@ summary: >
   An agent forgets everything when the window closes. A second brain is the
   durable half of the system: structured, linked notes the agent reads back on
   demand, so accumulated thinking outlives any single conversation.
-updated: 2026-09-16
+updated: 2026-09-25
 sources:
   - title: "The Agent Memory Problem, and Why It Matters"
     url: "https://talirezun.substack.com/p/the-agent-memory-problem-and-why"
@@ -59,6 +59,11 @@ sources:
     publication: "Substack"
     date: 2026-09-03
     sections: ["retrieval", "knowledge-immortality"]
+  - title: "The Context Engine"
+    url: "https://talirezun.substack.com/p/the-context-engine"
+    publication: "Substack"
+    date: 2026-09-20
+    sections: ["four-layers", "what-a-second-brain-is", "retrieval"]
 related: ["context-engineering", "coding-agents"]
 tags: ["agent-memory", "second-brain", "knowledge-management", "mcp"]
 ---
@@ -93,21 +98,31 @@ Everything you learn about a topic is worth keeping, and a new source should mak
 
 The practical test is whether the thing expires. A wrong turn you took this week is state. A failure whose value is the pattern across many incidents is a wiki page. The suite was at eighty-four green before my change is state. How a subsystem actually works is a page. Put durable material into working state and the next save quietly overwrites it, and nothing warns you, because overwriting is precisely what that store is for.
 
+There is a third write rule, and it took me longest to see because for a year the tool had one front door for everything. A project's canonical documents, the architecture, the decisions, the conventions, the roadmap, are neither knowledge nor state. They must be carried word for word and changed deliberately. Send an architecture document through the same pipeline that builds wiki pages and a model paraphrases it, merges it with other sources, and the original is gone. So foundations get their own rule: replaced whole, held verbatim, never merged, never summarised, and never rewritten by a model. An agent may draft one when you ask it to, and you approve it before it lands. The verbs are the distinction. Knowledge is ingested, because the original is raw material. A foundation is added, because the original is the product.
+
+| Kind | What it holds | Write rule |
+|------|---------------|-----------|
+| Foundations | Canonical documents: architecture, decisions, conventions, roadmap | Replaced whole, verbatim, never rewritten by a model |
+| Working state | The standing brief, the latest handoff, the journal | Each save supersedes the last |
+| Knowledge | The wiki: entities, concepts, summaries | Accumulates, a new source deepens existing pages |
+
+Get the rule wrong for any one of them and the store quietly destroys its own value.
+
 ## What is a second brain, in concrete terms? {#what-a-second-brain-is}
 
 A folder of markdown files on your own machine that an AI keeps organised. You drop in a PDF, an article or a text file, and it reads the source and writes an interlinked wiki out of it: entity pages for the people, tools and companies, concept pages for the ideas, and a summary page for the source itself. Roughly five to fifteen linked pages per source. Drop in something on the same subject a month later and it updates the existing pages rather than creating near-duplicates, so the wiki gets denser rather than just bigger.
 
-The tool I built for this is The Curator. It is open source under MIT, it runs locally on `localhost:3333`, and the files it writes are ordinary markdown that Obsidian opens natively. Nothing about the format is proprietary and nothing is locked in. If the project disappeared tomorrow you would still have a folder of readable notes.
+The tool I built for this is The Curator. It is open source, MIT apart from ten source-available Shared Brain backend files, it runs on your own machine as a Mac app or a local server, and the files it writes are ordinary markdown that Obsidian opens natively. Nothing about the format is proprietary and nothing is locked in. If the project disappeared tomorrow you would still have a folder of readable notes.
 
 Two things about it that people get wrong, and I would rather state them plainly than let the marketing version stand.
 
-**It needs an API key.** Google Gemini, Anthropic or OpenRouter. There is no version of this that runs the ingestion pipeline on nothing. Gemini has a free tier, though Google tightened it substantially at the end of 2025 and a single batch of five to ten PDFs will usually exhaust a day's quota. On paid keys, moderate solo use lands around five euros a month. If you would rather nothing left your machine at all, it runs against a local model through LM Studio, and the trade is exactly what you would expect: full privacy, lower quality.
+**It needs an API key.** Google Gemini, Anthropic or OpenRouter. There is no version of this that runs the ingestion pipeline on nothing. Gemini has a free tier, though Google tightened it substantially at the end of 2025 and a single batch of five to ten PDFs will usually exhaust a day's quota. On paid keys, moderate solo use lands around five euros a month. This paragraph used to say that it could run against a local model through LM Studio if you wanted nothing to leave your machine. That was wrong, and it contradicted what this chapter says further down. Local models cannot run it yet: the model doing the ingestion needs roughly a two hundred thousand token window, and running that locally is heavy enough that I have not shipped it rather than ship something mediocre.
 
 **The output is roughly ninety-five percent right, not a hundred.** An AI building a knowledge graph makes mistakes: links that point nowhere, pages that end up orphaned, the same concept written twice under slightly different names. That is why there is a health layer that scans for broken links, orphans and near-duplicates. Every scan is opt-in, priced before you run it, and gated behind a preview, so nothing destructive happens without you signing off on it.
 
 ## How does the model actually reach the notes? {#retrieval}
 
-Through an MCP server that exposes the wiki to a frontier model as a set of tools. Twenty of them as of August 2026: twelve that read, and eight health and authoring tools, of which five change anything on disk. The model can list domains, pull an index, search across the wiki, read a specific page, and then, if you let it, write findings back. Once that bridge is connected, the model is not being handed a pile of documents. It is navigating a structure.
+Through an MCP server that exposes the wiki to a frontier model as a set of tools. Twenty-four of them as of version 3.64.2 in September 2026, of which seven change anything on disk and the rest only read. In August it was twenty, with five that wrote. The read side is the part that matters: writing knowledge through an agent is a convenience, reading context through one is the product. The model can list domains, pull an index, search across the wiki, read a specific page, and then, if you let it, write findings back. Once that bridge is connected, the model is not being handed a pile of documents. It is navigating a structure.
 
 The graph-native tools are the ones that justify the whole architecture, because they answer questions a flat index cannot answer at all.
 
@@ -120,6 +135,8 @@ For scale, my own articles domain sits at roughly three thousand three hundred n
 The same bridge now carries working state as well as knowledge, and that introduces a problem the wiki never had. State can arrive over sync from another machine, or be written by somebody else inside a shared brain, so it has to be treated as data rather than as orders. The store escapes text that tries to impersonate the operator and defangs URLs and shell pipes on the way in and on the way out. That last rule came from a measurement rather than a theory: planted state containing a piped shell install was never executed by a model, but in three runs out of ten it was relayed to me as a recommended next step. No sanitiser can check whether a claim is true. An instruction found in state is a note from a peer, not an order.
 
 What I cannot tell you is how this behaves at ten times that size. I have not tested it against tens of thousands of nodes, multiple active domains and years of ingestion. Traversal efficiency and token consumption at that scale are open questions, and writes through the MCP are already noticeably slow on large wikis. This is generation one of something.
+
+None of it is a database. Knowledge, the standing brief, the foundations and each handoff are plain markdown files under one folder you chose, synced through your own private repository. Each handoff lives under a path that includes the machine that wrote it, a hostname plus an install id, and that segment is what makes two computers syncing the same repository safe. Two machines writing the same file is a conflict. Two machines each writing their own file is a fact. The layout is published as a specification in the repository, so a tool that is not mine can read and write the same state.
 
 ## What changes once your thinking outlives the session? {#knowledge-immortality}
 

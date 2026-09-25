@@ -8,7 +8,7 @@ summary: >
   The model writes the code. The harness decides what it sees, what it may
   touch, and when it stops. Most of the difference between a good session and
   a wasted one comes from the harness, not the model underneath it.
-updated: 2026-08-30
+updated: 2026-09-25
 sources:
   - title: "Blueprint of a Frontier Coding Agent"
     url: "https://talirezun.substack.com/p/blueprint-of-a-frontier-coding-agent"
@@ -58,6 +58,11 @@ sources:
     publication: "Substack"
     date: 2026-08-30
     sections: ["staying-current"]
+  - title: "The Context Engine"
+    url: "https://talirezun.substack.com/p/the-context-engine"
+    publication: "Substack"
+    date: 2026-09-20
+    sections: ["what-a-harness-does", "staying-current", "making-it-save"]
 related: ["context-engineering", "orchestration"]
 tags: ["coding-agents", "developer-tools", "harness", "claude-code"]
 ---
@@ -65,6 +70,8 @@ tags: ["coding-agents", "developer-tools", "harness", "claude-code"]
 ## What does a coding harness actually do? {#what-a-harness-does}
 
 Everything the model does not. The model is the brain: it reads and it writes text. The harness is the loop that keeps it running, the tools that let it touch your files and execute commands, the memory that stops it starting from zero every session, and the permission system that decides what it is allowed to do at all. Take a frontier model and strip the harness away and you have a very good text predictor that cannot open a file.
+
+The consequence people miss is in the memory. The harness gives the model its tools and its memory, which means that when you leave the harness, you leave its memory behind. Claude Code, Codex, Cursor, Cline, OpenCode, Antigravity, Gemini CLI: each one holds whatever it remembers about your project inside itself.
 
 The term was only formalised in early 2026, which is late given how long the thing itself has existed.
 
@@ -154,6 +161,10 @@ Look at what happened to my own verdicts. Claude Desktop went from "graduate awa
 
 There is now a concrete version of that bet. The state a session leaves behind lives as plain markdown in a store the agent reaches over MCP, rather than inside any one product's project folder, so a handoff written by an orchestrator in one harness can be read by an agent in another, on another machine. What travels is the reading. What does not travel yet is the instruction to save, because automatic activation from a description is a mechanism specific to particular clients and everywhere else it is prose you paste in. The artefact is tool-independent. The discipline is not, quite.
 
+For a harness that cannot speak MCP at all there is now a plain command as a second way in. `my-curator context` prints a project's bootstrap, `my-curator save` writes a handoff from standard input, and `my-curator doctor` reports what is actually wired on the machine and writes nothing. Anything that can run a shell command can read and write the same state.
+
+The obvious objection is that the labs are building this themselves, and they are. In August 2026 Anthropic [unified Claude's memory across chat and Cowork](https://claude.com/blog/claudes-memory-works-everywhere-and-you-decide-whats-in-it) and let you read, edit and delete what it keeps, topic by topic. That is good work, and if everything you do happens inside one vendor's product, use it. What it cannot do is structural rather than a flaw: vendor memory lives inside the vendor's product, so it will not follow your project into another harness, another lab's model or another machine. That matters because models are not interchangeable. Some build better, some audit better, and no model audits its own work well. I now run two of my own projects across Claude Code, Antigravity and Codex at once, all reading and writing the same state. Mixing harnesses used to be expensive, and the cost was never the subscription. It was re-explaining the project every time you crossed a boundary. Several people working one project through the same store is something the design permits and nobody has tested yet, so I am not claiming it.
+
 Two habits keep this from being a problem.
 
 **Distrust benchmark numbers, including favourable ones.** Nearly every figure circulating about these tools is vendor-published. In at least one case I looked into, the comparison was not symmetric: the vendor's model got one fixed prompt while the models it was compared against got the better of two attempts. Treat headline scores as a direction of travel rather than a verdict, and re-verify anything you would make a purchasing decision on.
@@ -161,3 +172,15 @@ Two habits keep this from being a problem.
 **Get good at one thing before you get clever.** Pick one harness. Build one real project end to end with it. Break it, fix it, ship it. That is the whole curriculum, and it transfers completely when you switch. Orchestration, multiple agents, mixed local and cloud fleets, all of that is worth doing and none of it is worth doing first. Orchestration multiplies whatever you already have, and if what you have is chaos, you now have parallel chaos.
 
 The version-number discipline follows from the same logic. I stopped putting model version strings in anything durable, because the naming moves faster than the writing and a wrong version number costs more credibility than a vague one. Name the tier and the vendor. Let the reader look up what is current.
+
+## Does a harness actually save its state when you tell it to? {#making-it-save}
+
+Not reliably, and the only way to know on yours is to measure it. Storing context was never the hard part, and reading it back is not hard either. The hard part is that state only exists if the agent saves it, and an agent with an instruction to save is not an agent that saves. On Claude Code, running headless, the installed skill on its own produced a saved handoff in zero runs out of four, with no error and nothing on screen to say it had not happened. A short instruction block pasted into the harness's own entry file took that to three of four. Adding lifecycle hooks took it to four of four.
+
+Those are my own measurements, taken in September 2026 against one release, four runs per arm. Small numbers, and I would rather publish them than a claim nobody checked. Another harness, which loads skills by itself, saved four of four either way.
+
+The hooks turned up findings you only get by running the thing. In the same headless mode the stop hook never fired at all, not once in six sessions. Without the hook, five of six save attempts ran a shell command named after the tool instead of calling the tool. Across the fourteen harnesses I track, eleven have some kind of lifecycle hook and they disagree about almost everything: three accept a hook that never fires, and one caps its session-end hook at three seconds, which is not long enough to finish a save. As of this writing one of those fourteen rows carries a real measurement and the other thirteen say not measured, in the product and in the documentation, until somebody runs the protocol on them.
+
+The rule I hold the hooks to is narrow. A hook may ask, inject or record. It may never write the handoff itself, because a fabricated handoff is worse than a missing one, and the whole value of the store is that what was written was written by whoever it names.
+
+Measuring once in a lab does not tell you whether capture is working on your project this month, so The Curator now shows a reading computed from a local, content-free log of which tools were called: how many sessions started with the context, how many saved before stopping, how many read and did not save. It is in words, never a percentage, because a percentage reads as a grade and "two read and did not save" reads as two sessions you can go and look at. It reports and never blocks. And it says on the screen what it cannot see: a save made from the shell leaves no line in that log, and a session that never opened the bridge is not counted at all. I use it on my own projects daily, and it has twice told me something I did not want to know. That is what an instrument is for.

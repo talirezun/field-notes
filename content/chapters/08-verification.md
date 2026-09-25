@@ -8,7 +8,7 @@ summary: >
   Agent failures are quiet. The work completes, reports success, and leaves
   something broken underneath. Verification is the discipline of making that
   gap loud, and it is where most of my own worst findings came from.
-updated: 2026-08-20
+updated: 2026-09-25
 sources:
   - title: "I Built Auto Loops Before They Had a Name"
     url: "https://talirezun.substack.com/p/i-built-auto-loops-before-they-had"
@@ -58,6 +58,11 @@ sources:
     url: "https://talirezun.substack.com/p/blueprint-of-a-frontier-coding-agent"
     publication: "Substack"
     sections: ["why-it-matters"]
+  - title: "The Context Engine"
+    url: "https://talirezun.substack.com/p/the-context-engine"
+    publication: "Substack"
+    date: 2026-09-20
+    sections: ["the-audit", "tests-not-comments"]
 related: ["orchestration", "building-without-being-a-developer"]
 tags: ["verification", "testing", "audit", "quality"]
 ---
@@ -92,11 +97,15 @@ I should be honest about one thing, because a reader comparing my published work
 
 The rule that has been stable is short. The reviewer must not be the author.
 
+The pool of auditors has also widened. I used to send almost all of my audit work to one other vendor for exactly this reason. Today I get excellent audit results from frontier open-weight families as well, GLM, Qwen and DeepSeek among them, which makes it cheaper to run several reviewers rather than one.
+
 ## What do you write down, and where? {#tests-not-comments}
 
 In a test, not a comment. A comment cannot fail. A test can. Any property you assert in a document, assert again as an automated check, so that the day it stops being true something breaks loudly instead of quietly remaining written.
 
 This matters more the less code you read yourself. When written intent is most of what you have, the gap between what a document claims and what the system does is invisible to you by definition, and it will not close on its own.
+
+It matters even more once models read your documents. On The Curator several documents are read by agents rather than people, so a wrong sentence in them does not just misinform a reader, it changes what an agent does. I treat a false claim in a document as a first-class defect, and documentation ships in the same release as the behaviour change or the release is not finished. The on-disk format there is published as a specification, and the test suite parses that specification against the live constants in the code on every run, so the document cannot quietly drift away from what it describes.
 
 What that looks like in numbers, on my own systems.
 

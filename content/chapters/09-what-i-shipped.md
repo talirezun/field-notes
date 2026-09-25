@@ -8,7 +8,7 @@ summary: >
   The products I built and run, described in terms of what they do and what
   building them cost me. No architecture diagrams and no capability claims I
   cannot point at a published source for. Just the account.
-updated: 2026-09-16
+updated: 2026-09-25
 sources:
   - title: "The Curator"
     url: "https://github.com/talirezun/the-curator"
@@ -69,13 +69,18 @@ sources:
     publication: "Substack"
     date: 2026-09-16
     sections: ["lumina"]
+  - title: "The Context Engine"
+    url: "https://talirezun.substack.com/p/the-context-engine"
+    publication: "Substack"
+    date: 2026-09-20
+    sections: ["the-curator"]
 related: ["building-without-being-a-developer", "agent-memory", "product-websites"]
 tags: ["projects", "the-curator", "lumina", "build-log"]
 ---
 
 ## What is The Curator and why did I build it? {#the-curator}
 
-A local, open-source place for context to live, in three layers. Your brain: you drop a PDF, an article or a note into it, and it reads the source and writes an interlinked wiki, entity pages, concept pages and a summary page, that gets richer with every source rather than longer. Your team's brain: the same thing built collectively by a cohort, opt-in, without anyone handing over the rest of their notes. Your agents' brain: working state, where a build currently stands, written by an agent at the end of a session and read at the start of the next one, on whatever model, harness or machine that next session happens to be. Everything stays as plain markdown on your own machine, and an MCP server exposes all of it to any local MCP client as a set of twenty tools. Since September 2026 it is a desktop app with a menu bar widget, and the product site is [mycurator.xyz](https://mycurator.xyz).
+A local, open-source place for context to live, in three layers. Your brain: you drop a PDF, an article or a note into it, and it reads the source and writes an interlinked wiki, entity pages, concept pages and a summary page, that gets richer with every source rather than longer. Your team's brain: the same thing built collectively by a cohort, opt-in, without anyone handing over the rest of their notes. Your agents' brain: working state, where a build currently stands, written by an agent at the end of a session and read at the start of the next one, on whatever model, harness or machine that next session happens to be. Everything stays as plain markdown on your own machine, and an MCP server exposes all of it to any local MCP client as a set of twenty-four tools as of version 3.64.2, seven of which write. The line I use for it now is the context engine: your brain, your team's brain, your agents' brain. Since September 2026 it is a desktop app with a menu bar widget, and the product site is [mycurator.xyz](https://mycurator.xyz).
 
 I did not build it as a product. I built it because I had a memory problem in my own work and nothing available solved it the way I wanted it solved.
 
@@ -85,7 +90,7 @@ Practical facts, and the ones people most often get wrong about it:
 
 **It needs an API key.** Google Gemini, Anthropic or OpenRouter. There is no version of this that does the ingestion on nothing, and I would rather say that plainly than let a "runs entirely locally" impression stand. Gemini has a free tier, though it was tightened substantially at the end of 2025 and one batch of PDFs will usually exhaust a day of it. On a paid key, moderate solo use runs around five euros a month. Local models are not available yet. The provider row exists in Settings and is marked unavailable, and the MCP bridge needing no network of its own is a different thing from that.
 
-**Installation is a one-line script on macOS, or clone and `npm install` elsewhere, on Node 18 or newer.** It runs on `localhost:3333`. Obsidian opens the same folder natively, so the graph view comes free.
+**On a Mac it is a downloadable app; on Windows and Linux it is the same code run as a local server you open in the browser.** The Mac app is not notarised yet, so macOS asks you to allow it, and that is on my list. Elsewhere it is clone and `npm install` on Node 18 or newer, and it runs on `localhost:3333`. Obsidian opens the same folder natively, so the graph view comes free. Wiring the bridge into a harness still means pasting a block into that harness's configuration. Your coding agent can do it for you, and `my-curator doctor` tells you whether it actually took.
 
 It is live and actively developed. The collaborative Shared Brain layer is still beta and I would not describe it otherwise.
 
