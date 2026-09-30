@@ -8,7 +8,7 @@ summary: >
   An agent forgets everything when the window closes. A second brain is the
   durable half of the system: structured, linked notes the agent reads back on
   demand, so accumulated thinking outlives any single conversation.
-updated: 2026-09-25
+updated: 2026-09-30
 sources:
   - title: "The Agent Memory Problem, and Why It Matters"
     url: "https://talirezun.substack.com/p/the-agent-memory-problem-and-why"
@@ -64,6 +64,11 @@ sources:
     publication: "Substack"
     date: 2026-09-20
     sections: ["four-layers", "what-a-second-brain-is", "retrieval"]
+  - title: "The Right Context, Not All of It"
+    url: "https://talirezun.substack.com/p/the-right-context-not-all-of-it"
+    publication: "Substack"
+    date: 2026-09-30
+    sections: ["four-layers"]
 related: ["context-engineering", "coding-agents"]
 tags: ["agent-memory", "second-brain", "knowledge-management", "mcp"]
 ---
@@ -107,6 +112,8 @@ There is a third write rule, and it took me longest to see because for a year th
 | Knowledge | The wiki: entities, concepts, summaries | Accumulates, a new source deepens existing pages |
 
 Get the rule wrong for any one of them and the store quietly destroys its own value.
+
+The test I teach for where something belongs is four questions. Would it still be true next month, in every thread of the work? It goes in the standing brief. Is it only true of this thread, this week? The handoff. Is it long, reference-grade, and needed only for certain kinds of work? A foundation document. Is it something you learned that should connect to other things you learned? The wiki. When I set this as an exercise, the items students hesitate on are a dead end that might outlive the thread, and a lesson whose value is the pattern across many incidents. That hesitation is the skill. The boundary between state and knowledge is the one no tool can draw for you.
 
 ## What is a second brain, in concrete terms? {#what-a-second-brain-is}
 

@@ -8,7 +8,7 @@ summary: >
   The model writes the code. The harness decides what it sees, what it may
   touch, and when it stops. Most of the difference between a good session and
   a wasted one comes from the harness, not the model underneath it.
-updated: 2026-09-25
+updated: 2026-09-30
 sources:
   - title: "Blueprint of a Frontier Coding Agent"
     url: "https://talirezun.substack.com/p/blueprint-of-a-frontier-coding-agent"
@@ -63,6 +63,11 @@ sources:
     publication: "Substack"
     date: 2026-09-20
     sections: ["what-a-harness-does", "staying-current", "making-it-save"]
+  - title: "The Right Context, Not All of It"
+    url: "https://talirezun.substack.com/p/the-right-context-not-all-of-it"
+    publication: "Substack"
+    date: 2026-09-30
+    sections: ["staying-current", "making-it-save"]
 related: ["context-engineering", "orchestration"]
 tags: ["coding-agents", "developer-tools", "harness", "claude-code"]
 ---
@@ -161,9 +166,13 @@ Look at what happened to my own verdicts. Claude Desktop went from "graduate awa
 
 There is now a concrete version of that bet. The state a session leaves behind lives as plain markdown in a store the agent reaches over MCP, rather than inside any one product's project folder, so a handoff written by an orchestrator in one harness can be read by an agent in another, on another machine. What travels is the reading. What does not travel yet is the instruction to save, because automatic activation from a description is a mechanism specific to particular clients and everywhere else it is prose you paste in. The artefact is tool-independent. The discipline is not, quite.
 
+That prose has to land in the right file, and the files differ by harness. Claude Code reads CLAUDE.md. Codex, OpenCode and Cursor read AGENTS.md. Antigravity reads AGENTS.md or GEMINI.md, and not CLAUDE.md. Some tools also cut a long instruction file off after a fixed size without saying so. So the same short block goes at the very top of both CLAUDE.md and AGENTS.md, identical, committed with the code. I learned why the hard way. On a project with no AGENTS.md, Antigravity still found the context and saved, but into the shared work-stream, replacing the handoff Claude Code had written there. Nothing was lost for good, and the store now keeps each tool's saves under a name of its own and says so when one save replaces another tool's. The lesson was about the file, not the store: a tool that was never told is a tool that quietly does its own thing.
+
+Most setups that span two tools or two computers break for one reason: they expect one route to carry something that travels by another. The handoff belongs to the work, wherever it happens, so it lives in the synced store and follows you. The instruction file belongs to the code, so it lives beside the code and follows the repository. Each tool's MCP entry, its skills, its hooks and your API keys travel by neither, and get set up once on each computer. Once you see which owner each piece has, the rest is habit.
+
 For a harness that cannot speak MCP at all there is now a plain command as a second way in. `my-curator context` prints a project's bootstrap, `my-curator save` writes a handoff from standard input, and `my-curator doctor` reports what is actually wired on the machine and writes nothing. Anything that can run a shell command can read and write the same state.
 
-The obvious objection is that the labs are building this themselves, and they are. In August 2026 Anthropic [unified Claude's memory across chat and Cowork](https://claude.com/blog/claudes-memory-works-everywhere-and-you-decide-whats-in-it) and let you read, edit and delete what it keeps, topic by topic. That is good work, and if everything you do happens inside one vendor's product, use it. What it cannot do is structural rather than a flaw: vendor memory lives inside the vendor's product, so it will not follow your project into another harness, another lab's model or another machine. That matters because models are not interchangeable. Some build better, some audit better, and no model audits its own work well. I now run two of my own projects across Claude Code, Antigravity and Codex at once, all reading and writing the same state. Mixing harnesses used to be expensive, and the cost was never the subscription. It was re-explaining the project every time you crossed a boundary. Several people working one project through the same store is something the design permits and nobody has tested yet, so I am not claiming it.
+The obvious objection is that the labs are building this themselves, and they are. In August 2026 Anthropic [unified Claude's memory across chat and Cowork](https://claude.com/blog/claudes-memory-works-everywhere-and-you-decide-whats-in-it) and let you read, edit and delete what it keeps, topic by topic. That is good work, and if everything you do happens inside one vendor's product, use it. What it cannot do is structural rather than a flaw: vendor memory lives inside the vendor's product, so it will not follow your project into another harness, another lab's model or another machine. That matters because models are not interchangeable. Some build better, some audit better, and no model audits its own work well. I now run two of my own projects across Claude Code, Antigravity and Codex at once, all reading and writing the same state. There is an economic reason to mix, too. The subscription plans that come with the vendors' own harnesses are, in my experience, far more generous than paying for the same models by the token through the API. The vendors subsidise their own harnesses, so for anyone building seriously the sensible fleet is one harness to build on one subscription, another to audit on a different one. Mixing harnesses used to be expensive, and the cost was never the subscription. It was re-explaining the project every time you crossed a boundary. Several people working one project through the same store is something the design permits and nobody has tested yet, so I am not claiming it.
 
 Two habits keep this from being a problem.
 
@@ -177,7 +186,7 @@ The version-number discipline follows from the same logic. I stopped putting mod
 
 Not reliably, and the only way to know on yours is to measure it. Storing context was never the hard part, and reading it back is not hard either. The hard part is that state only exists if the agent saves it, and an agent with an instruction to save is not an agent that saves. On Claude Code, running headless, the installed skill on its own produced a saved handoff in zero runs out of four, with no error and nothing on screen to say it had not happened. A short instruction block pasted into the harness's own entry file took that to three of four. Adding lifecycle hooks took it to four of four.
 
-Those are my own measurements, taken in September 2026 against one release, four runs per arm. Small numbers, and I would rather publish them than a claim nobody checked. Another harness, which loads skills by itself, saved four of four either way.
+Those are my own measurements, taken in September 2026 against one release, four runs per arm. Small numbers, and I would rather publish them than a claim nobody checked. Another harness, which loads skills by itself, saved four of four either way. The model matters as well as the harness. Capable models read, save and re-read consistently in my measurements. Smaller ones do it less often, so if you run the discipline on a small model, check that the saves are actually landing.
 
 The hooks turned up findings you only get by running the thing. In the same headless mode the stop hook never fired at all, not once in six sessions. Without the hook, five of six save attempts ran a shell command named after the tool instead of calling the tool. Across the fourteen harnesses I track, eleven have some kind of lifecycle hook and they disagree about almost everything: three accept a hook that never fires, and one caps its session-end hook at three seconds, which is not long enough to finish a save. As of this writing one of those fourteen rows carries a real measurement and the other thirteen say not measured, in the product and in the documentation, until somebody runs the protocol on them.
 

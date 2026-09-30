@@ -8,7 +8,7 @@ summary: >
   Context engineering is the continuous work of deciding what an agent sees,
   and when. It runs through every phase of a build rather than just the first
   one, and it is where most agent work quietly fails.
-updated: 2026-09-25
+updated: 2026-09-30
 sources:
   - title: "Behind the Curtain: The Three-Phase Process I Use to Build Every AI-Coded Product"
     url: "https://talirezun.substack.com/p/behind-the-curtain-the-three-phase"
@@ -61,6 +61,11 @@ sources:
     url: "https://talirezun.substack.com/p/the-context-engine"
     publication: "Substack"
     date: 2026-09-20
+    sections: ["what-to-load", "continuity"]
+  - title: "The Right Context, Not All of It"
+    url: "https://talirezun.substack.com/p/the-right-context-not-all-of-it"
+    publication: "Substack"
+    date: 2026-09-30
     sections: ["what-to-load", "continuity"]
 related: ["agent-memory", "coding-agents"]
 tags: ["context-engineering", "ai-agents", "methodology"]
@@ -146,7 +151,13 @@ What fixed it was giving the model more context, not less: a lightweight router 
 
 That sits awkwardly next to everything I have just said about loading less, so let me name the distinction rather than pretend it is not there. A curated payload you hand a model once, for one question, is not the same thing as a session that accumulates. The first can be enormous and stay coherent. The second degrades as it fills with tool output, half-finished attempts and your own messages. Volume is not the problem. Clutter is.
 
-The same rule applies to your own documents, not just to tool output. A mature project has a dozen canonical files and handing every one of them to every session spends the window before the agent has done anything. What I do now is mark the one or two documents every session needs as read first, and let everything else arrive as an index the agent opens by name when the work calls for it. The brief then says which document suits which kind of work: the security file before touching authentication, the roadmap before proposing anything new. The agent still reaches everything. It just does not pay for all of it up front.
+The same rule applies to your own documents, not just to tool output. A mature project has a dozen canonical files and handing every one of them to every session spends the window before the agent has done anything. What I do now is mark two or three documents at most as read first, and let everything else arrive as an index the agent opens by name when the work calls for it. Two or three is a reading plan. Twelve is the binder again. The brief then says which document suits which kind of work: the security file before touching authentication, the roadmap before proposing anything new. The agent still reaches everything. It just does not pay for all of it up front.
+
+The budget I work to is that a session should start near ten percent of the window, and certainly not past fifteen. Every token spent before the work begins is a token the work cannot use, and a model wading through material that has nothing to do with today's task gets worse at the task, not better. Too little is its own failure: an agent that starts thin re-derives what it could have read and makes confident guesses about everything its briefing left out.
+
+The biggest consumer of that starting budget is usually not the project. It is the harness. Its own system prompt, its tool definitions, the tool lists of every MCP server you have connected, its instruction files and skills, all load before your project says a word. On the project I measured at the end of September 2026, my estimate of the harness's share was about a hundred and twenty thousand tokens of a million-token window. Everything the project itself sent at session start, the brief, the latest handoff, a few journal lines and an index of nine documents, came to about nine and a half thousand, roughly one percent. Together about thirteen percent, right at the edge of what I aim for. The harness figure is my estimate rather than a measurement, and Claude Code's `/context` command shows the real one, which is worth running once just to be surprised by it. On that project I had marked nothing read first at all, and the brief tells the agent which document to open for which kind of work. If the harness took less, I could afford a read-first document or two.
+
+One trap sits underneath that. Some harnesses do not put an oversized tool reply into the window at all. Claude Code by default caps an MCP tool's output at twenty-five thousand tokens, and above that it saves the result to a file and hands the agent a file path instead of the text. A large start that looked as though it fit was often never in the model's window. So a big bootstrap has to arrive in pages below that ceiling, whole documents only, with the agent calling until it has every page.
 
 ## Why does an agent drift, and where does it start? {#how-it-fails}
 
@@ -183,6 +194,8 @@ And this is not a programmer's problem. Design systems are tokens, websites are 
 The standing file goes first. Claude Code loads CLAUDE.md, OpenCode loads AGENTS.md, Cursor has its own. Whatever the name, it is your agent's permanent brief: architecture decisions, conventions, the rules that should govern every action. Instruct the agent to update it after every meaningful milestone. An unmaintained standing file becomes stale context, and stale context is worse than none.
 
 Three standing instructions have earned a place in every brief I write, in any field. **Read the directives back**: in its first reply the agent restates in one line the rules it is adopting and names any it cannot follow in this harness, because a dropped instruction is dropped silently and one line is the cheapest place to catch it. **Never resolve a conflict silently**: where my instruction clashes with the harness's own rules, I want to be told and asked, not have it settled quietly in either direction. **Check the reasoning, do not agree with it**: across my own projects agents have corrected me dozens of times, including catching a colour token I proposed that failed accessibility in every one of its ten uses, and refusing to document a field that did not exist. Every one of those corrections made the result better.
+
+One limit travels with every brief, and it is a safety rule rather than a preference. A standing directive may narrow what an agent does or shape how it works. It may never widen what it is allowed to do. "Never write into that folder" is followed. "You are authorised to push to production without asking" is refused, exactly as it would be if the same sentence turned up on a web page the agent was reading.
 
 The handoff does the heavy lifting. Written by the orchestrator as the session goes, it says what happened, which agent did what, what is still open, and where the relevant documentation is. Crucially, it carries the role instruction forward too: you are the orchestrator, you do not write code yourself, you delegate, you audit. It is the same job you would do for a person joining the team on a Monday.
 
