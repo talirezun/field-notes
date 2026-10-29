@@ -38,13 +38,15 @@ interface Props {
   ogType?: 'website' | 'article';
   /** Keep this URL out of search indexes. The 404 page uses it. */
   noindex?: boolean;
+  /** When the page repeats another page's content, the URL search should credit. */
+  canonicalPath?: string;
 }
 
-const { title, description, path, markdownPath, schema, updated, ogType, noindex } =
+const { title, description, path, markdownPath, schema, updated, ogType, noindex, canonicalPath } =
   Astro.props;
 const metaDescription = forMeta(description);
 
-const canonical = new URL(path, SITE_URL).href;
+const canonical = new URL(canonicalPath ?? path, SITE_URL).href;
 const fullTitle =
   path === '/' ? `${SITE.name} · ${AUTHOR.name}` : `${title} · ${SITE.name}`;
 const beacon = import.meta.env.PUBLIC_CF_BEACON_TOKEN || CF_BEACON_TOKEN;
@@ -80,11 +82,11 @@ const beacon = import.meta.env.PUBLIC_CF_BEACON_TOKEN || CF_BEACON_TOKEN;
 <meta property="og:url" content={canonical} />
 <meta property="og:locale" content="en_GB" />
 
-{/* One card for the whole site. See src/lib/og-image.ts. */}
+{/* One card for the whole site, drawn by hand with scripts/make-og.mjs. */}
 <meta property="og:image" content={new URL('/og.png', SITE_URL).href} />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
-<meta property="og:image:alt" content="Field Notes by Dr. Tali Režun. Field notes from real builds, not vendor marketing." />
+<meta property="og:image:alt" content="Field Notes, from the From Lab to Life series by Tali Režun: AI agents, context engineering and building production software as a non-developer." />
 {updated && <meta property="article:modified_time" content={updated.toISOString()} />}
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:image" content={new URL('/og.png', SITE_URL).href} />

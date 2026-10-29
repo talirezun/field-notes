@@ -49,6 +49,7 @@ const path = `/read/${chapter.slug}`;
   title={`${chapter.title}, source`}
   description={`The raw markdown behind the ${chapter.title} chapter, with its frontmatter, citations and pinned anchors. ${chapter.question}`}
   path={path}
+  canonicalPath={`/${chapter.slug}`}
   markdownPath={`/${chapter.slug}.md`}
 >
   <div class="shell reader">
