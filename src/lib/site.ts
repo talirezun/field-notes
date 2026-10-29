@@ -74,6 +74,62 @@ export const LINKS = {
   corrections: 'https://github.com/talirezun/field-notes/blob/main/CONTRIBUTING.md',
 } as const;
 
+/** The hub. Field Notes is one room in it. */
+export const HUB = {
+  home: 'https://talirezun.com',
+  library: 'https://talirezun.com/library',
+  libraryMarkdown: 'https://talirezun.com/library.md',
+  workflows: 'https://talirezun.com/workflows',
+  projects: 'https://talirezun.com/projects',
+  inquire: 'https://talirezun.com/inquire',
+  inquireReader: 'https://talirezun.com/inquire#reader',
+} as const;
+
+export type HubLink = {
+  kind: 'workflow' | 'projects';
+  title: string;
+  href: string;
+  /** One line, describing what the reader can do there. */
+  line: string;
+};
+
+/**
+ * Chapters that have an interactive counterpart on talirezun.com. The anchors
+ * are the section ids on the hub's workflows page. Checked 29 October 2026.
+ */
+export const HUB_FOR_CHAPTER: Record<string, HubLink> = {
+  'context-engineering': {
+    kind: 'workflow',
+    title: 'The context window',
+    href: `${HUB.workflows}#context-window`,
+    line: 'Switch the layers on and off and watch what the window is made of before the first prompt.',
+  },
+  'agent-memory': {
+    kind: 'workflow',
+    title: 'Memory that compounds',
+    href: `${HUB.workflows}#memory`,
+    line: 'Pick a tier and see what it holds, who writes it, and how documents, state and knowledge differ.',
+  },
+  'coding-agents': {
+    kind: 'workflow',
+    title: 'Multi-harness work',
+    href: `${HUB.workflows}#multi-harness`,
+    line: 'Step through a session that changes tool and machine and still picks up where it stopped.',
+  },
+  orchestration: {
+    kind: 'workflow',
+    title: 'Orchestration',
+    href: `${HUB.workflows}#orchestration`,
+    line: 'Watch a main session plan, route each task to the cheapest model that can do it, and audit the result.',
+  },
+  'what-i-shipped': {
+    kind: 'projects',
+    title: 'Projects',
+    href: HUB.projects,
+    line: 'Everything I build, with its status and a link to its own site.',
+  },
+};
+
 export const LICENSES = {
   content: { name: 'CC BY 4.0', href: 'https://creativecommons.org/licenses/by/4.0/' },
   code: { name: 'MIT', href: 'https://github.com/talirezun/field-notes/blob/main/LICENSE-CODE' },

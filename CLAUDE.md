@@ -274,6 +274,16 @@ Tokens are in `src/styles/tokens.css`. Do not introduce a colour outside them.
   two sites read as family: the centred hairline-with-label divider, and the
   offset block (a hairline box with a solid gold block behind it, shifted down
   and right). Use those rather than inventing new ones.
+- The master identity comes from the talirezun.com design system
+  (`~/Projects/talirezun-design/tali-rezun-design-system`, `BRAND-GUIDE.md`).
+  The logo is `tali režun_`, live text via the `.tr-logo` class in
+  `global.css`: Plex Mono Medium, lowercase, gold cursor, never italic, never
+  re-set, never "Dr.". In the header it sits small under the Playfair
+  "Field Notes" masthead and links to the hub; never on the same line as
+  Playfair. The favicon set in `public/` is the `tr_` icon from that system,
+  copied as is. Hub links live in `HUB` and `HUB_FOR_CHAPTER` in
+  `src/lib/site.ts`; update the anchors there if the hub's workflows page
+  changes.
 - Fonts are self-hosted, copied out of `@fontsource` by `prebuild`. No font CDN:
   it costs a round trip and leaks visitor data. `latin-ext` subsets are not
   optional, my name has a caron in it.

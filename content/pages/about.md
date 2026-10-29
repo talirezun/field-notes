@@ -2,7 +2,7 @@
 title: "About Field Notes"
 slug: "about"
 description: "Who wrote this, where the material comes from, how it is sourced and licensed, and what it deliberately leaves out."
-updated: 2026-08-20
+updated: 2026-10-29
 navOrder: 3
 ---
 
@@ -27,6 +27,17 @@ first person. They answer what happened to me.
 This is the other axis. Topical, durable, extractable. It answers how something
 works. Both are needed, and this site does not replace or republish the essays.
 It distils across them and links back to them.
+
+## Where it sits
+
+Field Notes is one room of [talirezun.com](https://talirezun.com). The hub holds
+the [library](https://talirezun.com/library) of everything I have published,
+with every edition linked, and the
+[workflows](https://talirezun.com/workflows), where the ideas in four of these
+chapters become something you can play with: the context window, orchestration,
+multi-harness work and memory that compounds. This site is the part built to be
+read by models as well as people, so it stays plain, citable and complete
+without JavaScript.
 
 ## Where the material comes from
 

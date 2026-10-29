@@ -9,7 +9,7 @@
 import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import matter from 'gray-matter';
-import { SITE_URL, AUTHOR, LICENSES, SITE } from './site';
+import { SITE_URL, AUTHOR, LICENSES, SITE, HUB } from './site';
 
 export const CHAPTERS_DIR = join(process.cwd(), 'content', 'chapters');
 
@@ -175,6 +175,9 @@ export function renderLlmsTxt(chapters: ChapterFile[]): string {
     '',
     `- [Source repository](https://github.com/talirezun/field-notes): the markdown behind this site.`,
     `- [talirezun.com](${AUTHOR.homepage}): the author's main site.`,
+    `- [Library as markdown](${HUB.libraryMarkdown}): every work the author has published, essays, papers and manuals, with links to each.`,
+    `- [Workflows](${HUB.workflows}): interactive versions of the context window, orchestration, multi-harness work and compounding memory. Built for people, not for extraction.`,
+    `- [Send an inquiry](${HUB.inquire}): consulting, speaking, team training, press, or the student and reader route.`,
     '',
   );
 

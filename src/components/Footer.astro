@@ -1,5 +1,5 @@
 ---
-import { ELSEWHERE, LINKS, LICENSES, AUTHOR, SITE } from '../lib/site';
+import { ELSEWHERE, LINKS, LICENSES, AUTHOR, SITE, HUB } from '../lib/site';
 import SocialIcon from './SocialIcon.astro';
 
 const year = new Date().getUTCFullYear();
@@ -9,7 +9,22 @@ const year = new Date().getUTCFullYear();
   <div class="shell">
     <div class="rule-label" role="separator" aria-label="Field Notes"><span>Field Notes</span></div>
 
+    <div class="identity">
+      <a class="tr-logo" href={HUB.home} aria-label="Tali Režun, talirezun.com">tali režun</a>
+      <p class="tagline">{SITE.tagline}</p>
+    </div>
+
     <div class="cols">
+      <section class="col">
+        <h3 class="label">On talirezun.com</h3>
+        <ul class="links">
+          <li><a href={HUB.workflows}>Workflows to play with</a></li>
+          <li><a href={HUB.library}>Library of everything I have published</a></li>
+          <li><a href={HUB.projects}>Projects</a></li>
+          <li><a href={HUB.inquire}>Send an inquiry</a></li>
+        </ul>
+      </section>
+
       <section class="col">
         <h3 class="label">Elsewhere</h3>
         <ul class="links">
@@ -65,6 +80,17 @@ const year = new Date().getUTCFullYear();
     margin-top: var(--space-9);
     padding-bottom: var(--space-7);
     border-top: var(--hairline) solid var(--ink-line);
+  }
+
+  .identity {
+    margin-top: var(--space-5);
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  .identity .tagline {
+    font-size: var(--size-sm);
+    color: var(--bone-dim);
   }
 
   .cols {

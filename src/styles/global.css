@@ -307,6 +307,41 @@ h3:hover > .anchor,
   opacity: 1;
 }
 
+/* ---------------------------------------------------------------- logo -- */
+
+/*
+  The master identity from the talirezun.com design system, as live text:
+  "tali režun" in Plex Mono Medium with a gold underscore cursor drawn here.
+  Never italic, never tracked, never re-set in another face, never blinking.
+*/
+.tr-logo {
+  display: inline-flex;
+  align-items: baseline;
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 1rem;
+  line-height: 1;
+  letter-spacing: 0;
+  color: var(--bone);
+  text-decoration: none;
+  text-transform: lowercase;
+  white-space: nowrap;
+}
+
+.tr-logo::after {
+  content: '';
+  display: inline-block;
+  width: 0.5em;
+  height: 0.11em;
+  margin-left: 0.05em;
+  background: var(--gold);
+  transform: translateY(0.06em);
+}
+
+a.tr-logo:hover {
+  color: var(--gold-bright);
+}
+
 /* --------------------------------------------------------------- utils -- */
 
 .visually-hidden {

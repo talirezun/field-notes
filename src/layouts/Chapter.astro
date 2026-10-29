@@ -4,7 +4,15 @@ import SourceList from '../components/SourceList.astro';
 import CuratorBlock from '../components/CuratorBlock.astro';
 import RuleLabel from '../components/RuleLabel.astro';
 import { splitChapter, leadAnswer, type Chapter } from '../lib/chapters';
-import { AUTHOR, SITE_URL, SITE, LICENSES, formatDate, isoDate } from '../lib/site';
+import {
+  AUTHOR,
+  SITE_URL,
+  SITE,
+  LICENSES,
+  HUB_FOR_CHAPTER,
+  formatDate,
+  isoDate,
+} from '../lib/site';
 
 interface Props {
   chapter: Chapter;
@@ -16,6 +24,7 @@ const { chapter, related, total } = Astro.props;
 const { data } = chapter;
 const { sections, generalSources, intro } = splitChapter(chapter);
 const path = `/${data.slug}`;
+const hub = HUB_FOR_CHAPTER[data.slug];
 
 const person = {
   '@type': 'Person',
@@ -142,6 +151,19 @@ for (const alias of data.anchorAliases) {
             <dd><a href={`/read/${data.slug}`}>{data.slug}.md</a></dd>
           </div>
         </dl>
+
+        {
+          hub && (
+            <aside class="hub-link" aria-label="On talirezun.com">
+              <p class="hub-kind">
+                {hub.kind === 'workflow' ? 'Try it on talirezun.com' : 'On talirezun.com'}
+              </p>
+              <p class="hub-line">
+                <a href={hub.href}>{hub.title}</a>. {hub.line}
+              </p>
+            </aside>
+          )
+        }
 
         {
           data.status === 'scaffold' && (
@@ -318,6 +340,26 @@ for (const alias of data.anchorAliases) {
     font-size: var(--size-xs);
     color: var(--bone-dim);
     margin: var(--space-1) 0 0;
+  }
+
+  .hub-link {
+    margin-top: var(--space-5);
+    padding-left: var(--space-4);
+    border-left: var(--hairline) solid var(--gold-dim);
+  }
+
+  .hub-kind {
+    font-family: var(--font-mono);
+    font-size: var(--size-xs);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--gold-dim);
+  }
+
+  .hub-line {
+    margin-top: var(--space-1);
+    font-size: var(--size-sm);
+    color: var(--bone-dim);
   }
 
   .scaffold {

@@ -1,0 +1,12 @@
+{
+  "name": "Field Notes by Tali Režun",
+  "short_name": "Field Notes",
+  "icons": [
+    { "src": "/android-chrome-192x192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/android-chrome-512x512.png", "sizes": "512x512", "type": "image/png" }
+  ],
+  "start_url": "/",
+  "theme_color": "#100e0b",
+  "background_color": "#100e0b",
+  "display": "standalone"
+}

@@ -2,15 +2,16 @@
 title: "Work with me"
 slug: "work-with-me"
 description: "Teaching, advisory, building and speaking. What I do, who it is for, and every way to reach me. Short and factual, with links out to the detail."
-updated: 2026-08-20
+updated: 2026-10-29
 navOrder: 4
 ---
 
 ## What I do
 
 Four things, in roughly the order they take up my time. If one of them fits,
-pick whichever channel at the [bottom of this page](#getting-in-touch) you
-already use. They all reach me.
+[send an inquiry](https://talirezun.com/inquire) on talirezun.com. It takes
+about two minutes and lands with everything I need to answer properly. The
+other ways to reach me are at the [bottom of this page](#getting-in-touch).
 
 ## Teaching
 
@@ -61,7 +62,25 @@ expect.
 
 ## Getting in touch
 
-Whichever of these you already use. I read all of them.
+For work, use the inquiry form on talirezun.com. Pick the route that fits and
+it asks only what that route needs:
+
+- [Consulting or advisory](https://talirezun.com/inquire/consulting): AI
+  strategy, organisation design, build advisory.
+- [Speaking or workshop](https://talirezun.com/inquire/speaking): keynotes,
+  workshops, intensives.
+- [Developer team training](https://talirezun.com/inquire/team-training):
+  training engineers to build with agents.
+- [Press or podcast](https://talirezun.com/inquire/press): interviews and
+  features.
+- [Something else](https://talirezun.com/inquire/other): a short message.
+
+If you are a student or a reader rather than a client, the
+[student and reader route](https://talirezun.com/inquire#reader) sends you
+straight to the materials, tools and resources, with no form. It never waits
+in an inbox, so it is quicker than writing to me.
+
+Everything else, whichever of these you already use. I read all of them.
 
 - **[Substack](https://talirezun.substack.com).** Reply to any post, or message
   me there. In practice this is how most people actually reach me, probably

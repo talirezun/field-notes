@@ -3,9 +3,25 @@ import Base from '../layouts/Base.astro';
 import RuleLabel from '../components/RuleLabel.astro';
 import Downloads from '../components/Downloads.astro';
 import { getChapters, splitChapter } from '../lib/chapters';
-import { SITE, SITE_URL, AUTHOR, LINKS, formatDate, isoDate } from '../lib/site';
+import {
+  SITE,
+  SITE_URL,
+  AUTHOR,
+  LINKS,
+  HUB,
+  HUB_FOR_CHAPTER,
+  formatDate,
+  isoDate,
+} from '../lib/site';
 
 const chapters = await getChapters();
+
+const workflows = chapters
+  .map((chapter) => ({ chapter, hub: HUB_FOR_CHAPTER[chapter.data.slug] }))
+  .filter(
+    (entry): entry is { chapter: (typeof chapters)[number]; hub: NonNullable<typeof entry.hub> } =>
+      entry.hub?.kind === 'workflow',
+  );
 const entries = chapters.map((chapter) => ({
   chapter,
   sections: splitChapter(chapter).sections,
@@ -80,6 +96,7 @@ const website = {
 
       <nav class="jump" aria-label="Jump to">
         <a href="#chapters">The chapters</a>
+        <a href="#workflows">Try the workflows</a>
         <a href="#corpus">Take the corpus</a>
         <a href="/the-curator">The Curator</a>
       </nav>
@@ -127,6 +144,39 @@ const website = {
       </ol>
     </div>
   </section>
+
+  {
+    workflows.length > 0 && (
+      <section class="workflows" id="workflows">
+        <div class="shell">
+          <RuleLabel as="h2" label={`${workflows.length} workflows`} />
+          <div class="measure stack-4">
+            <h3 class="corpus-head">Read it here, then play with it there.</h3>
+            <p>
+              Some of these chapters have an interactive counterpart on{' '}
+              <a href={HUB.workflows}>talirezun.com</a>, built for my students and for
+              engineering leads. Each one lets you change something and watch what happens,
+              which teaches the idea faster than another paragraph would.
+            </p>
+          </div>
+          <ul class="workflow-list">
+            {workflows.map(({ chapter, hub }) => (
+              <li>
+                <a class="wf-title" href={hub.href}>
+                  {hub.title}
+                </a>
+                <p class="wf-line">{hub.line}</p>
+                <p class="card-meta">
+                  Goes with chapter {String(chapter.data.number).padStart(2, '0')},{' '}
+                  <a href={`/${chapter.data.slug}`}>{chapter.data.title}</a>
+                </p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    )
+  }
 
   <section class="corpus" id="corpus">
     <div class="shell">
@@ -319,6 +369,45 @@ const website = {
 
   .flag {
     font-style: italic;
+  }
+
+  .workflows {
+    margin-top: var(--space-8);
+  }
+
+  .workflow-list {
+    list-style: none;
+    padding: 0;
+    margin: var(--space-6) 0 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    gap: var(--space-5) var(--space-6);
+  }
+
+  .workflow-list li {
+    display: grid;
+    gap: var(--space-2);
+    align-content: start;
+    padding-top: var(--space-4);
+    border-top: var(--hairline) solid var(--gold-dim);
+  }
+
+  .wf-title {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 900;
+    font-size: var(--size-lg);
+    color: var(--bone);
+    text-decoration: none;
+  }
+
+  .wf-title:hover {
+    color: var(--gold-bright);
+  }
+
+  .wf-line {
+    color: var(--bone-dim);
+    font-size: var(--size-sm);
   }
 
   .corpus {

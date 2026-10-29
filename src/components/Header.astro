@@ -1,5 +1,5 @@
 ---
-import { SOCIALS, SITE } from '../lib/site';
+import { SOCIALS, SITE, HUB } from '../lib/site';
 import SocialIcon from './SocialIcon.astro';
 
 interface Props {
@@ -12,7 +12,7 @@ const nav = [
   { label: 'Search', href: '/search' },
   { label: 'The Curator', href: '/the-curator' },
   { label: 'About', href: '/about' },
-  { label: 'Work with me', href: '/work-with-me' },
+  { label: 'Work with me', href: HUB.inquire, external: true },
 ];
 
 const isCurrent = (href: string) => href === path;
@@ -20,10 +20,10 @@ const isCurrent = (href: string) => href === path;
 
 <header class="site-header">
   <div class="shell bar">
-    <a class="wordmark" href="/" aria-label={`${SITE.name}, home`}>
-      <span class="wordmark-text">Field Notes</span>
-      <span class="wordmark-sub">Dr. Tali Režun</span>
-    </a>
+    <div class="masthead">
+      <a class="wordmark" href="/" aria-label={`${SITE.name}, home`}>Field Notes</a>
+      <a class="tr-logo" href={HUB.home} aria-label="Tali Režun, talirezun.com">tali režun</a>
+    </div>
 
     <nav class="nav" aria-label="Primary">
       <ul>
@@ -32,6 +32,12 @@ const isCurrent = (href: string) => href === path;
             <li>
               <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>
                 {item.label}
+                {item.external && (
+                  <>
+                    <span aria-hidden="true"> ↗</span>
+                    <span class="visually-hidden">, on talirezun.com</span>
+                  </>
+                )}
               </a>
             </li>
           ))
@@ -70,30 +76,31 @@ const isCurrent = (href: string) => href === path;
     padding-block: var(--space-4);
   }
 
-  .wordmark {
-    text-decoration: none;
-    color: var(--bone);
+  /*
+    Playfair speaks, Plex Mono signs. The site name is the hero; the master
+    logo sits under it, small, a full step of space away, and links to the hub.
+  */
+  .masthead {
     display: flex;
     flex-direction: column;
-    line-height: 1.05;
+    align-items: flex-start;
+    gap: var(--space-2);
     margin-right: auto;
   }
 
-  .wordmark-text {
+  .wordmark {
+    text-decoration: none;
+    color: var(--bone);
     font-family: var(--font-display);
     font-style: italic;
     font-weight: 900;
     font-size: 1.5rem;
+    line-height: 1.05;
     letter-spacing: -0.01em;
   }
 
-  .wordmark-sub {
-    font-family: var(--font-mono);
-    font-size: var(--size-xs);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-top: 0.35em;
+  .wordmark:hover {
+    color: var(--gold-bright);
   }
 
   .nav ul,
@@ -142,7 +149,7 @@ const isCurrent = (href: string) => href === path;
     .bar {
       gap: var(--space-3) var(--space-4);
     }
-    .wordmark {
+    .masthead {
       margin-right: 0;
       width: 100%;
     }
