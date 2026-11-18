@@ -53,9 +53,9 @@ people expect, and it is the step most likely to be skipped in favour of
 something bigger.
 
 **Capacity matters here.** Four sections is the floor, seven is the ceiling, and
-the validator enforces both. As of September 2026, chapters 01 and 02 are full
-at seven. The other eight, including chapter 10 on product websites, have
-exactly one slot each. When a chapter is full, the
+the validator enforces both. As of November 2026, chapters 01, 02, 03, 06, 08
+and 10 are full at seven. Chapters 04, 05, 07 and 09 have exactly one slot
+each. Run `npm run validate` for the current counts. When a chapter is full, the
 choice is to replace a weak section, merge two, or split the chapter. Never
 just add an eighth.
 

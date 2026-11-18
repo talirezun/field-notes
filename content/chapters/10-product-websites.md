@@ -9,7 +9,7 @@ summary: >
   work deserves twenty minutes. Built right in 2026 it is static files on the
   edge, legible to machines, with the conversation woven into the page rather
   than parked in a corner.
-updated: 2026-09-16
+updated: 2026-11-18
 sources:
   - title: "Every Product Needs a Home"
     url: "https://talirezun.substack.com/p/every-product-needs-a-home"
@@ -38,6 +38,11 @@ sources:
     url: "https://github.com/talirezun/field-notes"
     publication: "GitHub"
     sections: ["static-again", "legible-to-machines"]
+  - title: "The Founder Is the Front Page"
+    url: "https://talirezun.substack.com/p/the-founder-is-the-front-page"
+    publication: "Substack"
+    date: 2026-11-08
+    sections: ["build-in-public"]
 related: ["what-i-shipped", "coding-agents", "building-without-being-a-developer"]
 tags: ["product-websites", "static-sites", "geo", "lumina", "cloudflare"]
 ---
@@ -97,6 +102,18 @@ I use Cloudflare, for the unglamorous reason that all my domains already route t
 For a sense of what the result weighs, The Curator's site is one HTML page and a standalone 404, twenty-three files in the repository, about a hundred and fifty kilobytes of markup and a runtime under seventy. Screenshots ship as WebP with a PNG fallback at twice the displayed width for retina screens, which cut image weight by about three quarters. A response headers file sets security headers on everything, caches images for a day, and revalidates HTML and scripts on every load so a deploy is visible on the next reload. A desktop Lighthouse run scored a hundred for SEO and ninety-six for performance, accessibility and best practices. Those are the numbers I would set as the bar for any product website this year.
 
 The deploy is the part that changes how you work. Source in a repository, an automated workflow that deploys on every push to main and smoke-checks the live page, custom domain and certificate attached by the deploy itself. From that moment the loop is edit with your agent, push, live within a minute. No FTP, no forgotten image, and a rollback is a previous commit. That is the discipline professional teams use, available to one person for free.
+
+## Where does a product find its first people? {#build-in-public}
+
+In public, from the first day of the build, and through the founder rather than the logo. Distribution used to start at launch. Now it starts when you start building: you say what you are making, show the work as it happens, publish every release and write up what you learned, so that by launch day a small group already knows the product, has tried the rough version and has told you what broke. The website is where they land. The founder is how they find it.
+
+People follow people. A founder posting a failed deploy at eleven at night is more believable than a press release, and audiences learned to tell the difference. For a product with a worldwide technical audience, X is where that conversation happens in real time and where you cannot hide behind a company account. LinkedIn reaches buyers and decision makers who are not on X, and it is where the company and product pages carry the proof. Substack is for the long version, and its subscribers are the most loyal readers you will have. The personal profile carries the story. The product page carries the proof.
+
+The rule I would keep if I could keep only one is to contribute before you announce. Accounts that push their own product get filtered out, by the platform and by people. Someone who has added real knowledge to your field gets listened to when they finally have something to show. My own numbers are small and I would rather show them than a projection. My X account was close to dormant until mid-June 2026, when I started replying every day. A one-line reply under a large account's announcement reached more than 4,300 views, while my own product posts usually reach a few hundred to about a thousand. But my own posts hold the deeper conversation: one about two agents planning a ski holiday had an engagement rate of 11.8 percent against an account average of 2. Replies are how strangers find you. Your own posts are where the people who found you stay.
+
+It is a loop rather than a launch: announce, show the work, engage, collect feedback, release, write, and back to building with more people watching. It is sustainable for one person only because of agents. I draft strategy and per-channel campaign packages with a model, keep every campaign and engagement log as markdown in its own domain of my second brain, fifty-seven sources compiled into 817 linked pages when I wrote it up, and start each campaign from what I have already said, promised and shipped. The replies are mine. An account run by AI rather than with it is exactly the noise people learn to filter out.
+
+None of it substitutes for the product. If it does not help anyone, no amount of posting saves it. Building in public is a distribution method rather than a value proposition, and it is a lot of work: daily, personal, and measured in months rather than days.
 
 ## How do you brief a coding agent to build one? {#the-brief}
 

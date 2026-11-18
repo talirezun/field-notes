@@ -8,7 +8,7 @@ summary: >
   Sovereignty is not a slogan about hosting location. It is a set of concrete
   answers about where the weights run, who can revoke your access, what leaves
   your network, and what you would do if a vendor changed terms tomorrow.
-updated: 2026-09-16
+updated: 2026-11-18
 sources:
   - title: "16x Cheaper, Open Weights, and the Model That Doesn't Disappear on Fridays"
     url: "https://talirezun.substack.com/p/16x-cheaper-open-weights-and-the"
@@ -43,6 +43,11 @@ sources:
     url: "https://talirezun.com/download/the-energy-and-water-footprint-of-generative-ai/"
     publication: "International Leadership Journal"
     sections: ["the-tradeoff"]
+  - title: "Read, Write, Own, Think"
+    url: "https://talirezun.substack.com/p/read-write-own-think"
+    publication: "Substack"
+    date: 2026-10-30
+    sections: ["the-race"]
 related: ["organisational-design", "coding-agents"]
 tags: ["ai-sovereignty", "open-weights", "europe", "policy"]
 ---
@@ -118,6 +123,16 @@ The obvious move is a mixed fleet: a frontier orchestrator on your subscription,
 I should also say that I established most of that against official documentation rather than by running every combination myself. I did not want to publish a wish list dressed up as a field test.
 
 What you gain, beyond the two things already covered, is a smaller and more predictable surface. Nothing leaves the machine. Nothing is retained under a policy you did not write. And there is a modest environmental argument alongside it: in a comparison I co-authored, running a mid-sized open model locally used roughly a third less energy per task than a frontier cloud model on the same job. That figure comes from published literature and, in places, from vendor-reported data rather than from independent measurement, so I would treat it as an argument for the direction rather than a number to quote.
+
+## Does Europe have to win the model race? {#the-race}
+
+No. It has to win the application race, which is a different contest and one it is well placed for. The United States and China are racing on the models themselves and neither will slow down for anyone else's comfort, so for the foreseeable future most European organisations will use other people's models. The useful question is not how to catch up at the frontier. It is which intelligence you use, for what, and where your data goes.
+
+The two leaders took different roads. The American frontier is closed: you rent the strongest models through the cloud. Stanford's 2026 AI Index puts US private AI investment in 2025 at about 286 billion dollars, more than twenty-three times China's twelve billion, while noting that private figures understate Chinese spending because of government guidance funds. China went the other way, with open-weight models you can download and run on your own servers, DeepSeek, Qwen, Kimi and GLM among them, and the same report puts the gap between the best American and the best Chinese model at 2.7 percent as of March 2026. Europe leads in regulation and trails in investment, with one serious frontier challenger.
+
+What follows for a European company is practical rather than geopolitical. Classify the data before you choose the model. Public material can go to any tool. Internal documents can go to an enterprise plan with a data processing agreement. The crown jewels, the designs, the formulas, the intellectual property that makes the company what it is, stay on infrastructure you control, which is where open weights earn their place. That is the three rings below, applied to a whole organisation.
+
+And the part that should reassure rather than worry. The largest share of value in this wave is not in building models. It is in applying them to engineering, manufacturing, law, medicine and finance, where European depth is real. A continent of people who know their domain and have learned to direct the machine does not need to win the model race to win that one.
 
 ## How do you decide what an agent may touch? {#the-three-rings}
 

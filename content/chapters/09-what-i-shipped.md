@@ -8,7 +8,7 @@ summary: >
   The products I built and run, described in terms of what they do and what
   building them cost me. No architecture diagrams and no capability claims I
   cannot point at a published source for. Just the account.
-updated: 2026-09-25
+updated: 2026-11-18
 sources:
   - title: "The Curator"
     url: "https://github.com/talirezun/the-curator"
@@ -74,6 +74,16 @@ sources:
     publication: "Substack"
     date: 2026-09-20
     sections: ["the-curator"]
+  - title: "Stop Playing Postman: Why I Built AgentLink, a Private Line Between AI Agents"
+    url: "https://talirezun.substack.com/p/stop-playing-postman-why-i-built"
+    publication: "Substack"
+    date: 2026-11-15
+    sections: ["the-smaller-ones"]
+  - title: "My Second Brain Learned to Remember the Numbers"
+    url: "https://talirezun.substack.com/p/my-second-brain-learned-to-remember"
+    publication: "Substack"
+    date: 2026-11-16
+    sections: ["the-curator", "what-it-cost"]
 related: ["building-without-being-a-developer", "agent-memory", "product-websites"]
 tags: ["projects", "the-curator", "lumina", "build-log"]
 ---
@@ -93,6 +103,8 @@ Practical facts, and the ones people most often get wrong about it:
 **On a Mac it is a downloadable app; on Windows and Linux it is the same code run as a local server you open in the browser.** The Mac app is not notarised yet, so macOS asks you to allow it, and that is on my list. Elsewhere it is clone and `npm install` on Node 18 or newer, and it runs on `localhost:3333`. Obsidian opens the same folder natively, so the graph view comes free. Wiring the bridge into a harness still means pasting a block into that harness's configuration. Your coding agent can do it for you, and `my-curator doctor` tells you whether it actually took.
 
 It is live and actively developed. The collaborative Shared Brain layer is still beta and I would not describe it otherwise.
+
+In November 2026 it learned to keep the details as well as the ideas: a data-heavy document now gets a Key Facts section with every important figure copied exactly as written, and a newer document updates the older page while keeping the old value beside the new one. Chapter two has the before and after, and the verification chapter has what it took to ship without breaking anything that already worked.
 
 What went wrong is in chapter two in detail, so briefly here: early versions produced duplicate ghost pages once a wiki got large, the same entity spawning three near-identical files. A shared-brain release nearly shipped a bug that could have silently emptied a collective wiki while reporting success. And my own test suite was, for a while, writing test data into real user knowledge folders because a directory resolver preferred the production configuration over the test override. That last one is the most embarrassing thing in this chapter and it belongs here rather than buried.
 
@@ -132,7 +144,7 @@ One thing that did survive from that period is a method rather than a system. Ov
 
 ## What else is out there? {#the-smaller-ones}
 
-Four smaller things, three of them open source. None of them are businesses. They exist because a specific problem annoyed me enough to fix, and the reason they are worth listing is that the failure modes are more legible on small projects than on large ones.
+Five smaller things, four of them open source. None of them is a business today. They exist because a specific problem annoyed me enough to fix, and the reason they are worth listing is that the failure modes are more legible on small projects than on large ones.
 
 **MountVacation MCP** is an open-source MCP server, MIT licensed, that lets any MCP-compatible assistant search a European mountain accommodation database and hand back real results with booking links. Ten tools. It needs the provider's API key. I built it in fourteen days without writing a line of the TypeScript myself.
 
@@ -141,6 +153,8 @@ The day one version worked and was wrong. It returned the first batch of results
 **ARIA**, an avatar platform, is a client project and the largest single thing on this list: around seventeen thousand lines, close to four hundred commits, roughly three hundred distinct agent sessions, about six weeks to a production MVP. I have never published its feature set and I am not going to here, because it is not mine to describe.
 
 **Conduit** is an Apache-licensed framework for setting up a governed personal agent that lives in a folder on your own machine, with the setup done by pasting prompts rather than typing terminal commands. It is explicitly aimed at people who are not developers, and it uses The Curator as its memory layer. It is the earliest-stage thing I have published. Its documentation currently lists no known limitations, which at this age means they have not been found yet rather than that they do not exist.
+
+**AgentLink** is the newest and the least finished, MIT licensed and pre-alpha. It gives each AI app its own identity and lets agents in different harnesses, belonging to different people, send each other end-to-end encrypted messages and files, with anything important waiting for the owner's approval and an optional public proof that something was sent or agreed. Messages travel over Nostr, an open relay network, encrypted and wrapped before they leave the computer, so a relay sees an unreadable package rather than the content or the sender. Proofs run on test networks only, the contracts have not been externally audited, and it is not meant for real money or sensitive production data yet. It went from an empty repository to version 0.5.8 on 15 November 2026 in five weeks, the first version someone who never opens a terminal can install on a Mac or Windows. It is the other half of The Curator: one moves an agent's memory between sessions, the other moves messages between agents.
 
 **ØØT** is the organisational framework, and it has its own chapter.
 
@@ -159,6 +173,8 @@ The avatar platform burned close to three hundred dollars a day in credits at pe
 Moj AI cost about three hundred dollars a month in infrastructure during development, before any customer existed.
 
 One intensive day on an early command-line agent, back when it was billed by usage, cost me over three hundred euros. That is the day I stopped using that tool, and the reason was economics rather than capability.
+
+The Curator is funded from my own pocket, and its November 2026 release is a fair sample of what testing costs. I expected about ten euros of API calls and spent sixty to seventy, because a fair before-and-after comparison doubles every run.
 
 Those three hundreds are three unrelated things at three different scales, which is a good illustration of how easy it is to build a misleading story out of true numbers.
 

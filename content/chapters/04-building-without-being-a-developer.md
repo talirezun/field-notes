@@ -9,7 +9,7 @@ summary: >
   trade is line-level control. What you need in exchange is judgement about
   systems, an honest test loop, and the discipline to verify what you cannot
   read.
-updated: 2026-08-20
+updated: 2026-11-18
 sources:
   - title: "Chasing Jarvis: Can Technically Sophisticated Non-Programmers Deploy SaaS Applications Using AI Coding Agents?"
     url: "https://talirezun.com/download/chasing-jarvis-can-technically-sophisticated-non-programmers-deploy-saas-applications-using-ai-coding-agents/"
@@ -48,6 +48,11 @@ sources:
     publication: "Substack"
     date: 2026-07-20
     sections: ["what-you-need"]
+  - title: "Read, Write, Own, Think"
+    url: "https://talirezun.substack.com/p/read-write-own-think"
+    publication: "Substack"
+    date: 2026-10-30
+    sections: ["who-this-is-for", "the-centaur-model"]
 related: ["coding-agents", "context-engineering", "product-websites"]
 tags: ["non-developer", "centaur", "product", "practice"]
 ---
@@ -84,11 +89,17 @@ Those three positions are not compatible as slogans. What reconciles them is tha
 
 The most useful move I made in two years of thinking about this was deciding the original question was the wrong one. "Can non-developers build production software" is not the interesting inquiry. The interesting one is what new forms of expertise make someone effective at collaborating with these tools, because that is the thing that is actually being distributed.
 
+There is a longer view I give in the first hour of every Chasing Jarvis cohort, and it is why I keep coming back to this question. Every wave of the web rewarded the people who could build with it, and each one set the bar somewhere technical. To build on the read-only web you needed code and a server. On the read-write web you needed a platform account, and the platform kept the keys. In the ownership wave you needed a wallet and a crypto education. With models that write code, the bar is expertise in your own domain and the ability to describe what you want precisely, which is the first time it has not been technical. Stanford's 2026 AI Index puts generative AI at fifty-three percent population adoption within three years, faster than the personal computer or the internet. Technologies do not spread that fast when only engineers can use them.
+
+In the five-day programme, people who have never written a line of code ship a deliberately scoped product to a live address. That sits alongside everything above rather than against it. The bar to entry fell. Whether people step over it does not spread on its own, and the ones who do pull further ahead.
+
 ## Where does the human stay in the loop? {#the-centaur-model}
 
 The human supplies the specification, the taste, the judgement, and everything that depends on context the model has never seen. The model supplies implementation at speed. Neither half is sufficient alone, and the interesting work is being specific about where exactly human judgement compounds rather than treating "human in the loop" as a reassuring phrase.
 
 The evidence for the pattern is better than it usually gets credit for. A controlled field experiment run with Procter and Gamble, with 776 participants, found that individuals working with AI matched the performance of two-person teams working without it, and that AI broke down the silos between research and commercial roles. Karpathy's framing of the same division is the cleanest I have read: the specification is human, the implementation is the model's, the review is human again.
+
+The older evidence is from chess, and it is the one I teach with. After Deep Blue beat Kasparov in 1997, he helped start advanced chess, where players could use computers during the game. In 2005 an open freestyle tournament let anyone enter with any mix of people and machines. Grandmasters entered with computers, and the Hydra supercomputer did not reach the quarter-finals. The winners were two amateurs from New Hampshire, Steven Cramton and Zackary Stephen, rated 1685 and 1398, on three ordinary computers. Kasparov's reading was that a weak human with a machine and a better process beat a strong computer alone and, more remarkably, a strong human with a machine and an inferior process. Everyone now has roughly the same models. The process, and the domain you bring to it, are the parts that are still yours.
 
 Now the caveat, which matters more than the evidence.
 

@@ -8,7 +8,7 @@ summary: >
   An agent forgets everything when the window closes. A second brain is the
   durable half of the system: structured, linked notes the agent reads back on
   demand, so accumulated thinking outlives any single conversation.
-updated: 2026-09-30
+updated: 2026-11-18
 sources:
   - title: "The Agent Memory Problem, and Why It Matters"
     url: "https://talirezun.substack.com/p/the-agent-memory-problem-and-why"
@@ -69,6 +69,11 @@ sources:
     publication: "Substack"
     date: 2026-09-30
     sections: ["four-layers"]
+  - title: "My Second Brain Learned to Remember the Numbers"
+    url: "https://talirezun.substack.com/p/my-second-brain-learned-to-remember"
+    publication: "Substack"
+    date: 2026-11-16
+    sections: ["what-a-second-brain-is", "retrieval", "what-broke"]
 related: ["context-engineering", "coding-agents"]
 tags: ["agent-memory", "second-brain", "knowledge-management", "mcp"]
 ---
@@ -127,6 +132,12 @@ Two things about it that people get wrong, and I would rather state them plainly
 
 **The output is roughly ninety-five percent right, not a hundred.** An AI building a knowledge graph makes mistakes: links that point nowhere, pages that end up orphaned, the same concept written twice under slightly different names. That is why there is a health layer that scans for broken links, orphans and near-duplicates. Every scan is opt-in, priced before you run it, and gated behind a preview, so nothing destructive happens without you signing off on it.
 
+**Until November 2026 it kept the ideas and lost the numbers.** I ingested a pricing strategy for a course I teach: a list price, a revenue share with three options, a guaranteed minimum, a go or no-go threshold, a cancellation fee and a table of income by participant count. The wiki came back with three summary bullets and three generic concept pages. Asked what I would earn with fourteen participants, the chat could not answer, because the list price was nowhere in the wiki. Nothing had crashed. The ingest step had been designed to write short pages that connect ideas, and nothing in it asked the model to keep figures. Right for an essay. Wrong for a budget, a specification or an architecture file.
+
+So a second brain has to hold three kinds of knowledge rather than one. Understanding: ideas, arguments, connections. Facts and figures: exact numbers, with the date or period they belong to. Technical knowledge: how something is built, and why. A document that is measurably full of numbers, technical names or tables now gets a Key Facts section, with every important figure copied exactly as written, carrying its unit, its condition and its period or version. Ordinary articles get exactly the same instructions as before. And a newer document no longer sits beside an older one as a stranger: the page takes the new value with its version and keeps the old one next to it, so a company page ends up with a line like 2025 revenue €4.4M (2024: €3.1M). That is still knowledge accumulating. Nothing old is removed, and the history becomes something you can ask about.
+
+On that pricing document, twenty-nine facts worth keeping, the cheapest model I tested went from keeping about six to about nineteen, and a stronger one from sixteen to twenty-six. Cheaper models keep fewer facts, so for data-heavy material a stronger model is worth paying for. The reason I care is that models reason well. A model that does not have a number will often produce a plausible one, nicely formatted and wrong. For understanding, a summary is enough. For a decision, an approximate answer is worse than none.
+
 ## How does the model actually reach the notes? {#retrieval}
 
 Through an MCP server that exposes the wiki to a frontier model as a set of tools. Twenty-four of them as of version 3.64.2 in September 2026, of which seven change anything on disk and the rest only read. In August it was twenty, with five that wrote. The read side is the part that matters: writing knowledge through an agent is a convenience, reading context through one is the product. The model can list domains, pull an index, search across the wiki, read a specific page, and then, if you let it, write findings back. Once that bridge is connected, the model is not being handed a pile of documents. It is navigating a structure.
@@ -134,6 +145,8 @@ Through an MCP server that exposes the wiki to a frontier model as a set of tool
 The graph-native tools are the ones that justify the whole architecture, because they answer questions a flat index cannot answer at all.
 
 `get_backlinks` returns every page that links *to* the one you are looking at. A search index has no concept of this. `get_connected_nodes` walks the graph outward up to two hops and ranks what it finds by distance, which is how you surface a connection you never consciously made. `get_graph_overview` returns the shape of the whole thing: node and edge counts, a breakdown by page type, the top twenty hubs, the orphans, the most-used tags.
+
+Reading back turned out to have its own version of the numbers problem. The chat inside the app reads a fixed budget per question, about sixty kilobytes, like a desk with room for only so many pages, and one very large page could fill the whole desk so that the small page holding the answer was never opened. It now reads Key Facts first, and when the desk fills it reads big pages in part: the title, the facts and the sections that match the question. Agent search had the same bias, big pages winning because they were big. It now ranks by relevance and handles exact names, version strings, prices and percentages, and on a set of 246 questions the right page came first 215 times, up from 113. In the chat, correct answers out of 636 rose from 421 to 469 on one model and from 386 to 440 on another.
 
 The working query pattern is boring and it is the right one: list the domains, pull the index, search, then read the specific nodes that matter. Cheap traversal first, expensive full reads last. It is the same just-in-time discipline from the previous chapter, applied to notes instead of code.
 
@@ -196,5 +209,7 @@ Synthesis could be permanently bricked by a single malformed contribution, so on
 And one that belongs in this chapter because it is the most embarrassing: my own test suite was silently writing test data into real user knowledge folders, because the code that resolves which directory to use preferred the production configuration over the test override. Nobody lost anything and the stray data was cleaned up. It should never have been possible.
 
 Earlier still, before any of the collaborative work, large wikis produced ghost files: the same entity spawning three slightly different pages because deduplication was not strict enough. That one is unglamorous and it took real work to fix, and it is the sort of thing that decides whether a knowledge graph is usable at size or just impressive at demo scale.
+
+The most recent round, in November 2026, found three more of the same family while I was testing something else entirely. Sync across two computers could make the app forget that a file had already been read, so you might pay to read it again. A wiki built elsewhere could fail after the model had already been paid. And files saved in old text encodings silently lost letters like č, ž and é, which on a wiki written by someone with a caron in his surname is not a cosmetic problem. The first two are fixed: records from both computers are kept, and everything is checked before any money is spent. The third became a visible warning that names the file rather than an automatic fix, and why is in the verification chapter.
 
 There is a pattern in all of it, and it is the same pattern as the last chapter. The failure mode of these systems is not a crash. It is a confident, successful-looking completion with something quietly missing underneath. Build your checks accordingly.

@@ -45,6 +45,7 @@
   "ai-sovereignty": [
     "open-weights",
     "the-cost-case",
+    "the-race",
     "the-shutdown",
     "the-three-rings",
     "the-tradeoff",
@@ -60,6 +61,7 @@
   ],
   "verification": [
     "automated-testing",
+    "no-regressions",
     "tests-not-comments",
     "the-audit",
     "what-audits-find",
@@ -76,6 +78,7 @@
   ],
   "product-websites": [
     "answer-aware-navigation",
+    "build-in-public",
     "hosting-and-cost",
     "legible-to-machines",
     "static-again",

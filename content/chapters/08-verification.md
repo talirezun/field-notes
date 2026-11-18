@@ -8,7 +8,7 @@ summary: >
   Agent failures are quiet. The work completes, reports success, and leaves
   something broken underneath. Verification is the discipline of making that
   gap loud, and it is where most of my own worst findings came from.
-updated: 2026-09-25
+updated: 2026-11-18
 sources:
   - title: "I Built Auto Loops Before They Had a Name"
     url: "https://talirezun.substack.com/p/i-built-auto-loops-before-they-had"
@@ -63,6 +63,16 @@ sources:
     publication: "Substack"
     date: 2026-09-20
     sections: ["the-audit", "tests-not-comments"]
+  - title: "Stop Playing Postman: Why I Built AgentLink, a Private Line Between AI Agents"
+    url: "https://talirezun.substack.com/p/stop-playing-postman-why-i-built"
+    publication: "Substack"
+    date: 2026-11-15
+    sections: ["the-audit", "no-regressions"]
+  - title: "My Second Brain Learned to Remember the Numbers"
+    url: "https://talirezun.substack.com/p/my-second-brain-learned-to-remember"
+    publication: "Substack"
+    date: 2026-11-16
+    sections: ["the-audit", "no-regressions"]
 related: ["orchestration", "building-without-being-a-developer"]
 tags: ["verification", "testing", "audit", "quality"]
 ---
@@ -96,6 +106,8 @@ For a security pass before anything goes live, I run three models from three dif
 I should be honest about one thing, because a reader comparing my published work will notice it. The way I have described this audit stack has changed. In some pieces it is three frontier models running in parallel. In others it is one model writing and a different one auditing. In others again it is review and verifier agents living inside an orchestration workflow. Those are three implementations of the same rule rather than one stable practice I have run for two years, and I would rather say that than pretend at a consistency I did not have.
 
 The rule that has been stable is short. The reviewer must not be the author.
+
+I now take it one step further: the reviewer should not see the author's reasoning either. On AgentLink the reviewer gets the specification and the diff, nothing else, and returns pass or fail. On The Curator's November 2026 release each change was built by one agent and audited by another that never saw how the builder thought about it and wrote its own test questions. Over two days there were more than a dozen audit rounds, and several changes went back three or four times. The auditors caught a link fixer that would have rewritten an ordinary sentence, a cost estimate that could show zero and then spend, and a page excerpt that could have sent a secret from a page's properties to the model. The builders' own tests had missed every one.
 
 The pool of auditors has also widened. I used to send almost all of my audit work to one other vendor for exactly this reason. Today I get excellent audit results from frontier open-weight families as well, GLM, Qwen and DeepSeek among them, which makes it cheaper to run several reviewers rather than one.
 
@@ -158,6 +170,18 @@ Across that audit I logged twenty-one gaps between what was claimed and what was
 An earlier and simpler version of the same lesson: on a thirty-day build, the pre-launch security pass surfaced eighteen issues that had to be fixed. Eighteen vulnerabilities in code I had already looked at and decided was finished.
 
 For context on how normal that is rather than how careless I am, the published research on generated code is not comforting. One large study across more than a hundred models and eighty tasks found only around fifty-five percent of the generated code was secure. If you ship agent-written code without an audit, you are shipping something in roughly that condition.
+
+## When is better on average not good enough? {#no-regressions}
+
+When people rely on the thing. For a change to a system people use every day, the bar is not that results improve on average. It is that no answer that was right before becomes wrong after. A change that lifts the average while breaking one thing somebody depended on is a regression with good statistics.
+
+I set that rule for The Curator's November 2026 release, because it runs on other people's machines and updates itself, and it cost more than I planned. Four designs for how the chat picks which pages to read were built, measured and withdrawn. Each one improved the average. Each one turned at least one correct answer wrong. The fifth passed. Measuring that meant asking every one of 1,188 labelled questions from six real domains on the old and the new version, twice each and six times for anything suspicious, with a stronger model judging and the disagreements read by hand. No question went from always right to always wrong.
+
+The same rule killed a feature outright. An automatic detector for old file encodings guessed wrong on 2,559 letters across 43,742 randomised samples, turning the Czech Kč into Kè. A wrong letter written silently into someone's wiki is worse than a visible warning, so it shipped as a warning that names the file instead.
+
+Two more checks I now keep for anything that guards money or data. Mutation testing: deliberately break each new safety check and confirm that a test notices. And tests first for critical work: on AgentLink the builder commits the failing tests as their own commit before any implementation, so the test provably existed before the code it judges.
+
+The price is worth stating, because it is the reason most people skip this. I expected about ten euros of API calls for that release and spent sixty to seventy, almost all of it on before-and-after comparisons, which double every run before repeats multiply them. The final chat round alone sent about seventeen million tokens to one model. I now set a testing budget before I start.
 
 ## What can you still not verify? {#what-you-cannot-check}
 

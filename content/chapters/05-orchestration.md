@@ -8,7 +8,7 @@ summary: >
   Rarely, and then decisively. Most tasks are faster with one agent and a clear
   brief. Fan-out earns its keep when the work is genuinely independent, or when
   you need several honest opinions before you commit.
-updated: 2026-08-20
+updated: 2026-11-18
 sources:
   - title: "From Writing Code to Directing Intelligence: Five Days Inside Augment Code's Intent"
     url: "https://talirezun.substack.com/p/from-writing-code-to-directing-intelligence"
@@ -50,6 +50,11 @@ sources:
     url: "https://medium.com/@talirezun/how-i-built-an-ai-marketing-team-that-actually-works-from-memes-to-technical-content-in-minutes-87f646608c60"
     publication: "Medium"
     sections: ["when-not-to"]
+  - title: "Stop Playing Postman: Why I Built AgentLink, a Private Line Between AI Agents"
+    url: "https://talirezun.substack.com/p/stop-playing-postman-why-i-built"
+    publication: "Substack"
+    date: 2026-11-15
+    sections: ["the-orchestrator"]
 related: ["coding-agents", "context-engineering"]
 tags: ["multi-agent", "orchestration", "workflow", "ai-agents"]
 ---
@@ -81,6 +86,8 @@ The pieces that make it work in practice:
 **The role instruction carried forward.** When a session ends, the handoff says what happened and also restates the job: you are the orchestrator, you do not write code yourself, you delegate, you audit. Otherwise the next session quietly reverts to being a single agent with ambitions.
 
 Model choice becomes staffing. Complex reasoning and decomposition go to the strongest model you have. Mechanical work goes to something cheaper. The audit goes to a model from a different vendor entirely. You are not picking a favourite. You are filling roles.
+
+The largest run of this so far is AgentLink. The repository opened on 12 October 2026 with a specification pack, ten invariants, a decision log and an audit process, and no product code. Five weeks later it held 808 merged pull requests, 154 entries in the decision log, 972 test files and 30 version tags. The orchestrator planned, cut the work into task cards and dispatched them to eight to fifteen builder agents at once, each on its own branch, and wrote no product code itself. Staffing by tier: the strongest model for every critical build and every review, a mid-tier one for features with a clear specification, the small one for read-only checks and watching CI, and a stronger model again for the hardest security audits. Every change is classed by the files it touches, from no security relevance to critical, and a required CI check computes that class rather than trusting the author's label. Agents never push to the main branch. I approve the merge for critical changes and every public release. And the thread across days and machines is held by The Curator, where the orchestrator saves its working state after every decision.
 
 ## Do autonomous loops work, or do they just spend money? {#loops}
 
