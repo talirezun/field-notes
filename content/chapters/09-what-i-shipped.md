@@ -74,6 +74,11 @@ sources:
     publication: "Substack"
     date: 2026-09-20
     sections: ["the-curator"]
+  - title: "One Founder, Eight Weeks, Four Hundred Agents"
+    url: "https://talirezun.substack.com/p/one-founder-eight-weeks-four-hundred"
+    publication: "Substack"
+    date: 2026-10-21
+    sections: ["aria", "what-it-cost"]
   - title: "Stop Playing Postman: Why I Built AgentLink, a Private Line Between AI Agents"
     url: "https://talirezun.substack.com/p/stop-playing-postman-why-i-built"
     publication: "Substack"
@@ -98,7 +103,7 @@ Practical facts, and the ones people most often get wrong about it:
 
 **It is MIT, mostly.** The app is MIT and free to use, fork and modify. Ten Shared Brain backend files are source-available under a separate licence, free for personal, educational and research use, and they convert to MIT two years after each release.
 
-**It needs an API key.** Google Gemini, Anthropic or OpenRouter. There is no version of this that does the ingestion on nothing, and I would rather say that plainly than let a "runs entirely locally" impression stand. Gemini has a free tier, though it was tightened substantially at the end of 2025 and one batch of PDFs will usually exhaust a day of it. On a paid key, moderate solo use runs around five euros a month. Local models are not available yet. The provider row exists in Settings and is marked unavailable, and the MCP bridge needing no network of its own is a different thing from that.
+**It needs an API key.** Google Gemini, Anthropic or OpenRouter. There is no version of this that does the ingestion on nothing, and I would rather say that plainly than let a "runs entirely locally" impression stand. Gemini has a free tier, and it is enough for a first second brain: my students build theirs on it without paying anything. It is rate-limited, so very large batches go slower. On a paid key, moderate solo use runs around five euros a month. Local models are not available yet. The provider row exists in Settings and is marked unavailable, and the MCP bridge needing no network of its own is a different thing from that.
 
 **On a Mac it is a downloadable app; on Windows and Linux it is the same code run as a local server you open in the browser.** The Mac app is not notarised yet, so macOS asks you to allow it, and that is on my list. Elsewhere it is clone and `npm install` on Node 18 or newer, and it runs on `localhost:3333`. Obsidian opens the same folder natively, so the graph view comes free. Wiring the bridge into a harness still means pasting a block into that harness's configuration. Your coding agent can do it for you, and `my-curator doctor` tells you whether it actually took.
 
@@ -142,15 +147,25 @@ Some numbers from the version that did not survive, because the cost of being wr
 
 One thing that did survive from that period is a method rather than a system. Over that project I did more than a hundred successful handovers between agent sessions using written handoff documents, and that discipline is the reason the work accumulated at all rather than restarting every time a context window filled.
 
+## What did one person and four hundred agents build in eight weeks? {#aria}
+
+ARIA, a client's MVP: a real-time, voice-driven companion with a lip-synced video face that sits inside a product the user is already logged into, reacts to a live stream of events about that user, and remembers them when they come back. The client's engineering estimate was six senior developers and eight months at minimum, more realistically a year. I delivered a working, deployed MVP in eight weeks without writing the code, by directing more than four hundred agents through roughly three hundred orchestrator sessions, across 367 commits and a little over seventeen thousand lines. The client's own use case is not mine to describe, so this stays agnostic about the industry.
+
+The eight weeks were not eight weeks of agents. The first was research, design and foundations, and none of the build agents worked in it: it was the week that established I should orchestrate existing voice and avatar services rather than build a talking face myself. The last week was research on how it would scale. The build in between took about six weeks.
+
+The hardest problem was not technical. Getting an avatar to talk is solved. Getting it to talk at the right moment is not. A live session is five sources converging on one mouth: the persona, the user's speech, platform events arriving several a second, a heartbeat for quiet stretches, and an operator's pacing controls. The rules that made it work: separate knowing from speaking, so every event updates the context silently and only important ones earn a spoken reaction. Queue, deduplicate and cap what is waiting. Hold an important announcement that arrives mid-sentence, but let it expire after eight seconds rather than land on a new topic. Rate-limit the mouth, not the ears. Give operators presets rather than knobs. Once a session is live, the first spoken response arrives about 480 milliseconds after the user stops talking.
+
+The agents wrote every line of that logic. They did not design it. Whether knowing and speaking should be separated, or how long a held announcement should live, were judgements about how a conversation should feel, tested by me with a microphone over dozens of iterations and then written into a document every agent had to read. That is the human's job in an orchestrated build. And because those documents were the control plane rather than a record, the handover to the client's developers was close to free: it had been happening continuously for eight weeks.
+
+Two things worth keeping from the deployment. The real scaling ceiling is not the infrastructure. It is the concurrency limit of the external voice and avatar providers, which makes scaling a commercial negotiation before it is an engineering problem. And the principle I would make non-negotiable for anything like it: a companion that knows this much about someone, in real time, has to work in their favour. Slow down, offer a pause, point to help. Not push.
+
 ## What else is out there? {#the-smaller-ones}
 
-Five smaller things, four of them open source. None of them is a business today. They exist because a specific problem annoyed me enough to fix, and the reason they are worth listing is that the failure modes are more legible on small projects than on large ones.
+Four smaller things, all of them open source. None of them is a business today. They exist because a specific problem annoyed me enough to fix, and the reason they are worth listing is that the failure modes are more legible on small projects than on large ones.
 
 **MountVacation MCP** is an open-source MCP server, MIT licensed, that lets any MCP-compatible assistant search a European mountain accommodation database and hand back real results with booking links. Ten tools. It needs the provider's API key. I built it in fourteen days without writing a line of the TypeScript myself.
 
 The day one version worked and was wrong. It returned the first batch of results and stopped, because the underlying API pages results in groups of thirty while a search in a busy region has hundreds. Fixing that took three separate strategies, retry logic with backoff, and partial-result handling so that a failure on the fourth page returns the ninety results already collected rather than an error. Then an automated testing loop found the rest: searches in one country returning nothing at all, children's ages parsed incorrectly, currency conversion failures, and location lookups failing for particular regions. It remains a proof-of-concept rather than a production-grade commercial service, and I say so in the repository.
-
-**ARIA**, an avatar platform, is a client project and the largest single thing on this list: around seventeen thousand lines, close to four hundred commits, roughly three hundred distinct agent sessions, about six weeks to a production MVP. I have never published its feature set and I am not going to here, because it is not mine to describe.
 
 **Conduit** is an Apache-licensed framework for setting up a governed personal agent that lives in a folder on your own machine, with the setup done by pasting prompts rather than typing terminal commands. It is explicitly aimed at people who are not developers, and it uses The Curator as its memory layer. It is the earliest-stage thing I have published. Its documentation currently lists no known limitations, which at this age means they have not been found yet rather than that they do not exist.
 
@@ -168,7 +183,7 @@ The rest of the ledger, all from my own records:
 
 Across twelve months I logged 1,278 contributions, ninety-eight percent of them commits, spread across four products that shipped.
 
-The avatar platform burned close to three hundred dollars a day in credits at peak. That is by some distance the most expensive thing on this page, and it was expensive because a client deadline made parallelism worth paying for.
+The avatar platform burned close to three hundred dollars a day in credits at peak. That is by some distance the most expensive thing on this page, and it was expensive because a client deadline made parallelism worth paying for. Even if every build day had run at peak, the credit bill comes to around twelve to thirteen thousand dollars, against a client estimate that works out at forty-eight to seventy-two developer-months. That excludes my own time, the external services, and the two years of learning that made it possible.
 
 Moj AI cost about three hundred dollars a month in infrastructure during development, before any customer existed.
 

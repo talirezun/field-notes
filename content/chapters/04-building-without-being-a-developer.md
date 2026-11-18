@@ -48,6 +48,11 @@ sources:
     publication: "Substack"
     date: 2026-07-20
     sections: ["what-you-need"]
+  - title: "One Founder, Eight Weeks, Four Hundred Agents"
+    url: "https://talirezun.substack.com/p/one-founder-eight-weeks-four-hundred"
+    publication: "Substack"
+    date: 2026-10-21
+    sections: ["what-it-costs"]
   - title: "Read, Write, Own, Think"
     url: "https://talirezun.substack.com/p/read-write-own-think"
     publication: "Substack"
@@ -91,7 +96,7 @@ The most useful move I made in two years of thinking about this was deciding the
 
 There is a longer view I give in the first hour of every Chasing Jarvis cohort, and it is why I keep coming back to this question. Every wave of the web rewarded the people who could build with it, and each one set the bar somewhere technical. To build on the read-only web you needed code and a server. On the read-write web you needed a platform account, and the platform kept the keys. In the ownership wave you needed a wallet and a crypto education. With models that write code, the bar is expertise in your own domain and the ability to describe what you want precisely, which is the first time it has not been technical. Stanford's 2026 AI Index puts generative AI at fifty-three percent population adoption within three years, faster than the personal computer or the internet. Technologies do not spread that fast when only engineers can use them.
 
-In the five-day programme, people who have never written a line of code ship a deliberately scoped product to a live address. That sits alongside everything above rather than against it. The bar to entry fell. Whether people step over it does not spread on its own, and the ones who do pull further ahead.
+Less technical people struggle more. That is simply true, and the conditions above are the reason. But in my most recent workshops, six days were enough for less technical participants to build a simple app or a simple website with coding agents. That sits alongside everything above rather than against it. The bar to entry fell. Whether people step over it does not spread on its own, and the ones who do pull further ahead.
 
 ## Where does the human stay in the loop? {#the-centaur-model}
 
@@ -157,7 +162,7 @@ Far less in money than people expect and far more in time than anyone admits. Lu
 
 That second number is the one missing from every optimistic version of this story.
 
-A few more, all from my own records rather than estimates. The avatar platform came to around seventeen thousand lines across more than three hundred agent sessions, reached a production MVP in about six weeks, and burned close to three hundred dollars a day in credits at peak. Across twelve months I logged 1,278 contributions, ninety-eight percent of them commits, spread across four products that shipped. The client on the avatar project did the counterfactual arithmetic themselves and put it at five developers and six to twelve months against one founder and six weeks. That is their number, not mine, and it is the kind of comparison worth being sceptical about, but they were the ones paying either way.
+A few more, all from my own records rather than estimates. The avatar platform took eight weeks: a week of research and foundations at the start, a week of research on scaling at the end, and about six weeks of build in between, in which more than four hundred agents, directed through roughly three hundred orchestrator sessions, produced a little over seventeen thousand lines across 367 commits. At peak it burned close to three hundred dollars a day in credits, which caps the whole credit bill at around twelve to thirteen thousand dollars even if every build day had run at peak. Across twelve months I logged 1,278 contributions, ninety-eight percent of them commits, spread across four products that shipped. The client's own engineering estimate for the same MVP was six senior developers and eight months at minimum, more realistically a year. I had that here as five developers and six to twelve months, which undersold their number. It is the kind of comparison worth being sceptical about, and the credit figure excludes my own time and the external services, but they were the ones paying either way.
 
 Two structural things about cost that took me too long to learn.
 

@@ -63,6 +63,11 @@ sources:
     publication: "Substack"
     date: 2026-09-20
     sections: ["the-audit", "tests-not-comments"]
+  - title: "One Founder, Eight Weeks, Four Hundred Agents"
+    url: "https://talirezun.substack.com/p/one-founder-eight-weeks-four-hundred"
+    publication: "Substack"
+    date: 2026-10-21
+    sections: ["why-it-matters"]
   - title: "Stop Playing Postman: Why I Built AgentLink, a Private Line Between AI Agents"
     url: "https://talirezun.substack.com/p/stop-playing-postman-why-i-built"
     publication: "Substack"
@@ -88,6 +93,8 @@ A tool call failed and the agent carried on as though nothing had happened. Noth
 Two of five deployments finished with no success message at all. I found out because I checked whether the services were live rather than trusting the deploy log.
 
 And the one that still bothers me: removing a contributor from a shared knowledge base triggered a rebuild that read stale state, produced a completely empty wiki, and reported success. A green checkmark, no error anywhere, and a semester of collective work gone. The offline test suite was entirely green at the time.
+
+A fourth, from a real-time voice product, because it shows why no single agent finds these. After stopping a live session, starting it again hung forever at connecting, and only a full browser refresh fixed it. Four separate bugs were interacting: a swallowed failure on a video play call, an unnecessary pause in the cleanup code, a socket effect that disconnected and reconnected itself during startup, and a stale flag that made late callbacks believe a shutdown was still running. Each was locally reasonable. It took a human describing the exact symptom and an audit pass reading all four files at once. On the same build I stopped believing agents' claims about speed and had a headless harness replay a real spoken utterance end to end and record every timing, which is the only reason I know where the slow part actually was.
 
 The arithmetic makes this worse than it looks. A ten-step process that succeeds ninety-nine percent of the time at each individual step finishes correctly only about ninety percent of the time end to end. Agent work is many steps, most of them unwatched, and the failures compound silently until something visible finally breaks.
 

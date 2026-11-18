@@ -28,6 +28,7 @@ export const AUTHOR = {
     'https://medium.com/@talirezun',
     'https://github.com/talirezun',
     'https://www.researchgate.net/profile/Tali-Rezun',
+    'https://iris.to/talirezun',
   ],
 } as const;
 
@@ -35,7 +36,7 @@ export type SocialLink = {
   label: string;
   href: string;
   /** Key into src/components/SocialIcon.astro */
-  icon: 'x' | 'linkedin' | 'substack' | 'medium' | 'github' | 'website' | 'researchgate';
+  icon: 'x' | 'linkedin' | 'substack' | 'medium' | 'github' | 'website' | 'researchgate' | 'nostr';
 };
 
 /** The header row. Icon only, kept short on purpose. */
@@ -55,6 +56,7 @@ export const SOCIALS: SocialLink[] = [
 export const ELSEWHERE: SocialLink[] = [
   ...SOCIALS,
   { label: 'ResearchGate', href: 'https://www.researchgate.net/profile/Tali-Rezun', icon: 'researchgate' },
+  { label: 'Nostr', href: 'https://iris.to/talirezun', icon: 'nostr' },
   { label: 'talirezun.com', href: 'https://talirezun.com', icon: 'website' },
 ];
 

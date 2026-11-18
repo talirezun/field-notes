@@ -50,6 +50,16 @@ sources:
     url: "https://medium.com/@talirezun/how-i-built-an-ai-marketing-team-that-actually-works-from-memes-to-technical-content-in-minutes-87f646608c60"
     publication: "Medium"
     sections: ["when-not-to"]
+  - title: "One Founder, Eight Weeks, Four Hundred Agents"
+    url: "https://talirezun.substack.com/p/one-founder-eight-weeks-four-hundred"
+    publication: "Substack"
+    date: 2026-10-21
+    sections: ["the-orchestrator"]
+  - title: "Read, Write, Own, Think"
+    url: "https://talirezun.substack.com/p/read-write-own-think"
+    publication: "Substack"
+    date: 2026-10-30
+    sections: ["loops"]
   - title: "Stop Playing Postman: Why I Built AgentLink, a Private Line Between AI Agents"
     url: "https://talirezun.substack.com/p/stop-playing-postman-why-i-built"
     publication: "Substack"
@@ -85,6 +95,8 @@ The pieces that make it work in practice:
 
 **The role instruction carried forward.** When a session ends, the handoff says what happened and also restates the job: you are the orchestrator, you do not write code yourself, you delegate, you audit. Otherwise the next session quietly reverts to being a single agent with ambitions.
 
+**Documentation as the control plane.** On the avatar build in chapter nine every non-trivial change started as a written brief: what changes, which files, which invariants must hold, what must not be touched. The architecture documents carried guardrails written as rules no agent could miss. A misunderstanding at the orchestrator level cascades into every worker it briefs, so those documents were the only thing standing between three hundred sessions and three hundred slightly different ideas of what the product was. Keeping them true after every change, before the session closed, was the most exhausting part of the whole build. Orchestrators were migrated to fresh sessions roughly three hundred times, and for eight weeks I was, in effect, the memory of the system.
+
 Model choice becomes staffing. Complex reasoning and decomposition go to the strongest model you have. Mechanical work goes to something cheaper. The audit goes to a model from a different vendor entirely. You are not picking a favourite. You are filling roles.
 
 The largest run of this so far is AgentLink. The repository opened on 12 October 2026 with a specification pack, ten invariants, a decision log and an audit process, and no product code. Five weeks later it held 808 merged pull requests, 154 entries in the decision log, 972 test files and 30 version tags. The orchestrator planned, cut the work into task cards and dispatched them to eight to fifteen builder agents at once, each on its own branch, and wrote no product code itself. Staffing by tier: the strongest model for every critical build and every review, a mid-tier one for features with a clear specification, the small one for read-only checks and watching CI, and a stronger model again for the hardest security audits. Every change is classed by the files it touches, from no security relevance to critical, and a required CI check computes that class rather than trusting the author's label. Agents never push to the main branch. I approve the merge for critical changes and every public release. And the thread across days and machines is held by The Curator, where the orchestrator saves its working state after every decision.
@@ -112,6 +124,8 @@ I should own the obvious criticism here. My own early loops had no independent v
 One more piece of vocabulary that clarified my thinking, and it is not mine. A **loop** repeats while your session is open. A **goal** runs until a verifiable condition is true and then stops. A **schedule** runs in the cloud with your laptop closed. Only the goal has a termination condition, and a termination condition is a verification claim in disguise. If you cannot write the stopping condition, you do not yet know what you are checking for.
 
 The scheduled form is worth its own mention because it is the cheapest useful version of any of this. My support inbox runs as a headless agent on a cron job, hourly, on an always-on machine. It fetches unread mail, classifies by intent, and either answers or forwards to me with one sentence explaining why it did not feel able to answer. Roughly a fifth gets forwarded, and forwarding is the correct outcome rather than a failure, because a mediocre answer to a complicated question is worse than no answer at all. That took an afternoon to build and costs a few cents a run.
+
+It can answer on its own because it works its own inbox. Mail services built for agents, Atomic Mail is one, give an agent an address of its own that it reaches over MCP, where it reads, writes and replies in full. The agent that reads my five personal inboxes is a different one with one hard rule: it sorts, summarises and drafts replies, and nothing is sent without my approval. Whether an agent may send is a decision about whose inbox it is.
 
 Its weakness is instructive too. It logs how many messages it processed, replied to and forwarded. It logs nothing about whether the replies were any good. I spot-checked the sent replies for the first few weeks and then stopped, which means the quality loop on that system is currently me remembering to look.
 
